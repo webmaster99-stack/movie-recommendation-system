@@ -1,0 +1,56 @@
+[project]
+name = "recsys"
+version = "0.1.0"
+description = "Reproducible movie recommender: 5 algorithms compared, best one served as a web app."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy>=2.0",
+    "pandas>=2.2",
+    "pyarrow>=17",
+    "scipy>=1.14",
+    "pyyaml>=6.0",
+    "mlflow>=2.17",
+    "threadpoolctl>=3.5",
+]
+
+[dependency-groups]
+dev = [
+    "dvc>=3.55",
+    "pytest>=8.3",
+    "pytest-cov>=5.0",
+    "ruff>=0.7",
+    "mypy>=1.13",
+    "pre-commit>=4.0",
+    "types-PyYAML",
+    "pandas-stubs",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/recsys"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "NPY", "PD"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+files = ["src"]
+
+[[tool.mypy.overrides]]
+# MLflow is huge; analyzing its source makes mypy take minutes. Treat it as untyped.
+module = ["mlflow", "mlflow.*"]
+follow_imports = "skip"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

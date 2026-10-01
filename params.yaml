@@ -1,0 +1,21 @@
+# Single source of truth for every tunable value in the pipeline.
+# DVC tracks these per stage: changing a value re-runs only the stages that depend on it.
+
+seed: 42
+
+# Thread counts are pinned so multithreaded BLAS/OpenMP math gives identical results run to run.
+runtime:
+  num_threads: 4
+
+data:
+  movielens:
+    url: https://files.grouplens.org/datasets/movielens/ml-32m.zip
+    # Filled in during Phase 1 after the first verified download.
+    sha256: null
+
+mlflow:
+  experiment_name: movie-recsys
+  # Used only when MLFLOW_TRACKING_URI is unset, so the project works with no accounts.
+  # (MLflow 3.x refuses the old ./mlruns folder store, so local runs use SQLite.)
+  local_db: mlflow.db
+  local_artifacts: mlartifacts

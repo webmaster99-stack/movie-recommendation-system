@@ -1,0 +1,2 @@
+# Same bytes on every OS, so file hashes (DVC, Docker layers) match across platforms.
+* text=auto eol=lf

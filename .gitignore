@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# Data and models are versioned by DVC, not git
+/data/raw/
+/data/interim/
+/data/processed/
+/models/
+
+# Local MLflow store (fallback when DagsHub isn't configured)
+/mlflow.db
+/mlruns/
+/mlartifacts/
+
+# Secrets: never commit
+.env
+.env.*
+!.env.example
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Frontend
+web/node_modules/
+web/.next/
