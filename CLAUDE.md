@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-A portfolio movie recommender built in phases (see the checklist in `README.md`). Five algorithms are compared on MovieLens 32M plus a TMDB metadata snapshot: Popularity, Item-kNN, iALS, EASE and SASRec. The winner is served by FastAPI on Render's free tier (512MB RAM) behind a Next.js frontend on Vercel, with Supabase for auth and Postgres. Ilian reviews each phase before the next one starts. Explain design choices as you go, and when a tool or approach decision comes up, present a pros/cons table with a recommendation.
+A portfolio movie recommender built in phases (see the checklist in `README.md`). Five algorithms are compared on MovieLens 32M: Popularity, Item-kNN, iALS, EASE and SASRec. TMDB (posters, plot summaries) is used only by the web app, never by experiments. The winner is served by FastAPI on Render's free tier (512MB RAM) behind a Next.js frontend on Vercel, with Supabase for auth and Postgres. Ilian reviews each phase before the next one starts. Explain design choices as you go, and when a tool or approach decision comes up, present a pros/cons table with a recommendation.
 
 **Hard requirement: full reproducibility.** A stranger who clones the repo and runs the pipeline must get the same metrics and artifacts. Every change must preserve this.
 
@@ -24,14 +24,15 @@ uv run mlflow ui --backend-store-uri sqlite:///mlflow.db        # browse local r
 
 CI (`.github/workflows/ci.yml`) runs `uv sync --frozen`, ruff, mypy and pytest.
 
-**Windows performance caveat:** on this machine, Python imports are very slow because of Defender scanning and Docker Desktop CPU load (importing `mlflow` has taken 2–4 minutes). Use long timeouts or `run_in_background` for anything that imports mlflow/pandas, and don't misread slowness as a hang. A multi-line `python -c` fails through the Bash tool on Windows; write a script to the scratchpad instead.
+**Windows performance caveat:** on this machine, Python imports are very slow because of Defender scanning and Docker Desktop CPU load (importing `mlflow` has taken 2–4 minutes). Use long timeouts or `run_in_background` for anything that imports mlflow/pandas, and don't misread slowness as a hang. A multi-line `python -c` fails through the Bash tool on Windows; write a script to the scratchpad instead. A `>` inside an argument can be treated as a redirect even when quoted (e.g. `uv add "pkg>=1.0"` created a stray empty file named `1.0`), so add packages without version specifiers and let uv pin them.
 
 ## Architecture and conventions
 
 - **`params.yaml` is the single source of truth** for every tunable value: seed, thread counts, data URLs and checksums, filters, split dates, hyperparameters. Load it with `recsys.utils.config.load_params()`. Don't hardcode values in code. DVC tracks params per stage, so only the affected stages re-run.
 - **Determinism:** every entry point calls `recsys.utils.seed.make_deterministic(seed, num_threads)` first. It seeds Python, NumPy and torch, pins BLAS/OpenMP threads, and returns a `np.random.Generator`; pass that generator around explicitly instead of using global NumPy random state.
 - **MLflow:** wrap training/evaluation in `recsys.utils.mlflow_utils.tracked_run(name)`. It logs the git commit/dirty flag and `params.yaml`, `uv.lock` and `dvc.lock` as provenance. The tracking URI is `MLFLOW_TRACKING_URI` (DagsHub, set in `.env`) when present; otherwise a local `sqlite:///mlflow.db` with artifacts in `mlartifacts/`. MLflow 3.x rejects the file store, so don't reintroduce `./mlruns`. Mypy skips MLflow's source on purpose (see `pyproject.toml`).
-- **Data:** data, models and metrics outputs are versioned by DVC (DagsHub remote) and git-ignored. MovieLens can't be redistributed, so the pipeline downloads it from GroupLens and verifies the SHA256 in `params.yaml`; never push raw MovieLens files to a public remote. The TMDB snapshot is pulled once and shared via `dvc pull`.
+- **Data:** data, models and metrics outputs are versioned by DVC (DagsHub remote) and git-ignored. The pipeline downloads MovieLens from GroupLens and verifies the SHA256 in `params.yaml`. The ML-32M license allows redistribution, including transformations, under the same license, so its data is pushed to the DVC remote. The dataset's `README.txt`, which contains the license, is kept in `data/raw/ml-32m/` and pushed with it.
+- **TMDB terms:** no caching TMDB data for more than 6 months, and no sharing TMDB datasets. So TMDB data must never enter the DVC pipeline, the DVC remote or git. Only the API fetches it, caching it in Postgres with refresh before 6 months, and the app shows the TMDB logo and the required notice.
 - Layout: `src/recsys/{data,models,evaluation,tuning,registry,utils}` for the pipeline. `api/`, `web/` and `monitoring/` are placeholders for later phases. `docker/train.Dockerfile` is the reference environment, where results should be byte-identical.
 
 ## Project plan
@@ -41,7 +42,7 @@ Approved with Ilian on 2026-10-01. Follow it; propose changes to Ilian rather th
 ### Decisions
 | Area | Choice |
 |---|---|
-| Data | MovieLens 32M (ratings + tags) + a one-time TMDB metadata snapshot (posters, plot summaries, cast, keywords) |
+| Data | MovieLens 32M (ratings, movies, tags, links) for all experiments. TMDB is app-only (decided 2026-10-02 after reading its terms). |
 | Data versioning / pipelines | DVC (`dvc.yaml` stages, `params.yaml`, `dvc.lock` committed), remote on DagsHub |
 | Experiment tracking + registry | MLflow on DagsHub, registry aliases `champion` / `challenger` |
 | Algorithms (5) | Popularity, Item-kNN, iALS, EASE, SASRec |
@@ -65,23 +66,22 @@ Onboarding therefore works with whichever model wins, and offline evaluation and
 ### Reproducibility strategy
 1. Pinned environment: `uv.lock`; `docker/train.Dockerfile` (CPU PyTorch) is the reference environment.
 2. Determinism: `make_deterministic`; `torch.use_deterministic_algorithms(True)`; pinned BLAS/OpenMP threads; Optuna with a seeded `TPESampler` and sequential trials.
-3. Data provenance: MovieLens is downloaded from GroupLens and checked against the SHA256 in `params.yaml`; every downstream output is deterministic, so its hash must match `dvc.lock`. The TMDB snapshot goes to the public DagsHub DVC remote with attribution, so strangers `dvc pull` it and never need a key (re-check TMDB terms when implementing).
+3. Data provenance: MovieLens is downloaded from GroupLens and checked against the SHA256 in `params.yaml`. Every downstream output is deterministic, so its hash must match `dvc.lock`. Strangers can either `dvc pull` or rebuild from scratch, and experiments need no API keys.
 4. Provenance on every MLflow run (via `tracked_run`); local SQLite fallback when there are no credentials.
 5. One command: `dvc repro` builds data, trains all 5 models, evaluates them and selects the winner. `metrics/*.json` are DVC metrics, so `dvc metrics diff` shows mismatches.
 6. CI `repro-check.yml` runs the pipeline twice on a small fixed sample and asserts identical hashes and metrics. Byte-identical results are guaranteed inside Docker; on bare metal across different CPUs, metrics match within a small documented tolerance.
 
 ### Data pipeline (DVC stages)
 1. `download`: ML-32M zip → verify checksum → `data/raw/`
-2. `tmdb_snapshot`: frozen stage that reads `links.csv` and pulls TMDB metadata; normal runs use `dvc pull` instead.
-3. `validate`: pandera schemas (ID ranges, ratings 0.5–5, timestamps, no duplicate (user, item) pairs); fail loudly.
-4. `preprocess` (all values in params):
+2. `validate`: pandera schemas (ID ranges, ratings 0.5–5, timestamps, no duplicate (user, item) pairs); fail loudly.
+3. `preprocess` (all values in params):
    - Keep a recent time window (e.g. 2010+).
    - Ratings ≥ 3.5 become positive implicit interactions; keep the full ratings for analysis.
    - Iterative k-core filter (users ≥ 5, items ≥ 10).
    - Cap the catalog at the ~20k most popular items.
    - Re-index IDs to contiguous integers.
-5. `split`: global temporal split. Train runs up to T1, validation covers T1–T2, test is everything after T2. Same split for all models; no future data leaks into training.
-6. `features`: TMDB item features (genres, year, posters) for the UI and analysis.
+4. `split`: global temporal split. Train runs up to T1, validation covers T1–T2, test is everything after T2. Same split for all models; no future data leaks into training.
+5. `items`: catalog table from MovieLens (title, year, genres, tmdbId for the app to look up).
 
 ### Evaluation protocol
 - Full ranking over the whole catalog, with no sampled negatives (Krichene & Rendle 2020). Seen items are excluded.
@@ -117,8 +117,10 @@ Onboarding therefore works with whichever model wins, and offline evaluation and
 - Render sleeps after 15 minutes idle: the frontend shows "waking up the server…" while it retries `/health`. An optional UptimeRobot ping also provides uptime monitoring.
 - Endpoints: `GET /health`, `GET /movies/search?q=`, `GET /movies/{id}`, `GET /movies/{id}/similar`, `GET /onboarding/movies`, `POST /ratings`, `GET /recommendations?k=`, `POST /events`.
 - Auth: verify the Supabase JWT in a FastAPI dependency, with Postgres row-level security as a second layer.
+- TMDB: the API fetches movie details by tmdbId as needed (key stays server-side) and caches them in a `movie_metadata` table with `fetched_at`, refreshing anything older than ~5 months.
 - Tables:
   - `profiles`
+  - `movie_metadata` (TMDB cache)
   - `ratings`
   - `rec_requests` (request ID, user, model version, items shown, latency)
   - `events` (clicks, ratings given after a recommendation)
@@ -133,7 +135,7 @@ Onboarding therefore works with whichever model wins, and offline evaluation and
   - Movie detail with "similar movies"
   - My ratings
   - About / How it works (architecture, model card, live metrics)
-- Posters load from TMDB's image CDN by URL, with attribution in the footer.
+- Posters load from TMDB's image CDN by URL. The footer shows the TMDB logo and the notice: "This product uses the TMDB API but is not endorsed or certified by TMDB."
 
 ### Monitoring
 - Operational: latency, error rate and request volume, logged per request to Postgres. Grafana Cloud reads from the Supabase Postgres data source; alerts fire on p95 latency and error rate.
@@ -146,7 +148,7 @@ Onboarding therefore works with whichever model wins, and offline evaluation and
 
 ### Phases (one at a time; Ilian reviews after each)
 0. ✅ Foundation: uv, ruff/mypy/pytest, pre-commit, `params.yaml`, DVC init, MLflow utilities, seeding, train Dockerfile, CI skeleton. Still open: connecting the DagsHub remote, which needs Ilian's account.
-1. Data: download/validate/preprocess/split stages, TMDB snapshot, EDA notebook
+1. ✅ Data: download/validate/preprocess/split/items stages, EDA notebook (`notebooks/01_eda.ipynb` explains the `preprocess`/`split` values). Result: 8.48M positives, 71,841 users, 19,642 movies. ~40% of val/test users have no prior history; evaluate them separately as an onboarding scenario in Phase 2.
 2. Evaluation framework (metrics unit-tested on hand-computed examples) + Popularity and Item-kNN, MLflow logging
 3. iALS, EASE, SASRec + Optuna tuning
 4. Selection & registry: comparison report, significance tests, model card, export bundle, `champion` alias, CI reproducibility check

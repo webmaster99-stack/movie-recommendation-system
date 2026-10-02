@@ -14,12 +14,23 @@ uv sync          # exact, locked environment (Python 3.12)
 uv run pytest    # tests
 ```
 
+### Data
+
+```bash
+uv run dvc pull    # fetch the processed data from DagsHub (fast)
+uv run dvc repro   # or rebuild everything from GroupLens (checksum-verified)
+```
+
+Data: [MovieLens 32M](https://grouplens.org/datasets/movielens/32m/) by GroupLens Research, used under
+its license (see `data/raw/ml-32m/README.txt`). F. Maxwell Harper and Joseph A. Konstan. 2015. *The MovieLens
+Datasets: History and Context.* ACM TiiS 5, 4: 19:1–19:19.
+
 Optional: copy `.env.example` to `.env` to log runs to DagsHub instead of the local `mlflow.db`.
 
 ## Build phases
 
 - [x] 0. Foundation: tooling, config, determinism, CI
-- [ ] 1. Data pipeline (DVC)
+- [x] 1. Data pipeline (DVC)
 - [ ] 2. Evaluation framework + baselines
 - [ ] 3. iALS, EASE, SASRec + tuning
 - [ ] 4. Model selection + registry

@@ -1,0 +1,11 @@
+{
+  "first_rating": "1995-01-09T11:46:44+00:00",
+  "last_rating": "2023-10-13T02:29:07+00:00",
+  "mean_rating": 3.5404,
+  "n_movies": 87585,
+  "n_movies_rated": 84432,
+  "n_movies_without_tmdb_id": 124,
+  "n_ratings": 32000204,
+  "n_tags": 2000072,
+  "n_users": 200948
+}

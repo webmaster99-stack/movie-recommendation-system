@@ -1,0 +1,19 @@
+{
+  "test": {
+    "frac_targets_on_unseen_items": 0.0224,
+    "n_interactions": 520897,
+    "n_users": 8707,
+    "n_users_with_history": 5250
+  },
+  "train": {
+    "n_interactions": 7384228,
+    "n_items": 19166,
+    "n_users": 64440
+  },
+  "val": {
+    "frac_targets_on_unseen_items": 0.0322,
+    "n_interactions": 575705,
+    "n_users": 9739,
+    "n_users_with_history": 5795
+  }
+}

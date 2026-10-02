@@ -1,0 +1,150 @@
+schema: '2.0'
+stages:
+  download:
+    cmd: python -m recsys.data.download
+    deps:
+    - path: src/recsys/data/download.py
+      hash: md5
+      md5: fcb7fa4bd867d10b90353c00f16e2422
+      size: 2658
+    params:
+      params.yaml:
+        data.movielens:
+          url: https://files.grouplens.org/datasets/movielens/ml-32m.zip
+          sha256: 
+            e4a68655d7386b8f95f2f2424b2ff975dfdd15ffd59e0d864a14dca43e99d6ee
+    outs:
+    - path: data/raw/ml-32m
+      hash: md5
+      md5: ec6fac2724479bc4d97190945181aa49.dir
+      size: 955633013
+      nfiles: 5
+  validate:
+    cmd: python -m recsys.data.validate
+    deps:
+    - path: data/raw/ml-32m
+      hash: md5
+      md5: ec6fac2724479bc4d97190945181aa49.dir
+      size: 955633013
+      nfiles: 5
+    - path: src/recsys/data/validate.py
+      hash: md5
+      md5: 76474bb1ea2dac712d10a15deb834e37
+      size: 4556
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    outs:
+    - path: data/interim
+      hash: md5
+      md5: d1d05c025ac41def394baed9b441fc1d.dir
+      size: 181307366
+      nfiles: 4
+    - path: metrics/data_validation.json
+      hash: md5
+      md5: f3ca12fb93cd5f601a7dd89ca6ba23fd
+      size: 271
+  preprocess:
+    cmd: python -m recsys.data.preprocess
+    deps:
+    - path: data/interim/ratings.parquet
+      hash: md5
+      md5: ca142bc316d5f29ebd252d6ad834a8e7
+      size: 164193095
+    - path: src/recsys/data/preprocess.py
+      hash: md5
+      md5: 443bcad66ca79a379bbe79f3b229dfcc
+      size: 4662
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        preprocess:
+          start_date: '2015-01-01'
+          end_date:
+          positive_threshold: 3.5
+          max_items: 20000
+          min_user_interactions: 5
+          min_item_interactions: 10
+    outs:
+    - path: data/processed/interactions.parquet
+      hash: md5
+      md5: 7f0ae7f5d3e152c8789b4753ec0805c6
+      size: 36230294
+    - path: data/processed/item_map.parquet
+      hash: md5
+      md5: 50c8c1928ec87e61c58246de59f8f7fc
+      size: 175578
+    - path: data/processed/user_map.parquet
+      hash: md5
+      md5: 687a20412a8006a09b1097ebeea87c76
+      size: 651618
+    - path: metrics/preprocess.json
+      hash: md5
+      md5: 84692c47474beeb1915c14aba938dd18
+      size: 167
+  split:
+    cmd: python -m recsys.data.split
+    deps:
+    - path: data/processed/interactions.parquet
+      hash: md5
+      md5: 7f0ae7f5d3e152c8789b4753ec0805c6
+      size: 36230294
+    - path: src/recsys/data/preprocess.py
+      hash: md5
+      md5: 443bcad66ca79a379bbe79f3b229dfcc
+      size: 4662
+    - path: src/recsys/data/split.py
+      hash: md5
+      md5: 127a143bbcb3f79be683454f5bf4499a
+      size: 2968
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        split:
+          val_start: '2022-01-01'
+          test_start: '2023-01-01'
+    outs:
+    - path: data/processed/splits
+      hash: md5
+      md5: cd861dfb9874d23c5507e0b0661bd3dc.dir
+      size: 36393308
+      nfiles: 3
+    - path: metrics/split.json
+      hash: md5
+      md5: e9a3aaaf2a7aeb3da44bb26190f1a011
+      size: 384
+  items:
+    cmd: python -m recsys.data.items
+    deps:
+    - path: data/interim/links.parquet
+      hash: md5
+      md5: 95bb686a7f617c27630ccd68c03c5915
+      size: 1369095
+    - path: data/interim/movies.parquet
+      hash: md5
+      md5: 134fc1e330852f04bc71696af5db44d5
+      size: 1871089
+    - path: data/processed/item_map.parquet
+      hash: md5
+      md5: 50c8c1928ec87e61c58246de59f8f7fc
+      size: 175578
+    - path: src/recsys/data/items.py
+      hash: md5
+      md5: fe62ed0d507aa42c8e38edf7a535a695
+      size: 1745
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    outs:
+    - path: data/processed/items.parquet
+      hash: md5
+      md5: ab61fe6a1bd0ea374a5a0538f48559ce
+      size: 701413

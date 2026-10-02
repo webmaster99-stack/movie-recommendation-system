@@ -1,0 +1,8 @@
+{
+  "density": 0.00601,
+  "kept_fraction_of_raw": 0.265,
+  "median_interactions_per_user": 64.0,
+  "n_interactions": 8480830,
+  "n_items": 19642,
+  "n_users": 71841
+}

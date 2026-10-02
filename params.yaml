@@ -10,8 +10,22 @@ runtime:
 data:
   movielens:
     url: https://files.grouplens.org/datasets/movielens/ml-32m.zip
-    # Filled in during Phase 1 after the first verified download.
-    sha256: null
+    # Pinned 2026-10-02 after checking the MD5 against GroupLens' published ml-32m.zip.md5.
+    sha256: e4a68655d7386b8f95f2f2424b2ff975dfdd15ffd59e0d864a14dca43e99d6ee
+
+# Values chosen from the per-year / candidate-split analysis in notebooks/01_eda.ipynb.
+preprocess:
+  start_date: "2015-01-01"  # activity roughly triples in 2015; modern catalog; CPU budget
+  end_date: null  # keep everything up to the end of the dataset (2023-10-13)
+  positive_threshold: 3.5  # ~2/3 of ratings count as "liked"
+  max_items: 20000  # bounds EASE's item x item matrix
+  min_user_interactions: 5
+  min_item_interactions: 10
+
+# Global temporal split: train < val_start <= val < test_start <= test.
+split:
+  val_start: "2022-01-01"
+  test_start: "2023-01-01"
 
 mlflow:
   experiment_name: movie-recsys

@@ -1,0 +1,63 @@
+stages:
+  download:
+    cmd: python -m recsys.data.download
+    deps:
+      - src/recsys/data/download.py
+    params:
+      - data.movielens
+    outs:
+      - data/raw/ml-32m
+
+  validate:
+    cmd: python -m recsys.data.validate
+    deps:
+      - data/raw/ml-32m
+      - src/recsys/data/validate.py
+      - src/recsys/utils/io.py
+    outs:
+      - data/interim
+    metrics:
+      - metrics/data_validation.json:
+          cache: false
+
+  preprocess:
+    cmd: python -m recsys.data.preprocess
+    deps:
+      - data/interim/ratings.parquet
+      - src/recsys/data/preprocess.py
+      - src/recsys/utils/io.py
+    params:
+      - preprocess
+    outs:
+      - data/processed/interactions.parquet
+      - data/processed/user_map.parquet
+      - data/processed/item_map.parquet
+    metrics:
+      - metrics/preprocess.json:
+          cache: false
+
+  split:
+    cmd: python -m recsys.data.split
+    deps:
+      - data/processed/interactions.parquet
+      - src/recsys/data/split.py
+      - src/recsys/data/preprocess.py  # reuses to_unix
+      - src/recsys/utils/io.py
+    params:
+      - split
+    outs:
+      - data/processed/splits
+    metrics:
+      - metrics/split.json:
+          cache: false
+
+  items:
+    cmd: python -m recsys.data.items
+    deps:
+      - data/processed/item_map.parquet
+      - data/interim/movies.parquet
+      - data/interim/links.parquet
+      - src/recsys/data/items.py
+      - src/recsys/utils/io.py
+    outs:
+      - data/processed/items.parquet
