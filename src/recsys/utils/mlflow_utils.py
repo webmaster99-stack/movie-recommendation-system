@@ -5,8 +5,10 @@ set, otherwise to a local SQLite file, so a stranger can run everything with no 
 Every run is tagged with the exact code and config it came from.
 """
 
+import io
 import os
 import subprocess
+import sys
 from collections.abc import Iterator
 from contextlib import contextmanager
 from typing import Any
@@ -29,6 +31,10 @@ def _git(*args: str) -> str:
 
 
 def configure_mlflow() -> str:
+    # With a remote server MLflow prints a "View run" link starting with an emoji when a run
+    # ends. A Windows console (cp1252) can't encode it and the stage would crash.
+    if isinstance(sys.stdout, io.TextIOWrapper):
+        sys.stdout.reconfigure(errors="replace")
     # Variables already set in the environment (e.g. CI secrets) win over the .env file.
     load_dotenv(PROJECT_ROOT / ".env")
     params = load_params()["mlflow"]
