@@ -61,3 +61,43 @@ stages:
       - src/recsys/utils/io.py
     outs:
       - data/processed/items.parquet
+
+  # One train and one evaluate stage per model, e.g. `dvc repro evaluate@item_knn`.
+  train:
+    foreach: [popularity, item_knn]
+    do:
+      cmd: python -m recsys.models.train ${item}
+      deps:
+        - data/processed/splits/train.parquet
+        - data/processed/item_map.parquet
+        - src/recsys/models/__init__.py
+        - src/recsys/models/base.py
+        - src/recsys/models/train.py
+        - src/recsys/models/${item}.py
+        - src/recsys/utils/io.py
+      params:
+        - models.${item}
+      outs:
+        - models/${item}
+
+  evaluate:
+    foreach: [popularity, item_knn]
+    do:
+      cmd: python -m recsys.evaluation.evaluate ${item}
+      deps:
+        - models/${item}
+        - data/processed/splits/train.parquet
+        - data/processed/splits/val.parquet
+        - src/recsys/evaluation
+        - src/recsys/models/__init__.py
+        - src/recsys/models/base.py
+        - src/recsys/models/${item}.py
+        - src/recsys/utils/io.py
+      params:
+        - seed  # drives the bootstrap resampling
+        - evaluation
+      outs:
+        - data/evaluation/val/${item}.parquet
+      metrics:
+        - metrics/val_${item}.json:
+            cache: false

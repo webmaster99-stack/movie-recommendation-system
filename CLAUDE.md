@@ -19,6 +19,7 @@ uv run mypy                               # strict; checks src/ only
 uv run pytest                             # all tests
 uv run pytest tests/test_seed.py::test_different_seeds_differ   # single test
 uv run dvc repro                          # run the pipeline (stages defined in dvc.yaml from Phase 1)
+uv run dvc repro evaluate@item_knn        # one model only; train/evaluate are per-model stages (`stage@model`)
 uv run mlflow ui --backend-store-uri sqlite:///mlflow.db        # browse local runs
 ```
 
@@ -33,6 +34,9 @@ CI (`.github/workflows/ci.yml`) runs `uv sync --frozen`, ruff, mypy and pytest.
 - **MLflow:** wrap training/evaluation in `recsys.utils.mlflow_utils.tracked_run(name)`. It logs the git commit/dirty flag and `params.yaml`, `uv.lock` and `dvc.lock` as provenance. The tracking URI is `MLFLOW_TRACKING_URI` (DagsHub, set in `.env`) when present; otherwise a local `sqlite:///mlflow.db` with artifacts in `mlartifacts/`. MLflow 3.x rejects the file store, so don't reintroduce `./mlruns`. Mypy skips MLflow's source on purpose (see `pyproject.toml`).
 - **Data:** data, models and metrics outputs are versioned by DVC (DagsHub remote) and git-ignored. The pipeline downloads MovieLens from GroupLens and verifies the SHA256 in `params.yaml`. The ML-32M license allows redistribution, including transformations, under the same license, so its data is pushed to the DVC remote. The dataset's `README.txt`, which contains the license, is kept in `data/raw/ml-32m/` and pushed with it.
 - **TMDB terms:** no caching TMDB data for more than 6 months, and no sharing TMDB datasets. So TMDB data must never enter the DVC pipeline, the DVC remote or git. Only the API fetches it, caching it in Postgres with refresh before 6 months, and the app shows the TMDB logo and the required notice.
+- **Models:** every model subclasses `recsys.models.base.Recommender` and is registered in `recsys/models/__init__.py` under the name used in `params.yaml` (`models.<name>`) and in the `foreach` lists in `dvc.yaml`. Subclasses implement `fit`, `score`, `save`, `load`; masking seen items and picking the top k live in the base class (`top_k` uses a stable sort so ties never depend on the CPU). Save models with `save_arrays` (`.npy` + `meta.json`), never `.npz`: zip entries carry timestamps, which breaks byte-identical outputs.
+- **Evaluation:** `recsys.evaluation.evaluate` scores a saved model on the validation split in two scenarios (`protocol.py`): `warm` (users with history before the cut-off) and `onboarding` (new users; their first `evaluation.onboarding.n_history` likes are the history). It writes `metrics/val_<model>.json` and per-user metrics to `data/evaluation/val/<model>.parquet`. The test split is only evaluated in Phase 4.
+- **Timings stay out of DVC files:** training time and latency vary run to run, so they go to MLflow only. Anything written to `metrics/`, `models/` or `data/` must be deterministic.
 - Layout: `src/recsys/{data,models,evaluation,tuning,registry,utils}` for the pipeline. `api/`, `web/` and `monitoring/` are placeholders for later phases. `docker/train.Dockerfile` is the reference environment, where results should be byte-identical.
 
 ## Project plan
@@ -149,7 +153,7 @@ Onboarding therefore works with whichever model wins, and offline evaluation and
 ### Phases (one at a time; Ilian reviews after each)
 0. ✅ Foundation: uv, ruff/mypy/pytest, pre-commit, `params.yaml`, DVC init, MLflow utilities, seeding, train Dockerfile, CI skeleton. Still open: connecting the DagsHub remote, which needs Ilian's account.
 1. ✅ Data: download/validate/preprocess/split/items stages, EDA notebook (`notebooks/01_eda.ipynb` explains the `preprocess`/`split` values). Result: 8.48M positives, 71,841 users, 19,642 movies. ~40% of val/test users have no prior history; evaluate them separately as an onboarding scenario in Phase 2.
-2. Evaluation framework (metrics unit-tested on hand-computed examples) + Popularity and Item-kNN, MLflow logging
+2. ✅ Evaluation framework (metrics unit-tested on hand-computed examples) + Popularity and Item-kNN, MLflow logging. Validation NDCG@10, untuned: Popularity 0.063 warm / 0.312 onboarding; Item-kNN 0.081 / 0.369. Left for later phases: tuning the `models.*` params (3), paired significance tests on the per-user parquet files and the test split (4).
 3. iALS, EASE, SASRec + Optuna tuning
 4. Selection & registry: comparison report, significance tests, model card, export bundle, `champion` alias, CI reproducibility check
 5. API: FastAPI + Supabase schema + auth + tests + Dockerfile

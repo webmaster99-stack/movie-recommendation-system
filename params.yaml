@@ -27,6 +27,28 @@ split:
   val_start: "2022-01-01"
   test_start: "2023-01-01"
 
+# Starting values, not tuned yet: Phase 3 searches these on the validation split with Optuna.
+models:
+  popularity:
+    half_life_days: null  # null = plain counts; a number down-weights old interactions
+  item_knn:
+    k: 100  # neighbours kept per movie
+    similarity: cosine  # cosine | bm25
+    shrinkage: 20.0  # cosine only: damps similarities backed by few users
+    bm25_k1: 1.2  # bm25 only
+    bm25_b: 0.75  # bm25 only
+
+evaluation:
+  ks: [10, 20]
+  batch_size: 1024  # users scored at once; memory only, no effect on results
+  onboarding:
+    n_history: 10  # a new user's first likes stand in for the movies rated at sign-up
+  history_segments: [20, 100]  # warm users split into <20, 20-99 and >=100 liked movies
+  bootstrap:
+    n_resamples: 1000
+    confidence: 0.95
+  latency_users: 200  # single-user calls timed for p50/p95 (MLflow only)
+
 mlflow:
   experiment_name: movie-recsys
   # Used only when MLFLOW_TRACKING_URI is unset, so the project works with no accounts.

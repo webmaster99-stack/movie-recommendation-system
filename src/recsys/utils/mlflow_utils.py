@@ -12,6 +12,7 @@ from contextlib import contextmanager
 from typing import Any
 
 import mlflow
+from dotenv import load_dotenv
 from mlflow.entities import Run
 
 from recsys.utils.config import PARAMS_PATH, PROJECT_ROOT, load_params
@@ -28,6 +29,8 @@ def _git(*args: str) -> str:
 
 
 def configure_mlflow() -> str:
+    # Variables already set in the environment (e.g. CI secrets) win over the .env file.
+    load_dotenv(PROJECT_ROOT / ".env")
     params = load_params()["mlflow"]
     name = params["experiment_name"]
     remote_uri = os.environ.get("MLFLOW_TRACKING_URI")

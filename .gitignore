@@ -13,6 +13,7 @@ htmlcov/
 /data/raw/
 /data/interim/
 /data/processed/
+/data/evaluation/
 /models/
 
 # Local MLflow store (fallback when DagsHub isn't configured)
