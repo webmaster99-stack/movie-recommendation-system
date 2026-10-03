@@ -38,3 +38,6 @@ Thumbs.db
 # Frontend
 web/node_modules/
 web/.next/
+
+# Local Claude Code MCP server config
+.mcp.json
