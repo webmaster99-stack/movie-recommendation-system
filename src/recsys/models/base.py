@@ -66,6 +66,7 @@ def load_meta(path: Path) -> dict[str, Any]:
 
 class Recommender(ABC):
     name: ClassVar[str]
+    uses_seed: ClassVar[bool] = False  # True: the constructor takes `seed` (random init etc.)
     n_items: int
 
     @property

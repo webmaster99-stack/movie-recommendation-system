@@ -1,0 +1,97 @@
+{
+  "best_params": {
+    "keep_per_item": 1000,
+    "l2": 1138.0
+  },
+  "best_scores": {
+    "all": 0.214613,
+    "onboarding": 0.37673,
+    "warm": 0.105677
+  },
+  "best_trial": 3,
+  "metric": "ndcg_at_10",
+  "model": "ease",
+  "seed": 42,
+  "trials": [
+    {
+      "all": 0.21439,
+      "number": 0,
+      "onboarding": 0.37646,
+      "params": {
+        "keep_per_item": 1000,
+        "l2": 500.0
+      },
+      "warm": 0.105486
+    },
+    {
+      "all": 0.212952,
+      "number": 1,
+      "onboarding": 0.374779,
+      "params": {
+        "keep_per_item": 1000,
+        "l2": 158.2
+      },
+      "warm": 0.104211
+    },
+    {
+      "all": 0.21428,
+      "number": 2,
+      "onboarding": 0.376635,
+      "params": {
+        "keep_per_item": 1000,
+        "l2": 3809.0
+      },
+      "warm": 0.105185
+    },
+    {
+      "all": 0.214613,
+      "number": 3,
+      "onboarding": 0.37673,
+      "params": {
+        "keep_per_item": 1000,
+        "l2": 1138.0
+      },
+      "warm": 0.105677
+    },
+    {
+      "all": 0.214479,
+      "number": 4,
+      "onboarding": 0.376371,
+      "params": {
+        "keep_per_item": 1000,
+        "l2": 545.2
+      },
+      "warm": 0.105695
+    },
+    {
+      "all": 0.209779,
+      "number": 5,
+      "onboarding": 0.372358,
+      "params": {
+        "keep_per_item": 1000,
+        "l2": 47.33
+      },
+      "warm": 0.100533
+    },
+    {
+      "all": 0.209779,
+      "number": 6,
+      "onboarding": 0.372358,
+      "params": {
+        "keep_per_item": 1000,
+        "l2": 47.33
+      },
+      "warm": 0.100533
+    },
+    {
+      "all": 0.207705,
+      "number": 7,
+      "onboarding": 0.371101,
+      "params": {
+        "keep_per_item": 1000,
+        "l2": 27.56
+      },
+      "warm": 0.09791
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "model": "ease",
+  "model_size_bytes": 153485633,
+  "onboarding": {
+    "coverage_at_10": 0.065727,
+    "coverage_at_20": 0.09164,
+    "mrr_at_10": {
+      "ci_high": 0.597704,
+      "ci_low": 0.573289,
+      "mean": 0.585615
+    },
+    "mrr_at_20": {
+      "ci_high": 0.601419,
+      "ci_low": 0.577291,
+      "mean": 0.5895
+    },
+    "n_users": 3894,
+    "ndcg_at_10": {
+      "ci_high": 0.385488,
+      "ci_low": 0.368627,
+      "mean": 0.37673
+    },
+    "ndcg_at_20": {
+      "ci_high": 0.36446,
+      "ci_low": 0.349841,
+      "mean": 0.357004
+    },
+    "novelty_at_10": {
+      "ci_high": 2.177145,
+      "ci_low": 2.127576,
+      "mean": 2.151479
+    },
+    "novelty_at_20": {
+      "ci_high": 2.350803,
+      "ci_low": 2.303464,
+      "mean": 2.327335
+    },
+    "popularity_at_10": {
+      "ci_high": 0.283963,
+      "ci_low": 0.278689,
+      "mean": 0.281334
+    },
+    "popularity_at_20": {
+      "ci_high": 0.253319,
+      "ci_low": 0.249119,
+      "mean": 0.251135
+    },
+    "recall_at_10": {
+      "ci_high": 0.079761,
+      "ci_low": 0.07456,
+      "mean": 0.077186
+    },
+    "recall_at_20": {
+      "ci_high": 0.134259,
+      "ci_low": 0.126783,
+      "mean": 0.130581
+    }
+  },
+  "split": "val",
+  "warm": {
+    "coverage_at_10": 0.082324,
+    "coverage_at_20": 0.107881,
+    "mrr_at_10": {
+      "ci_high": 0.214672,
+      "ci_low": 0.197247,
+      "mean": 0.206417
+    },
+    "mrr_at_20": {
+      "ci_high": 0.223044,
+      "ci_low": 0.205675,
+      "mean": 0.214731
+    },
+    "n_users": 5795,
+    "ndcg_at_10": {
+      "ci_high": 0.110398,
+      "ci_low": 0.101032,
+      "mean": 0.105677
+    },
+    "ndcg_at_20": {
+      "ci_high": 0.109185,
+      "ci_low": 0.101021,
+      "mean": 0.105277
+    },
+    "novelty_at_10": {
+      "ci_high": 2.780358,
+      "ci_low": 2.745216,
+      "mean": 2.763313
+    },
+    "novelty_at_20": {
+      "ci_high": 2.964705,
+      "ci_low": 2.931269,
+      "mean": 2.947988
+    },
+    "popularity_at_10": {
+      "ci_high": 0.191826,
+      "ci_low": 0.188519,
+      "mean": 0.190104
+    },
+    "popularity_at_20": {
+      "ci_high": 0.173269,
+      "ci_low": 0.1705,
+      "mean": 0.171854
+    },
+    "recall_at_10": {
+      "ci_high": 0.048417,
+      "ci_low": 0.042752,
+      "mean": 0.04559
+    },
+    "recall_at_20": {
+      "ci_high": 0.080181,
+      "ci_low": 0.072832,
+      "mean": 0.076564
+    },
+    "segments": {
+      "history_20_to_99": {
+        "mrr_at_10": 0.216047,
+        "mrr_at_20": 0.223923,
+        "n_users": 1514,
+        "ndcg_at_10": 0.119273,
+        "ndcg_at_20": 0.123997,
+        "novelty_at_10": 2.493259,
+        "novelty_at_20": 2.655079,
+        "popularity_at_10": 0.223169,
+        "popularity_at_20": 0.203025,
+        "recall_at_10": 0.065873,
+        "recall_at_20": 0.110906
+      },
+      "history_ge_100": {
+        "mrr_at_10": 0.195717,
+        "mrr_at_20": 0.204341,
+        "n_users": 4053,
+        "ndcg_at_10": 0.095432,
+        "ndcg_at_20": 0.093145,
+        "novelty_at_10": 2.874406,
+        "novelty_at_20": 3.069308,
+        "popularity_at_10": 0.175337,
+        "popularity_at_20": 0.157982,
+        "recall_at_10": 0.035176,
+        "recall_at_20": 0.059582
+      },
+      "history_lt_20": {
+        "mrr_at_10": 0.33267,
+        "mrr_at_20": 0.33839,
+        "n_users": 228,
+        "ndcg_at_10": 0.197516,
+        "ndcg_at_20": 0.196619,
+        "novelty_at_10": 2.581753,
+        "novelty_at_20": 2.736378,
+        "popularity_at_10": 0.233045,
+        "popularity_at_20": 0.21148,
+        "recall_at_10": 0.09603,
+        "recall_at_20": 0.15039
+      }
+    }
+  }
+}
