@@ -64,7 +64,7 @@ stages:
 
   # One train and one evaluate stage per model, e.g. `dvc repro evaluate@item_knn`.
   train:
-    foreach: [popularity, item_knn]
+    foreach: [popularity, item_knn, ials, ease, sasrec]
     do:
       cmd: python -m recsys.models.train ${item}
       deps:
@@ -76,12 +76,13 @@ stages:
         - src/recsys/models/${item}.py
         - src/recsys/utils/io.py
       params:
+        - seed  # random initialisation and sampling (ials, sasrec)
         - models.${item}
       outs:
         - models/${item}
 
   evaluate:
-    foreach: [popularity, item_knn]
+    foreach: [popularity, item_knn, ials, ease, sasrec]
     do:
       cmd: python -m recsys.evaluation.evaluate ${item}
       deps:

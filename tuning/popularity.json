@@ -1,0 +1,115 @@
+{
+  "best_params": {
+    "half_life_days": 30
+  },
+  "best_scores": {
+    "all": 0.191727,
+    "onboarding": 0.292541,
+    "warm": 0.123985
+  },
+  "best_trial": 7,
+  "metric": "ndcg_at_10",
+  "model": "popularity",
+  "seed": 42,
+  "trials": [
+    {
+      "all": 0.184979,
+      "number": 0,
+      "onboarding": 0.291934,
+      "params": {
+        "half_life_days": 45
+      },
+      "warm": 0.113109
+    },
+    {
+      "all": 0.162973,
+      "number": 1,
+      "onboarding": 0.312207,
+      "params": {
+        "half_life_days": null
+      },
+      "warm": 0.062695
+    },
+    {
+      "all": 0.169468,
+      "number": 2,
+      "onboarding": 0.319357,
+      "params": {
+        "half_life_days": 365
+      },
+      "warm": 0.06875
+    },
+    {
+      "all": 0.165756,
+      "number": 3,
+      "onboarding": 0.31618,
+      "params": {
+        "half_life_days": 730
+      },
+      "warm": 0.064677
+    },
+    {
+      "all": 0.182505,
+      "number": 4,
+      "onboarding": 0.239341,
+      "params": {
+        "half_life_days": 14
+      },
+      "warm": 0.144313
+    },
+    {
+      "all": 0.172242,
+      "number": 5,
+      "onboarding": 0.23014,
+      "params": {
+        "half_life_days": 7
+      },
+      "warm": 0.133337
+    },
+    {
+      "all": 0.172404,
+      "number": 6,
+      "onboarding": 0.319204,
+      "params": {
+        "half_life_days": 180
+      },
+      "warm": 0.073761
+    },
+    {
+      "all": 0.191727,
+      "number": 7,
+      "onboarding": 0.292541,
+      "params": {
+        "half_life_days": 30
+      },
+      "warm": 0.123985
+    },
+    {
+      "all": 0.183463,
+      "number": 8,
+      "onboarding": 0.311094,
+      "params": {
+        "half_life_days": 90
+      },
+      "warm": 0.097701
+    },
+    {
+      "all": 0.188546,
+      "number": 9,
+      "onboarding": 0.264836,
+      "params": {
+        "half_life_days": 21
+      },
+      "warm": 0.137283
+    },
+    {
+      "all": 0.183958,
+      "number": 10,
+      "onboarding": 0.29106,
+      "params": {
+        "half_life_days": 60
+      },
+      "warm": 0.11199
+    }
+  ]
+}

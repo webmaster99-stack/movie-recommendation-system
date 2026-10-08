@@ -5,6 +5,7 @@ DVC-tracked files, which have to be identical on every run.
 """
 
 import argparse
+import logging
 import time
 from pathlib import Path
 
@@ -27,13 +28,15 @@ def main() -> None:
     parser.add_argument("model", choices=sorted(MODELS))
     name = parser.parse_args().model
 
+    logging.basicConfig(format="%(message)s")
+    logging.getLogger("recsys").setLevel(logging.INFO)  # per-epoch progress
     params = load_params()
     make_deterministic(params["seed"], params["runtime"]["num_threads"])
     train = pd.read_parquet(SPLITS_DIR / "train.parquet")
     n_items = len(pd.read_parquet(PROCESSED_DIR / "item_map.parquet"))
 
     with tracked_run(f"train-{name}", tags={"model": name, "stage": "train"}):
-        model = build_model(name, params["models"][name])
+        model = build_model(name, params["models"][name], params["seed"])
         mlflow.log_params(model.params)
         start = time.perf_counter()
         model.fit(train, n_items)

@@ -1,155 +1,155 @@
 {
   "model": "item_knn",
-  "model_size_bytes": 15489825,
+  "model_size_bytes": 130823050,
   "onboarding": {
-    "coverage_at_10": 0.044904,
-    "coverage_at_20": 0.064454,
+    "coverage_at_10": 0.042766,
+    "coverage_at_20": 0.058599,
     "mrr_at_10": {
-      "ci_high": 0.577145,
-      "ci_low": 0.551723,
-      "mean": 0.564335
+      "ci_high": 0.580945,
+      "ci_low": 0.555886,
+      "mean": 0.567909
     },
     "mrr_at_20": {
-      "ci_high": 0.581859,
-      "ci_low": 0.556775,
-      "mean": 0.56911
+      "ci_high": 0.58562,
+      "ci_low": 0.560795,
+      "mean": 0.572657
     },
     "n_users": 3894,
     "ndcg_at_10": {
-      "ci_high": 0.378395,
-      "ci_low": 0.360918,
-      "mean": 0.369261
+      "ci_high": 0.382687,
+      "ci_low": 0.364712,
+      "mean": 0.373451
     },
     "ndcg_at_20": {
-      "ci_high": 0.359572,
-      "ci_low": 0.343763,
-      "mean": 0.351191
+      "ci_high": 0.364714,
+      "ci_low": 0.348941,
+      "mean": 0.356367
     },
     "novelty_at_10": {
-      "ci_high": 1.721085,
-      "ci_low": 1.670644,
-      "mean": 1.695483
+      "ci_high": 1.696295,
+      "ci_low": 1.646922,
+      "mean": 1.670968
     },
     "novelty_at_20": {
-      "ci_high": 1.857867,
-      "ci_low": 1.810461,
-      "mean": 1.833496
+      "ci_high": 1.840368,
+      "ci_low": 1.796528,
+      "mean": 1.817074
     },
     "popularity_at_10": {
-      "ci_high": 0.353745,
-      "ci_low": 0.348639,
-      "mean": 0.351186
+      "ci_high": 0.359016,
+      "ci_low": 0.353521,
+      "mean": 0.356284
     },
     "popularity_at_20": {
-      "ci_high": 0.319649,
-      "ci_low": 0.315596,
-      "mean": 0.317657
+      "ci_high": 0.321894,
+      "ci_low": 0.317607,
+      "mean": 0.319762
     },
     "recall_at_10": {
-      "ci_high": 0.073324,
-      "ci_low": 0.068073,
-      "mean": 0.070599
+      "ci_high": 0.074683,
+      "ci_low": 0.069425,
+      "mean": 0.071944
     },
     "recall_at_20": {
-      "ci_high": 0.123779,
-      "ci_low": 0.116556,
-      "mean": 0.120164
+      "ci_high": 0.127583,
+      "ci_low": 0.120361,
+      "mean": 0.123937
     }
   },
   "split": "val",
   "warm": {
-    "coverage_at_10": 0.030649,
-    "coverage_at_20": 0.045311,
+    "coverage_at_10": 0.034161,
+    "coverage_at_20": 0.047551,
     "mrr_at_10": {
-      "ci_high": 0.167013,
-      "ci_low": 0.151514,
-      "mean": 0.158983
+      "ci_high": 0.173636,
+      "ci_low": 0.157042,
+      "mean": 0.165621
     },
     "mrr_at_20": {
-      "ci_high": 0.173636,
-      "ci_low": 0.158228,
-      "mean": 0.165728
+      "ci_high": 0.180437,
+      "ci_low": 0.163797,
+      "mean": 0.172433
     },
     "n_users": 5795,
     "ndcg_at_10": {
-      "ci_high": 0.08516,
-      "ci_low": 0.076572,
-      "mean": 0.080917
+      "ci_high": 0.088149,
+      "ci_low": 0.079442,
+      "mean": 0.083887
     },
     "ndcg_at_20": {
-      "ci_high": 0.082592,
-      "ci_low": 0.075298,
-      "mean": 0.079004
+      "ci_high": 0.086372,
+      "ci_low": 0.07878,
+      "mean": 0.082602
     },
     "novelty_at_10": {
-      "ci_high": 1.83707,
-      "ci_low": 1.809177,
-      "mean": 1.823377
+      "ci_high": 1.980762,
+      "ci_low": 1.949702,
+      "mean": 1.965572
     },
     "novelty_at_20": {
-      "ci_high": 1.97045,
-      "ci_low": 1.943789,
-      "mean": 1.9568
+      "ci_high": 2.103529,
+      "ci_low": 2.075004,
+      "mean": 2.088915
     },
     "popularity_at_10": {
-      "ci_high": 0.310997,
-      "ci_low": 0.307793,
-      "mean": 0.309337
+      "ci_high": 0.287868,
+      "ci_low": 0.283939,
+      "mean": 0.285861
     },
     "popularity_at_20": {
-      "ci_high": 0.285123,
-      "ci_low": 0.282324,
-      "mean": 0.28371
+      "ci_high": 0.264647,
+      "ci_low": 0.26146,
+      "mean": 0.263046
     },
     "recall_at_10": {
-      "ci_high": 0.036854,
-      "ci_low": 0.031902,
-      "mean": 0.034341
+      "ci_high": 0.037636,
+      "ci_low": 0.03242,
+      "mean": 0.034946
     },
     "recall_at_20": {
-      "ci_high": 0.058637,
-      "ci_low": 0.052124,
-      "mean": 0.055235
+      "ci_high": 0.061177,
+      "ci_low": 0.054434,
+      "mean": 0.057759
     },
     "segments": {
       "history_20_to_99": {
-        "mrr_at_10": 0.177457,
-        "mrr_at_20": 0.18406,
+        "mrr_at_10": 0.188315,
+        "mrr_at_20": 0.195707,
         "n_users": 1514,
-        "ndcg_at_10": 0.096726,
-        "ndcg_at_20": 0.098744,
-        "novelty_at_10": 1.752971,
-        "novelty_at_20": 1.860718,
-        "popularity_at_10": 0.327413,
-        "popularity_at_20": 0.304128,
-        "recall_at_10": 0.051089,
-        "recall_at_20": 0.080925
+        "ndcg_at_10": 0.100285,
+        "ndcg_at_20": 0.104125,
+        "novelty_at_10": 1.792372,
+        "novelty_at_20": 1.914928,
+        "popularity_at_10": 0.32082,
+        "popularity_at_20": 0.294351,
+        "recall_at_10": 0.052581,
+        "recall_at_20": 0.088463
       },
       "history_ge_100": {
-        "mrr_at_10": 0.143581,
-        "mrr_at_20": 0.1503,
+        "mrr_at_10": 0.14912,
+        "mrr_at_20": 0.155754,
         "n_users": 4053,
-        "ndcg_at_10": 0.069207,
-        "ndcg_at_20": 0.0657,
-        "novelty_at_10": 1.840406,
-        "novelty_at_20": 1.985421,
-        "popularity_at_10": 0.302174,
-        "popularity_at_20": 0.27555,
-        "recall_at_10": 0.024898,
-        "recall_at_20": 0.040346
+        "ndcg_at_10": 0.071723,
+        "ndcg_at_20": 0.068525,
+        "novelty_at_10": 2.031194,
+        "novelty_at_20": 2.155921,
+        "popularity_at_10": 0.270729,
+        "popularity_at_20": 0.249455,
+        "recall_at_10": 0.024571,
+        "recall_at_20": 0.041224
       },
       "history_lt_20": {
-        "mrr_at_10": 0.310096,
-        "mrr_at_20": 0.318247,
+        "mrr_at_10": 0.308241,
+        "mrr_at_20": 0.314364,
         "n_users": 228,
-        "ndcg_at_10": 0.184113,
-        "ndcg_at_20": 0.184419,
-        "novelty_at_10": 1.988189,
-        "novelty_at_20": 2.086058,
-        "popularity_at_10": 0.316619,
-        "popularity_at_20": 0.293194,
-        "recall_at_10": 0.090997,
-        "recall_at_20": 0.149314
+        "ndcg_at_10": 0.191238,
+        "ndcg_at_20": 0.18993,
+        "novelty_at_10": 1.949146,
+        "novelty_at_20": 2.053119,
+        "popularity_at_10": 0.322712,
+        "popularity_at_20": 0.296776,
+        "recall_at_10": 0.102269,
+        "recall_at_20": 0.147807
       }
     }
   }

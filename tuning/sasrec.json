@@ -1,0 +1,140 @@
+{
+  "best_params": {
+    "batch_size": 256,
+    "dropout": 0.2395,
+    "epochs": 10,
+    "hidden_dim": 64,
+    "learning_rate": 0.002352,
+    "max_len": 50,
+    "max_users": null,
+    "n_blocks": 2,
+    "n_heads": 1,
+    "n_negatives": 1024,
+    "weight_decay": 0.0
+  },
+  "best_scores": {
+    "all": 0.160995,
+    "onboarding": 0.303433,
+    "warm": 0.065282
+  },
+  "best_trial": 2,
+  "metric": "ndcg_at_10",
+  "model": "sasrec",
+  "seed": 42,
+  "trials": [
+    {
+      "all": 0.155622,
+      "number": 0,
+      "onboarding": 0.298353,
+      "params": {
+        "batch_size": 256,
+        "dropout": 0.2,
+        "epochs": 10,
+        "hidden_dim": 64,
+        "learning_rate": 0.001,
+        "max_len": 50,
+        "max_users": null,
+        "n_blocks": 2,
+        "n_heads": 1,
+        "n_negatives": 1024,
+        "weight_decay": 0.0
+      },
+      "warm": 0.059713
+    },
+    {
+      "all": 0.153166,
+      "number": 1,
+      "onboarding": 0.294109,
+      "params": {
+        "batch_size": 256,
+        "dropout": 0.3803,
+        "epochs": 10,
+        "hidden_dim": 64,
+        "learning_rate": 0.0008605,
+        "max_len": 50,
+        "max_users": null,
+        "n_blocks": 2,
+        "n_heads": 1,
+        "n_negatives": 1024,
+        "weight_decay": 0.0
+      },
+      "warm": 0.058458
+    },
+    {
+      "all": 0.160995,
+      "number": 2,
+      "onboarding": 0.303433,
+      "params": {
+        "batch_size": 256,
+        "dropout": 0.2395,
+        "epochs": 10,
+        "hidden_dim": 64,
+        "learning_rate": 0.002352,
+        "max_len": 50,
+        "max_users": null,
+        "n_blocks": 2,
+        "n_heads": 1,
+        "n_negatives": 1024,
+        "weight_decay": 0.0
+      },
+      "warm": 0.065282
+    },
+    {
+      "all": 0.154274,
+      "number": 3,
+      "onboarding": 0.293382,
+      "params": {
+        "batch_size": 256,
+        "dropout": 0.0624,
+        "epochs": 10,
+        "hidden_dim": 64,
+        "learning_rate": 0.0004653,
+        "max_len": 50,
+        "max_users": null,
+        "n_blocks": 2,
+        "n_heads": 1,
+        "n_negatives": 1024,
+        "weight_decay": 0.0
+      },
+      "warm": 0.060799
+    },
+    {
+      "all": 0.145888,
+      "number": 4,
+      "onboarding": 0.283768,
+      "params": {
+        "batch_size": 256,
+        "dropout": 0.3465,
+        "epochs": 10,
+        "hidden_dim": 64,
+        "learning_rate": 0.0003533,
+        "max_len": 50,
+        "max_users": null,
+        "n_blocks": 2,
+        "n_heads": 1,
+        "n_negatives": 1024,
+        "weight_decay": 0.0
+      },
+      "warm": 0.053239
+    },
+    {
+      "all": 0.155847,
+      "number": 5,
+      "onboarding": 0.295971,
+      "params": {
+        "batch_size": 256,
+        "dropout": 0.2832,
+        "epochs": 10,
+        "hidden_dim": 64,
+        "learning_rate": 0.001628,
+        "max_len": 50,
+        "max_users": null,
+        "n_blocks": 2,
+        "n_heads": 1,
+        "n_negatives": 1024,
+        "weight_decay": 0.0
+      },
+      "warm": 0.06169
+    }
+  ]
+}

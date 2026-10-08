@@ -27,16 +27,82 @@ split:
   val_start: "2022-01-01"
   test_start: "2023-01-01"
 
-# Starting values, not tuned yet: Phase 3 searches these on the validation split with Optuna.
+# Tuned values, copied from tuning/<model>.json (`python -m recsys.tuning.tune <model>` searches
+# them on the validation split). A test fails if the two disagree. Values that are not in the
+# model's search space under `tuning` below are fixed choices.
 models:
   popularity:
-    half_life_days: null  # null = plain counts; a number down-weights old interactions
+    half_life_days: 30  # an interaction counts half as much every 30 days; null = plain counts
   item_knn:
-    k: 100  # neighbours kept per movie
-    similarity: cosine  # cosine | bm25
-    shrinkage: 20.0  # cosine only: damps similarities backed by few users
-    bm25_k1: 1.2  # bm25 only
-    bm25_b: 0.75  # bm25 only
+    k: 853  # neighbours kept per movie
+    similarity: cosine  # cosine | bm25 (bm25 adds bm25_k1 and bm25_b)
+    shrinkage: 19.53  # cosine only: damps similarities backed by few users
+  ials:
+    factors: 110  # length of each movie/user vector
+    regularization: 19.25
+    alpha: 2.945  # weight of a liked movie relative to an unseen one
+    iterations: 21
+  ease:
+    l2: 1138.0  # the one real hyperparameter: higher = smoother, more popular recommendations
+    # Weights kept per movie (largest absolute values), stored sparse. null = all 19,642,
+    # a dense 1.5 GB matrix. Not searched: it trades accuracy for size (see Phase 4).
+    keep_per_item: 1000
+  sasrec:
+    hidden_dim: 64
+    n_blocks: 2
+    n_heads: 1
+    max_len: 50  # most recent likes the model reads
+    dropout: 0.2395
+    learning_rate: 0.002352
+    weight_decay: 0.0
+    epochs: 10  # ~2 min each on a 4-core laptop CPU, which is what caps this model
+    batch_size: 256
+    n_negatives: 1024  # random movies per batch in the softmax; null = the whole catalog
+    max_users: null  # train on a random subset of users to cut CPU time; null = everyone
+
+# Optuna search per model (seeded TPE, one trial at a time, so a rerun repeats the same trials).
+# `enqueue` lists starting points tried first: the untuned Phase 2/3 values, so the search
+# can only match or beat them. `when` samples a value only if an earlier one has the given value.
+tuning:
+  metric: ndcg_at_10  # averaged over all validation users, warm and onboarding together
+  models:
+    popularity:
+      grid: true  # one cheap hyperparameter: try every value once instead of sampling
+      space:
+        half_life_days:
+          {type: categorical, choices: [null, 7, 14, 21, 30, 45, 60, 90, 180, 365, 730]}
+    item_knn:
+      n_trials: 30
+      space:
+        k: {type: int, low: 10, high: 1000, log: true}
+        similarity: {type: categorical, choices: [cosine, bm25]}
+        shrinkage: {type: float, low: 0.0, high: 200.0, when: {similarity: cosine}}
+        bm25_k1: {type: float, low: 0.1, high: 3.0, when: {similarity: bm25}}
+        bm25_b: {type: float, low: 0.0, high: 1.0, when: {similarity: bm25}}
+      enqueue:
+        - {k: 100, similarity: cosine, shrinkage: 20.0}
+    ials:
+      n_trials: 30
+      space:
+        factors: {type: int, low: 32, high: 256, log: true}
+        regularization: {type: float, low: 0.001, high: 100.0, log: true}
+        alpha: {type: float, low: 1.0, high: 50.0, log: true}
+        iterations: {type: int, low: 5, high: 30}
+      enqueue:
+        - {factors: 64, regularization: 0.01, alpha: 1.0, iterations: 15}
+    ease:
+      n_trials: 8
+      space:
+        l2: {type: float, low: 20.0, high: 5000.0, log: true}
+      enqueue:
+        - {l2: 500.0}
+    sasrec:
+      n_trials: 6  # ~20 min per trial on CPU, so a small search with epochs held fixed
+      space:
+        learning_rate: {type: float, low: 0.0003, high: 0.005, log: true}
+        dropout: {type: float, low: 0.0, high: 0.4}
+      enqueue:
+        - {learning_rate: 0.001, dropout: 0.2}
 
 evaluation:
   ks: [10, 20]
