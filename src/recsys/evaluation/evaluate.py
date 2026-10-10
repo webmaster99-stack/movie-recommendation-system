@@ -1,17 +1,22 @@
-"""Stage `evaluate@<model>`: score a trained model on the validation split.
+"""Stages `evaluate@<model>` and `test@<model>`: score a trained model on one split.
+
+- `evaluate` scores `models/<model>` (trained on the training split) on validation. Tuning
+  and model selection only ever look at these numbers.
+- `test` (`--split test`) scores `models/final/<model>` (refitted on training + validation)
+  on the test split. It runs once, with the hyperparameters already fixed, and nothing is
+  chosen from its results.
 
 Every model is ranked against the whole catalog (no sampled negatives, which distort model
 comparisons; Krichene & Rendle 2020) with the movies in the user's history excluded.
 
 Outputs:
-- `metrics/val_<model>.json`: means with bootstrap confidence intervals, per scenario.
-- `data/evaluation/val/<model>.parquet`: the per-user values behind those means, kept so
-  that models can be compared with paired significance tests in Phase 4.
+- `metrics/<split>_<model>.json`: means with bootstrap confidence intervals for returning
+  users (`warm`), new users (`onboarding`) and both pooled (`all`).
+- `data/evaluation/<split>/<model>.parquet`: the per-user values behind those means, which
+  the `compare` stage uses for paired significance tests.
 
 Latency goes to MLflow only: it varies run to run and would break the reproducibility check
 if it were written to a DVC-tracked file.
-
-The test split is never touched here. It is evaluated once, in Phase 4, after tuning.
 """
 
 import argparse
@@ -25,16 +30,18 @@ import pandas as pd
 
 from recsys.evaluation import metrics
 from recsys.evaluation.protocol import EvalSet, onboarding_eval_set, warm_eval_set
-from recsys.models import MODELS, load_model
+from recsys.models import MODELS, base_name, load_fitted
 from recsys.models.base import History, ItemIds, Recommender
 from recsys.models.train import dir_size_bytes
 from recsys.utils.config import load_params
 from recsys.utils.io import write_json, write_parquet
 from recsys.utils.mlflow_utils import tracked_run
-from recsys.utils.paths import EVAL_DIR, METRICS_DIR, MODELS_DIR, SPLITS_DIR
+from recsys.utils.paths import EVAL_DIR, FINAL_MODELS_DIR, METRICS_DIR, MODELS_DIR, SPLITS_DIR
 from recsys.utils.seed import make_deterministic
 
 _SPLIT_ORDER = ("train", "val", "test")
+# Where the model that scores each split lives: it is trained on everything before the split.
+_MODELS_DIRS = {"val": MODELS_DIR, "test": FINAL_MODELS_DIR}
 _ID_COLUMNS = ("user_idx", "history_len", "n_targets")
 _DECIMALS = 6
 
@@ -155,14 +162,17 @@ def flatten(nested: dict[str, Any], prefix: str) -> dict[str, float]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("model", choices=sorted(MODELS))
-    name = parser.parse_args().model
-    split = "val"
+    parser.add_argument("--split", choices=sorted(_MODELS_DIRS), default="val")
+    args = parser.parse_args()
+    name: str = args.model
+    split: str = args.split
 
     params = load_params()
     cfg = params["evaluation"]
     rng = make_deterministic(params["seed"], params["runtime"]["num_threads"])
     history, targets = load_split(split)
-    model = load_model(name, MODELS_DIR / name)
+    models_dir = _MODELS_DIRS[split]
+    model = load_fitted(name, models_dir, params["models"][name], history)
     popularity = item_popularity(history, model.n_items)
     bootstrap = cfg["bootstrap"]
 
@@ -176,7 +186,9 @@ def main() -> None:
     results: dict[str, Any] = {
         "model": name,
         "split": split,
-        "model_size_bytes": dir_size_bytes(MODELS_DIR / name),
+        # A recency variant is its base model plus one float32 per movie.
+        "model_size_bytes": dir_size_bytes(models_dir / base_name(name))
+        + (0 if base_name(name) == name else 4 * model.n_items),
     }
     frames = []
     for scenario, (eval_set, segment_edges) in scenarios.items():
@@ -186,8 +198,18 @@ def main() -> None:
         )
         per_user.insert(0, "scenario", scenario)
         frames.append(per_user)
+    # Both scenarios pooled, each user counting once: the number models are tuned and
+    # selected on. Catalog coverage is per scenario, so it is not repeated here.
+    all_users = pd.concat(frames, ignore_index=True)
+    results["all"] = summarize(
+        all_users.drop(columns="scenario"),
+        {},
+        rng,
+        bootstrap["n_resamples"],
+        bootstrap["confidence"],
+    )
 
-    write_parquet(pd.concat(frames, ignore_index=True), EVAL_DIR / split / f"{name}.parquet")
+    write_parquet(all_users, EVAL_DIR / split / f"{name}.parquet")
     write_json(results, METRICS_DIR / f"{split}_{name}.json")
 
     warm_histories = scenarios["warm"][0].histories[: cfg["latency_users"]]
@@ -197,7 +219,7 @@ def main() -> None:
         mlflow.log_metrics(measure_latency(model, warm_histories, max(cfg["ks"])))
         mlflow.log_artifact(str(METRICS_DIR / f"{split}_{name}.json"))
 
-    for scenario in scenarios:
+    for scenario in (*scenarios, "all"):
         ndcg = results[scenario]["ndcg_at_10"]
         print(
             f"{name} {split} {scenario}: NDCG@10 {ndcg['mean']:.4f} "

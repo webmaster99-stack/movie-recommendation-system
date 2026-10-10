@@ -94,6 +94,11 @@ def test_params_use_the_tuned_values(name: str) -> None:
     if not path.exists():
         pytest.skip(f"{name} has not been tuned yet")
     result = json.loads(path.read_text(encoding="utf-8"))
-    assert load_params()["models"][name] == result["best_params"]
+    params = load_params()
+    # Values outside the search space are fixed choices and may change after the search
+    # (EASE's keep_per_item is set by the pruning study), so only searched values must match.
+    searched = set(params["tuning"]["models"][name]["space"])
+    tuned = {k: v for k, v in result["best_params"].items() if k in searched}
+    assert {k: v for k, v in params["models"][name].items() if k in searched} == tuned
     assert result["best_scores"]["all"] == max(t["all"] for t in result["trials"])
     assert np.isfinite(result["best_scores"]["all"])

@@ -1,0 +1,22 @@
+name: Reproducibility
+
+# Runs the whole DVC pipeline twice on a small synthetic dataset and fails if any output file
+# differs between the two runs. It doubles as a smoke test of every stage and of dvc.yaml.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  repro-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.9.11"
+      - name: Install (exactly as locked)
+        run: uv sync --frozen
+      - name: Run the pipeline twice and compare
+        run: uv run python scripts/repro_check.py

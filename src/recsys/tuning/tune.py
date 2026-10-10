@@ -1,7 +1,9 @@
 """Hyperparameter search for one model: `python -m recsys.tuning.tune <model>`.
 
 Each trial trains the model on the training split with one set of hyperparameters and
-scores it on the validation split, exactly as the `evaluate` stage does. The score is
+scores it on the validation split, exactly as the `evaluate` stage does. (A recency variant
+does not retrain anything: a trial recomputes its prior and reuses the base model saved in
+`models/`.) The score is
 `tuning.metric` averaged over all validation users, warm and onboarding together, so each
 user counts once. The test split is never read.
 
@@ -31,12 +33,13 @@ import pandas as pd
 from recsys.evaluation.evaluate import evaluate, item_popularity, load_split
 from recsys.evaluation.metrics import Floats
 from recsys.evaluation.protocol import EvalSet, onboarding_eval_set, warm_eval_set
-from recsys.models import MODELS, build_model
+from recsys.models import MODELS, base_name, build_model, load_model
 from recsys.models.base import Recommender
+from recsys.models.recency import Recency
 from recsys.utils.config import load_params
 from recsys.utils.io import write_json
 from recsys.utils.mlflow_utils import tracked_run
-from recsys.utils.paths import PROCESSED_DIR, TUNING_DIR
+from recsys.utils.paths import MODELS_DIR, PROCESSED_DIR, TUNING_DIR
 from recsys.utils.seed import make_deterministic
 
 _DECIMALS = 6
@@ -118,6 +121,10 @@ def main() -> None:
     # Hyperparameters that are not searched keep their value from `models.<model>`.
     fixed = {k: v for k, v in params["models"][name].items() if k not in spec["space"]}
     done: dict[str, dict[str, float]] = {}  # the sampler can propose the same values twice
+    # A recency variant is tuned on top of its base model as trained by the pipeline.
+    base = None
+    if base_name(name) != name:
+        base = load_model(base_name(name), MODELS_DIR / base_name(name))
 
     def objective(trial: optuna.Trial) -> float:
         model_params = {**fixed, **suggest(trial, spec["space"])}
@@ -128,6 +135,8 @@ def main() -> None:
             if key not in done:
                 start = time.perf_counter()
                 model = build_model(name, model_params, seed).fit(train, n_items)
+                if isinstance(model, Recency) and base is not None:
+                    model.wrap(base)
                 mlflow.log_metric("train_seconds", time.perf_counter() - start)
                 done[key] = validation_scores(
                     model, eval_sets, cfg["metric"], popularity, params["evaluation"]["batch_size"]

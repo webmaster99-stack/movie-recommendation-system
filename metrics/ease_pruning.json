@@ -1,0 +1,56 @@
+{
+  "l2": 1138.0,
+  "max_relative_drop": 0.001,
+  "metric": "ndcg_at_10",
+  "recommended_keep_per_item": 500,
+  "variants": [
+    {
+      "all": 0.214792,
+      "keep_per_item": null,
+      "onboarding": 0.376677,
+      "relative_drop": 0.0,
+      "size_mb": 1543.2,
+      "warm": 0.106012
+    },
+    {
+      "all": 0.214702,
+      "keep_per_item": 2000,
+      "onboarding": 0.376699,
+      "relative_drop": 0.000419,
+      "size_mb": 314.3,
+      "warm": 0.105847
+    },
+    {
+      "all": 0.214613,
+      "keep_per_item": 1000,
+      "onboarding": 0.37673,
+      "relative_drop": 0.000833,
+      "size_mb": 157.1,
+      "warm": 0.105677
+    },
+    {
+      "all": 0.214758,
+      "keep_per_item": 500,
+      "onboarding": 0.3762,
+      "relative_drop": 0.000158,
+      "size_mb": 78.6,
+      "warm": 0.106275
+    },
+    {
+      "all": 0.213953,
+      "keep_per_item": 200,
+      "onboarding": 0.37608,
+      "relative_drop": 0.003906,
+      "size_mb": 31.4,
+      "warm": 0.105009
+    },
+    {
+      "all": 0.212797,
+      "keep_per_item": 100,
+      "onboarding": 0.375678,
+      "relative_drop": 0.009288,
+      "size_mb": 15.7,
+      "warm": 0.103348
+    }
+  ]
+}

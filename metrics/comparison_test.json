@@ -1,0 +1,1168 @@
+{
+  "alpha": 0.05,
+  "metric": "ndcg_at_10",
+  "scopes": {
+    "all": {
+      "means": {
+        "ease": 0.220841,
+        "ease_recency": 0.233694,
+        "ials": 0.209141,
+        "ials_recency": 0.233755,
+        "item_knn": 0.207202,
+        "item_knn_recency": 0.207091,
+        "popularity": 0.175757,
+        "sasrec": 0.168567,
+        "sasrec_recency": 0.209941
+      },
+      "n_users": 8686,
+      "pairs": [
+        {
+          "better": "ials_recency",
+          "ci_high": 0.001938,
+          "ci_low": -0.001789,
+          "difference": 6.1e-05,
+          "p_adjusted": 1.0,
+          "p_value": 0.9474,
+          "significant": false,
+          "worse": "ease_recency"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.015962,
+          "ci_low": 0.010066,
+          "difference": 0.012913,
+          "p_adjusted": 1.01e-17,
+          "p_value": 1.01e-18,
+          "significant": true,
+          "worse": "ease"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.027389,
+          "ci_low": 0.020332,
+          "difference": 0.023814,
+          "p_adjusted": 3.046e-41,
+          "p_value": 2.031e-42,
+          "significant": true,
+          "worse": "sasrec_recency"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.027307,
+          "ci_low": 0.021875,
+          "difference": 0.024613,
+          "p_adjusted": 5.546e-71,
+          "p_value": 2.219e-72,
+          "significant": true,
+          "worse": "ials"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.030097,
+          "ci_low": 0.023069,
+          "difference": 0.026552,
+          "p_adjusted": 4.355e-48,
+          "p_value": 2.178e-49,
+          "significant": true,
+          "worse": "item_knn"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.030187,
+          "ci_low": 0.023215,
+          "difference": 0.026664,
+          "p_adjusted": 1.506e-48,
+          "p_value": 7.17e-50,
+          "significant": true,
+          "worse": "item_knn_recency"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.061798,
+          "ci_low": 0.054102,
+          "difference": 0.057998,
+          "p_adjusted": 7.579e-190,
+          "p_value": 2.297e-191,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.068899,
+          "ci_low": 0.061442,
+          "difference": 0.065188,
+          "p_adjusted": 1.974e-212,
+          "p_value": 5.64e-214,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.015702,
+          "ci_low": 0.010011,
+          "difference": 0.012852,
+          "p_adjusted": 8.849e-18,
+          "p_value": 8.045e-19,
+          "significant": true,
+          "worse": "ease"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.026703,
+          "ci_low": 0.020869,
+          "difference": 0.023753,
+          "p_adjusted": 4.483e-56,
+          "p_value": 2.038e-57,
+          "significant": true,
+          "worse": "sasrec_recency"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.0278,
+          "ci_low": 0.021305,
+          "difference": 0.024552,
+          "p_adjusted": 6.056e-47,
+          "p_value": 3.188e-48,
+          "significant": true,
+          "worse": "ials"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.029717,
+          "ci_low": 0.023272,
+          "difference": 0.026491,
+          "p_adjusted": 1.371e-58,
+          "p_value": 5.961e-60,
+          "significant": true,
+          "worse": "item_knn"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.029829,
+          "ci_low": 0.023446,
+          "difference": 0.026603,
+          "p_adjusted": 1.855e-59,
+          "p_value": 7.731e-61,
+          "significant": true,
+          "worse": "item_knn_recency"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.061269,
+          "ci_low": 0.054617,
+          "difference": 0.057937,
+          "p_adjusted": 2.796e-240,
+          "p_value": 7.767e-242,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.068867,
+          "ci_low": 0.061143,
+          "difference": 0.065127,
+          "p_adjusted": 1.031e-209,
+          "p_value": 3.033e-211,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "ease",
+          "ci_high": 0.015256,
+          "ci_low": 0.006153,
+          "difference": 0.010901,
+          "p_adjusted": 9.771e-06,
+          "p_value": 1.086e-06,
+          "significant": true,
+          "worse": "sasrec_recency"
+        },
+        {
+          "better": "ease",
+          "ci_high": 0.013783,
+          "ci_low": 0.009647,
+          "difference": 0.0117,
+          "p_adjusted": 1.291e-27,
+          "p_value": 9.221e-29,
+          "significant": true,
+          "worse": "ials"
+        },
+        {
+          "better": "ease",
+          "ci_high": 0.016722,
+          "ci_low": 0.010635,
+          "difference": 0.013639,
+          "p_adjusted": 7.126e-19,
+          "p_value": 5.938e-20,
+          "significant": true,
+          "worse": "item_knn"
+        },
+        {
+          "better": "ease",
+          "ci_high": 0.016786,
+          "ci_low": 0.010745,
+          "difference": 0.013751,
+          "p_adjusted": 5.342e-19,
+          "p_value": 4.109e-20,
+          "significant": true,
+          "worse": "item_knn_recency"
+        },
+        {
+          "better": "ease",
+          "ci_high": 0.049711,
+          "ci_low": 0.04022,
+          "difference": 0.045085,
+          "p_adjusted": 3.621e-80,
+          "p_value": 1.293e-81,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "ease",
+          "ci_high": 0.056045,
+          "ci_low": 0.048548,
+          "difference": 0.052275,
+          "p_adjusted": 4.594e-149,
+          "p_value": 1.482e-150,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "sasrec_recency",
+          "ci_high": 0.005609,
+          "ci_low": -0.003771,
+          "difference": 0.0008,
+          "p_adjusted": 1.0,
+          "p_value": 0.7307,
+          "significant": false,
+          "worse": "ials"
+        },
+        {
+          "better": "sasrec_recency",
+          "ci_high": 0.006917,
+          "ci_low": -0.001152,
+          "difference": 0.002738,
+          "p_adjusted": 1.0,
+          "p_value": 0.1688,
+          "significant": false,
+          "worse": "item_knn"
+        },
+        {
+          "better": "sasrec_recency",
+          "ci_high": 0.006935,
+          "ci_low": -0.000954,
+          "difference": 0.00285,
+          "p_adjusted": 1.0,
+          "p_value": 0.1501,
+          "significant": false,
+          "worse": "item_knn_recency"
+        },
+        {
+          "better": "sasrec_recency",
+          "ci_high": 0.036337,
+          "ci_low": 0.032037,
+          "difference": 0.034184,
+          "p_adjusted": 5.041e-184,
+          "p_value": 1.575e-185,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "sasrec_recency",
+          "ci_high": 0.045278,
+          "ci_low": 0.037611,
+          "difference": 0.041374,
+          "p_adjusted": 1.284e-86,
+          "p_value": 4.427e-88,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "ials",
+          "ci_high": 0.00534,
+          "ci_low": -0.001284,
+          "difference": 0.001939,
+          "p_adjusted": 1.0,
+          "p_value": 0.2567,
+          "significant": false,
+          "worse": "item_knn"
+        },
+        {
+          "better": "ials",
+          "ci_high": 0.005383,
+          "ci_low": -0.001143,
+          "difference": 0.002051,
+          "p_adjusted": 1.0,
+          "p_value": 0.2315,
+          "significant": false,
+          "worse": "item_knn_recency"
+        },
+        {
+          "better": "ials",
+          "ci_high": 0.038047,
+          "ci_low": 0.028773,
+          "difference": 0.033385,
+          "p_adjusted": 1.399e-42,
+          "p_value": 8.742e-44,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "ials",
+          "ci_high": 0.044095,
+          "ci_low": 0.037049,
+          "difference": 0.040575,
+          "p_adjusted": 1.477e-93,
+          "p_value": 4.924e-95,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "item_knn",
+          "ci_high": 0.000366,
+          "ci_low": -0.000146,
+          "difference": 0.000112,
+          "p_adjusted": 1.0,
+          "p_value": 0.3794,
+          "significant": false,
+          "worse": "item_knn_recency"
+        },
+        {
+          "better": "item_knn",
+          "ci_high": 0.035541,
+          "ci_low": 0.027006,
+          "difference": 0.031446,
+          "p_adjusted": 1.264e-46,
+          "p_value": 7.022e-48,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "item_knn",
+          "ci_high": 0.042484,
+          "ci_low": 0.034954,
+          "difference": 0.038636,
+          "p_adjusted": 1.93e-79,
+          "p_value": 7.147e-81,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "item_knn_recency",
+          "ci_high": 0.035326,
+          "ci_low": 0.027019,
+          "difference": 0.031334,
+          "p_adjusted": 1.264e-46,
+          "p_value": 7.28e-48,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "item_knn_recency",
+          "ci_high": 0.04238,
+          "ci_low": 0.034788,
+          "difference": 0.038524,
+          "p_adjusted": 5.964e-79,
+          "p_value": 2.294e-80,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "popularity",
+          "ci_high": 0.01156,
+          "ci_low": 0.002911,
+          "difference": 0.00719,
+          "p_adjusted": 0.009081,
+          "p_value": 0.001135,
+          "significant": true,
+          "worse": "sasrec"
+        }
+      ],
+      "ranking": [
+        "ials_recency",
+        "ease_recency",
+        "ease",
+        "sasrec_recency",
+        "ials",
+        "item_knn",
+        "item_knn_recency",
+        "popularity",
+        "sasrec"
+      ]
+    },
+    "onboarding": {
+      "means": {
+        "ease": 0.393265,
+        "ease_recency": 0.38312,
+        "ials": 0.381847,
+        "ials_recency": 0.38433,
+        "item_knn": 0.396045,
+        "item_knn_recency": 0.396084,
+        "popularity": 0.270014,
+        "sasrec": 0.32574,
+        "sasrec_recency": 0.336177
+      },
+      "n_users": 3436,
+      "pairs": [
+        {
+          "better": "item_knn_recency",
+          "ci_high": 0.000476,
+          "ci_low": -0.000387,
+          "difference": 3.9e-05,
+          "p_adjusted": 1.0,
+          "p_value": 0.859,
+          "significant": false,
+          "worse": "item_knn"
+        },
+        {
+          "better": "item_knn_recency",
+          "ci_high": 0.008598,
+          "ci_low": -0.002744,
+          "difference": 0.002819,
+          "p_adjusted": 1.0,
+          "p_value": 0.3041,
+          "significant": false,
+          "worse": "ease"
+        },
+        {
+          "better": "item_knn_recency",
+          "ci_high": 0.017414,
+          "ci_low": 0.00624,
+          "difference": 0.011753,
+          "p_adjusted": 0.0003905,
+          "p_value": 4.364e-05,
+          "significant": true,
+          "worse": "ials_recency"
+        },
+        {
+          "better": "item_knn_recency",
+          "ci_high": 0.018023,
+          "ci_low": 0.008112,
+          "difference": 0.012964,
+          "p_adjusted": 1.056e-06,
+          "p_value": 7.544e-08,
+          "significant": true,
+          "worse": "ease_recency"
+        },
+        {
+          "better": "item_knn_recency",
+          "ci_high": 0.020466,
+          "ci_low": 0.008313,
+          "difference": 0.014237,
+          "p_adjusted": 0.0001079,
+          "p_value": 1.007e-05,
+          "significant": true,
+          "worse": "ials"
+        },
+        {
+          "better": "item_knn_recency",
+          "ci_high": 0.065967,
+          "ci_low": 0.054135,
+          "difference": 0.059906,
+          "p_adjusted": 9.757e-79,
+          "p_value": 3.365e-80,
+          "significant": true,
+          "worse": "sasrec_recency"
+        },
+        {
+          "better": "item_knn_recency",
+          "ci_high": 0.077547,
+          "ci_low": 0.062829,
+          "difference": 0.070344,
+          "p_adjusted": 4.657e-72,
+          "p_value": 1.863e-73,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "item_knn_recency",
+          "ci_high": 0.132724,
+          "ci_low": 0.119761,
+          "difference": 0.12607,
+          "p_adjusted": 1.269e-262,
+          "p_value": 3.526e-264,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "item_knn",
+          "ci_high": 0.00869,
+          "ci_low": -0.002811,
+          "difference": 0.00278,
+          "p_adjusted": 1.0,
+          "p_value": 0.3076,
+          "significant": false,
+          "worse": "ease"
+        },
+        {
+          "better": "item_knn",
+          "ci_high": 0.017357,
+          "ci_low": 0.006146,
+          "difference": 0.011715,
+          "p_adjusted": 0.0003905,
+          "p_value": 4.339e-05,
+          "significant": true,
+          "worse": "ials_recency"
+        },
+        {
+          "better": "item_knn",
+          "ci_high": 0.018017,
+          "ci_low": 0.008196,
+          "difference": 0.012925,
+          "p_adjusted": 1.056e-06,
+          "p_value": 7.938e-08,
+          "significant": true,
+          "worse": "ease_recency"
+        },
+        {
+          "better": "item_knn",
+          "ci_high": 0.02036,
+          "ci_low": 0.008307,
+          "difference": 0.014198,
+          "p_adjusted": 0.0001079,
+          "p_value": 9.81e-06,
+          "significant": true,
+          "worse": "ials"
+        },
+        {
+          "better": "item_knn",
+          "ci_high": 0.06585,
+          "ci_low": 0.054205,
+          "difference": 0.059868,
+          "p_adjusted": 1.09e-77,
+          "p_value": 3.893e-79,
+          "significant": true,
+          "worse": "sasrec_recency"
+        },
+        {
+          "better": "item_knn",
+          "ci_high": 0.07749,
+          "ci_low": 0.062751,
+          "difference": 0.070305,
+          "p_adjusted": 4.104e-72,
+          "p_value": 1.579e-73,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "item_knn",
+          "ci_high": 0.132615,
+          "ci_low": 0.119806,
+          "difference": 0.126031,
+          "p_adjusted": 8.063e-261,
+          "p_value": 2.304e-262,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "ease",
+          "ci_high": 0.012381,
+          "ci_low": 0.005414,
+          "difference": 0.008934,
+          "p_adjusted": 1.255e-05,
+          "p_value": 1.046e-06,
+          "significant": true,
+          "worse": "ials_recency"
+        },
+        {
+          "better": "ease",
+          "ci_high": 0.013358,
+          "ci_low": 0.006907,
+          "difference": 0.010144,
+          "p_adjusted": 2.94e-08,
+          "p_value": 1.96e-09,
+          "significant": true,
+          "worse": "ease_recency"
+        },
+        {
+          "better": "ease",
+          "ci_high": 0.014934,
+          "ci_low": 0.008062,
+          "difference": 0.011418,
+          "p_adjusted": 9.68e-09,
+          "p_value": 6.05e-10,
+          "significant": true,
+          "worse": "ials"
+        },
+        {
+          "better": "ease",
+          "ci_high": 0.064457,
+          "ci_low": 0.049485,
+          "difference": 0.057087,
+          "p_adjusted": 1.073e-50,
+          "p_value": 5.366e-52,
+          "significant": true,
+          "worse": "sasrec_recency"
+        },
+        {
+          "better": "ease",
+          "ci_high": 0.074929,
+          "ci_low": 0.060257,
+          "difference": 0.067525,
+          "p_adjusted": 5.721e-77,
+          "p_value": 2.119e-78,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "ease",
+          "ci_high": 0.130796,
+          "ci_low": 0.115468,
+          "difference": 0.123251,
+          "p_adjusted": 5.09e-202,
+          "p_value": 1.542e-203,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.004713,
+          "ci_low": -0.002252,
+          "difference": 0.00121,
+          "p_adjusted": 1.0,
+          "p_value": 0.496,
+          "significant": false,
+          "worse": "ease_recency"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.005204,
+          "ci_low": -0.000319,
+          "difference": 0.002484,
+          "p_adjusted": 0.5474,
+          "p_value": 0.09123,
+          "significant": false,
+          "worse": "ials"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.055365,
+          "ci_low": 0.04132,
+          "difference": 0.048153,
+          "p_adjusted": 5.544e-40,
+          "p_value": 3.08e-41,
+          "significant": true,
+          "worse": "sasrec_recency"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.065748,
+          "ci_low": 0.051599,
+          "difference": 0.05859,
+          "p_adjusted": 1.456e-56,
+          "p_value": 6.068e-58,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.121391,
+          "ci_low": 0.107193,
+          "difference": 0.114317,
+          "p_adjusted": 5.731e-189,
+          "p_value": 1.849e-190,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.005901,
+          "ci_low": -0.003342,
+          "difference": 0.001273,
+          "p_adjusted": 1.0,
+          "p_value": 0.598,
+          "significant": false,
+          "worse": "ials"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.053004,
+          "ci_low": 0.040947,
+          "difference": 0.046943,
+          "p_adjusted": 1.179e-51,
+          "p_value": 5.357e-53,
+          "significant": true,
+          "worse": "sasrec_recency"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.064931,
+          "ci_low": 0.049986,
+          "difference": 0.05738,
+          "p_adjusted": 8.86e-53,
+          "p_value": 3.852e-54,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.11964,
+          "ci_low": 0.10676,
+          "difference": 0.113106,
+          "p_adjusted": 3.504e-233,
+          "p_value": 1.031e-234,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "ials",
+          "ci_high": 0.053368,
+          "ci_low": 0.038205,
+          "difference": 0.045669,
+          "p_adjusted": 8.657e-28,
+          "p_value": 5.093e-29,
+          "significant": true,
+          "worse": "sasrec_recency"
+        },
+        {
+          "better": "ials",
+          "ci_high": 0.063179,
+          "ci_low": 0.048864,
+          "difference": 0.056107,
+          "p_adjusted": 1.696e-51,
+          "p_value": 8.076e-53,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "ials",
+          "ci_high": 0.119545,
+          "ci_low": 0.10397,
+          "difference": 0.111833,
+          "p_adjusted": 6.715e-149,
+          "p_value": 2.238e-150,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "sasrec_recency",
+          "ci_high": 0.017296,
+          "ci_low": 0.002963,
+          "difference": 0.010438,
+          "p_adjusted": 0.03327,
+          "p_value": 0.004753,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "sasrec_recency",
+          "ci_high": 0.07024,
+          "ci_low": 0.062134,
+          "difference": 0.066164,
+          "p_adjusted": 5.481e-198,
+          "p_value": 1.713e-199,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "sasrec",
+          "ci_high": 0.063288,
+          "ci_low": 0.047897,
+          "difference": 0.055726,
+          "p_adjusted": 3.434e-42,
+          "p_value": 1.807e-43,
+          "significant": true,
+          "worse": "popularity"
+        }
+      ],
+      "ranking": [
+        "item_knn_recency",
+        "item_knn",
+        "ease",
+        "ials_recency",
+        "ease_recency",
+        "ials",
+        "sasrec_recency",
+        "sasrec",
+        "popularity"
+      ]
+    },
+    "warm": {
+      "means": {
+        "ease": 0.107995,
+        "ease_recency": 0.135897,
+        "ials": 0.09611,
+        "ials_recency": 0.135207,
+        "item_knn": 0.08361,
+        "item_knn_recency": 0.083399,
+        "popularity": 0.114068,
+        "sasrec": 0.065701,
+        "sasrec_recency": 0.127322
+      },
+      "n_users": 5250,
+      "pairs": [
+        {
+          "better": "ease_recency",
+          "ci_high": 0.002584,
+          "ci_low": -0.001246,
+          "difference": 0.000691,
+          "p_adjusted": 0.4925,
+          "p_value": 0.4925,
+          "significant": false,
+          "worse": "ials_recency"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.011194,
+          "ci_low": 0.005882,
+          "difference": 0.008575,
+          "p_adjusted": 5.461e-09,
+          "p_value": 1.092e-09,
+          "significant": true,
+          "worse": "sasrec_recency"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.025048,
+          "ci_low": 0.018364,
+          "difference": 0.02183,
+          "p_adjusted": 9.112e-37,
+          "p_value": 5.062e-38,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.031835,
+          "ci_low": 0.023995,
+          "difference": 0.027903,
+          "p_adjusted": 2.31e-38,
+          "p_value": 1.155e-39,
+          "significant": true,
+          "worse": "ease"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.043976,
+          "ci_low": 0.035689,
+          "difference": 0.039788,
+          "p_adjusted": 7.816e-67,
+          "p_value": 3.257e-68,
+          "significant": true,
+          "worse": "ials"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.056342,
+          "ci_low": 0.048271,
+          "difference": 0.052288,
+          "p_adjusted": 5.343e-131,
+          "p_value": 1.67e-132,
+          "significant": true,
+          "worse": "item_knn"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.056579,
+          "ci_low": 0.048615,
+          "difference": 0.052498,
+          "p_adjusted": 1.132e-133,
+          "p_value": 3.432e-135,
+          "significant": true,
+          "worse": "item_knn_recency"
+        },
+        {
+          "better": "ease_recency",
+          "ci_high": 0.074835,
+          "ci_low": 0.06543,
+          "difference": 0.070197,
+          "p_adjusted": 1.071e-173,
+          "p_value": 2.974e-175,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.011266,
+          "ci_low": 0.004653,
+          "difference": 0.007885,
+          "p_adjusted": 9.083e-06,
+          "p_value": 2.271e-06,
+          "significant": true,
+          "worse": "sasrec_recency"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.024736,
+          "ci_low": 0.017072,
+          "difference": 0.021139,
+          "p_adjusted": 1.706e-26,
+          "p_value": 1.218e-27,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.031151,
+          "ci_low": 0.023225,
+          "difference": 0.027212,
+          "p_adjusted": 1.726e-37,
+          "p_value": 9.084e-39,
+          "significant": true,
+          "worse": "ease"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.042906,
+          "ci_low": 0.035552,
+          "difference": 0.039097,
+          "p_adjusted": 9.782e-81,
+          "p_value": 3.494e-82,
+          "significant": true,
+          "worse": "ials"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.056106,
+          "ci_low": 0.047474,
+          "difference": 0.051597,
+          "p_adjusted": 1.852e-112,
+          "p_value": 6.174e-114,
+          "significant": true,
+          "worse": "item_knn"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.056306,
+          "ci_low": 0.047719,
+          "difference": 0.051808,
+          "p_adjusted": 2.82e-114,
+          "p_value": 9.096e-116,
+          "significant": true,
+          "worse": "item_knn_recency"
+        },
+        {
+          "better": "ials_recency",
+          "ci_high": 0.074033,
+          "ci_low": 0.064851,
+          "difference": 0.069506,
+          "p_adjusted": 2.109e-169,
+          "p_value": 6.026e-171,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "sasrec_recency",
+          "ci_high": 0.015522,
+          "ci_low": 0.010814,
+          "difference": 0.013254,
+          "p_adjusted": 2.115e-24,
+          "p_value": 1.627e-25,
+          "significant": true,
+          "worse": "popularity"
+        },
+        {
+          "better": "sasrec_recency",
+          "ci_high": 0.024783,
+          "ci_low": 0.01428,
+          "difference": 0.019328,
+          "p_adjusted": 1.082e-11,
+          "p_value": 1.202e-12,
+          "significant": true,
+          "worse": "ease"
+        },
+        {
+          "better": "sasrec_recency",
+          "ci_high": 0.036434,
+          "ci_low": 0.026232,
+          "difference": 0.031212,
+          "p_adjusted": 2.634e-29,
+          "p_value": 1.756e-30,
+          "significant": true,
+          "worse": "ials"
+        },
+        {
+          "better": "sasrec_recency",
+          "ci_high": 0.048769,
+          "ci_low": 0.039152,
+          "difference": 0.043713,
+          "p_adjusted": 1.307e-68,
+          "p_value": 5.227e-70,
+          "significant": true,
+          "worse": "item_knn"
+        },
+        {
+          "better": "sasrec_recency",
+          "ci_high": 0.048899,
+          "ci_low": 0.039287,
+          "difference": 0.043923,
+          "p_adjusted": 6.817e-70,
+          "p_value": 2.622e-71,
+          "significant": true,
+          "worse": "item_knn_recency"
+        },
+        {
+          "better": "sasrec_recency",
+          "ci_high": 0.066205,
+          "ci_low": 0.057097,
+          "difference": 0.061621,
+          "p_adjusted": 6.757e-141,
+          "p_value": 1.987e-142,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "popularity",
+          "ci_high": 0.01165,
+          "ci_low": 0.000874,
+          "difference": 0.006073,
+          "p_adjusted": 0.07995,
+          "p_value": 0.02665,
+          "significant": false,
+          "worse": "ease"
+        },
+        {
+          "better": "popularity",
+          "ci_high": 0.023405,
+          "ci_low": 0.013075,
+          "difference": 0.017958,
+          "p_adjusted": 2.324e-10,
+          "p_value": 3.32e-11,
+          "significant": true,
+          "worse": "ials"
+        },
+        {
+          "better": "popularity",
+          "ci_high": 0.035482,
+          "ci_low": 0.025957,
+          "difference": 0.030458,
+          "p_adjusted": 1.759e-33,
+          "p_value": 1.099e-34,
+          "significant": true,
+          "worse": "item_knn"
+        },
+        {
+          "better": "popularity",
+          "ci_high": 0.035709,
+          "ci_low": 0.026151,
+          "difference": 0.030669,
+          "p_adjusted": 3.286e-34,
+          "p_value": 1.933e-35,
+          "significant": true,
+          "worse": "item_knn_recency"
+        },
+        {
+          "better": "popularity",
+          "ci_high": 0.052924,
+          "ci_low": 0.043766,
+          "difference": 0.048367,
+          "p_adjusted": 1.707e-85,
+          "p_value": 5.885e-87,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "ease",
+          "ci_high": 0.014406,
+          "ci_low": 0.00942,
+          "difference": 0.011885,
+          "p_adjusted": 2.824e-20,
+          "p_value": 2.353e-21,
+          "significant": true,
+          "worse": "ials"
+        },
+        {
+          "better": "ease",
+          "ci_high": 0.027467,
+          "ci_low": 0.021149,
+          "difference": 0.024385,
+          "p_adjusted": 1.792e-45,
+          "p_value": 8.145e-47,
+          "significant": true,
+          "worse": "item_knn"
+        },
+        {
+          "better": "ease",
+          "ci_high": 0.027717,
+          "ci_low": 0.021248,
+          "difference": 0.024596,
+          "p_adjusted": 3.667e-46,
+          "p_value": 1.594e-47,
+          "significant": true,
+          "worse": "item_knn_recency"
+        },
+        {
+          "better": "ease",
+          "ci_high": 0.046878,
+          "ci_low": 0.037728,
+          "difference": 0.042294,
+          "p_adjusted": 5.555e-73,
+          "p_value": 2.057e-74,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "ials",
+          "ci_high": 0.016192,
+          "ci_low": 0.008946,
+          "difference": 0.0125,
+          "p_adjusted": 2.324e-10,
+          "p_value": 3.376e-11,
+          "significant": true,
+          "worse": "item_knn"
+        },
+        {
+          "better": "ials",
+          "ci_high": 0.016462,
+          "ci_low": 0.009182,
+          "difference": 0.012711,
+          "p_adjusted": 1.339e-10,
+          "p_value": 1.674e-11,
+          "significant": true,
+          "worse": "item_knn_recency"
+        },
+        {
+          "better": "ials",
+          "ci_high": 0.034598,
+          "ci_low": 0.026032,
+          "difference": 0.030409,
+          "p_adjusted": 6.087e-43,
+          "p_value": 2.899e-44,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "item_knn",
+          "ci_high": 0.000492,
+          "ci_low": -0.0001,
+          "difference": 0.00021,
+          "p_adjusted": 0.3506,
+          "p_value": 0.1753,
+          "significant": false,
+          "worse": "item_knn_recency"
+        },
+        {
+          "better": "item_knn",
+          "ci_high": 0.02223,
+          "ci_low": 0.013335,
+          "difference": 0.017909,
+          "p_adjusted": 1.911e-15,
+          "p_value": 1.737e-16,
+          "significant": true,
+          "worse": "sasrec"
+        },
+        {
+          "better": "item_knn_recency",
+          "ci_high": 0.022018,
+          "ci_low": 0.013077,
+          "difference": 0.017698,
+          "p_adjusted": 3.682e-15,
+          "p_value": 3.682e-16,
+          "significant": true,
+          "worse": "sasrec"
+        }
+      ],
+      "ranking": [
+        "ease_recency",
+        "ials_recency",
+        "sasrec_recency",
+        "popularity",
+        "ease",
+        "ials",
+        "item_knn",
+        "item_knn_recency",
+        "sasrec"
+      ]
+    }
+  },
+  "split": "test"
+}

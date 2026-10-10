@@ -5,12 +5,13 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from recsys.models import MODELS, build_model, load_model
+from recsys.models import BASE_MODELS, MODELS, base_name, build_model, load_fitted, load_model
 from recsys.models.base import histories_to_csr, top_k
-from recsys.models.ease import EASE
+from recsys.models.ease import EASE, prune
 from recsys.models.ials import IALS
 from recsys.models.item_knn import ItemKNN, bm25_weight
 from recsys.models.popularity import Popularity
+from recsys.models.recency import EASERecency, ItemKNNRecency, Recency, _standardise
 from recsys.models.sasrec import SASRec, _pad_left
 
 DAY = 86_400
@@ -156,6 +157,12 @@ def test_ease_keep_per_item_keeps_the_largest_absolute_weights() -> None:
     np.testing.assert_array_equal(full, dense)
 
 
+def test_prune_gives_the_same_weights_as_fitting_pruned() -> None:
+    dense = EASE(l2=0.5).fit(TRAIN, N_ITEMS).weights
+    fitted = EASE(l2=0.5, keep_per_item=2).fit(TRAIN, N_ITEMS).weights
+    np.testing.assert_array_equal(prune(dense, 2).toarray(), fitted.toarray())
+
+
 # --- iALS --------------------------------------------------------------------------------
 
 # Two groups of users with disjoint tastes: items 0-2 and items 3-5.
@@ -220,6 +227,73 @@ def test_sasrec_ignores_history_beyond_max_len() -> None:
     np.testing.assert_array_equal(model.score([long]), model.score([recent]))
 
 
+# --- recency variants --------------------------------------------------------------------
+
+
+def test_recency_prior_is_the_standardised_log_of_decayed_counts() -> None:
+    # Item 0: three likes two half-lives ago (3 * 0.25). Item 1: two likes now. Item 2: none.
+    rows = [(u, 0, 0) for u in range(3)] + [(u, 1, 100 * DAY) for u in range(2)]
+    model = ItemKNNRecency(half_life_days=50).fit(interactions(rows), 3)
+    log_counts = np.log1p([0.75, 2.0, 0.0])
+    expected = (log_counts - log_counts.mean()) / log_counts.std()
+    np.testing.assert_allclose(model.prior, expected, rtol=1e-6)
+
+
+def test_standardise_maps_a_constant_row_to_zeros() -> None:
+    out = _standardise(np.array([[1.0, 3.0], [2.0, 2.0]], dtype=np.float32), axis=1)
+    assert out.tolist() == [[-1.0, 1.0], [0.0, 0.0]]
+
+
+def test_recency_adds_the_weighted_prior_to_standardised_base_scores() -> None:
+    base = ItemKNN(k=2).fit(TRAIN, N_ITEMS)
+    model = ItemKNNRecency(half_life_days=30, weight=0.7).fit(TRAIN, N_ITEMS).wrap(base)
+    histories = [history(1), history(1, 2)]
+    expected = _standardise(base.score(histories), axis=1) + 0.7 * model.prior
+    np.testing.assert_allclose(model.score(histories), expected, rtol=1e-6)
+
+
+def test_recency_weight_moves_the_ranking_from_the_base_model_to_the_prior() -> None:
+    base = ItemKNN(k=2).fit(TRAIN, N_ITEMS)
+    histories = [history(1), history(2), history()]
+    off = ItemKNNRecency(weight=0.0).fit(TRAIN, N_ITEMS).wrap(base)
+    np.testing.assert_array_equal(
+        off.recommend_batch(histories, k=3), base.recommend_batch(histories, k=3)
+    )
+    # A prior in which item 3, which the base model knows nothing about, is the most liked.
+    item_3_is_hot = interactions([*TRAIN.itertuples(index=False), *[(u, 3, 0) for u in range(9)]])
+    assert base.recommend(history(2), k=3).tolist() == [0, 1, 3]
+    heavy = ItemKNNRecency(weight=100.0).fit(item_3_is_hot, N_ITEMS).wrap(base)
+    assert heavy.recommend(history(2), k=3).tolist() == [3, 0, 1]
+
+
+def test_recency_only_wraps_its_own_base_model() -> None:
+    with pytest.raises(TypeError, match="item_knn"):
+        ItemKNNRecency().wrap(EASE().fit(TRAIN, N_ITEMS))
+
+
+def test_recency_save_is_self_contained(tmp_path: Path) -> None:
+    base = EASE(l2=1.0, keep_per_item=2).fit(TRAIN, N_ITEMS)
+    model = EASERecency(half_life_days=30, weight=0.5).fit(TRAIN, N_ITEMS).wrap(base)
+    model.save(tmp_path / "a")
+    loaded = load_model("ease_recency", tmp_path / "a")
+    histories = [history(0), history(1, 2), history()]
+    np.testing.assert_array_equal(model.score(histories), loaded.score(histories))
+    assert loaded.params == model.params == {"half_life_days": 30, "weight": 0.5}
+    assert isinstance(loaded, Recency) and loaded.base.params == base.params
+
+
+def test_load_fitted_builds_a_variant_on_the_saved_base_model(tmp_path: Path) -> None:
+    base = ItemKNN(k=2).fit(TRAIN, N_ITEMS)
+    base.save(tmp_path / "item_knn")
+    assert isinstance(load_fitted("item_knn", tmp_path, {}, TRAIN), ItemKNN)
+
+    params = {"half_life_days": 30, "weight": 2.0}
+    variant = load_fitted("item_knn_recency", tmp_path, params, TRAIN)
+    expected = ItemKNNRecency(**params).fit(TRAIN, N_ITEMS).wrap(base)
+    histories = [history(1), history()]
+    np.testing.assert_array_equal(variant.score(histories), expected.score(histories))
+
+
 # --- save / load -------------------------------------------------------------------------
 
 
@@ -268,7 +342,11 @@ def test_registry_names_match_classes() -> None:
         "ials": IALS,
         "ease": EASE,
         "sasrec": SASRec,
-    } == MODELS
+    } == BASE_MODELS
+    variants = {name: cls for name, cls in MODELS.items() if name not in BASE_MODELS}
+    assert set(variants) == {f"{name}_recency" for name in BASE_MODELS if name != "popularity"}
+    assert all(issubclass(cls, Recency) for cls in variants.values())
+    assert base_name("ease_recency") == "ease" and base_name("ease") == "ease"
 
 
 def test_build_model_passes_the_seed_only_to_models_that_use_it() -> None:

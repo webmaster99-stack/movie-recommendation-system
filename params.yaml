@@ -45,8 +45,8 @@ models:
   ease:
     l2: 1138.0  # the one real hyperparameter: higher = smoother, more popular recommendations
     # Weights kept per movie (largest absolute values), stored sparse. null = all 19,642,
-    # a dense 1.5 GB matrix. Not searched: it trades accuracy for size (see Phase 4).
-    keep_per_item: 1000
+    # a dense 1.5 GB matrix. Not searched: set from the pruning study (`ease_pruning` below).
+    keep_per_item: 500
   sasrec:
     hidden_dim: 64
     n_blocks: 2
@@ -59,6 +59,20 @@ models:
     batch_size: 256
     n_negatives: 1024  # random movies per batch in the softmax; null = the whole catalog
     max_users: null  # train on a random subset of users to cut CPU time; null = everyone
+  # Recency variants: the model above plus a prior for what is popular right now
+  # (see models/recency.py). They reuse the trained model, so these two values are all they add.
+  item_knn_recency:
+    half_life_days: 246  # the prior halves an interaction's weight every this many days
+    weight: 0.05231  # how much the prior counts against the personalised score; 0 = base model
+  ials_recency:
+    half_life_days: 7
+    weight: 4.108
+  ease_recency:
+    half_life_days: 11
+    weight: 9.071
+  sasrec_recency:
+    half_life_days: 11
+    weight: 2.086
 
 # Optuna search per model (seeded TPE, one trial at a time, so a rerun repeats the same trials).
 # `enqueue` lists starting points tried first: the untuned Phase 2/3 values, so the search
@@ -103,6 +117,18 @@ tuning:
         dropout: {type: float, low: 0.0, high: 0.4}
       enqueue:
         - {learning_rate: 0.001, dropout: 0.2}
+    # A trial only recomputes the prior and rescores validation; the base model in models/ is
+    # reused, so it must be trained (`dvc repro train`) before its variant is tuned.
+    item_knn_recency: &recency_search
+      n_trials: 20
+      space:
+        half_life_days: {type: int, low: 7, high: 365, log: true}
+        weight: {type: float, low: 0.05, high: 20.0, log: true}
+      enqueue:
+        - {half_life_days: 30, weight: 0.5}
+    ials_recency: *recency_search
+    ease_recency: *recency_search
+    sasrec_recency: *recency_search
 
 evaluation:
   ks: [10, 20]
@@ -115,8 +141,24 @@ evaluation:
     confidence: 0.95
   latency_users: 200  # single-user calls timed for p50/p95 (MLflow only)
 
+# EASE scored with the full matrix (null) and with only the strongest weights per movie.
+# models.ease.keep_per_item is the smallest value that loses at most max_relative_drop of
+# tuning.metric (stage `ease_pruning`); a test fails if the two disagree.
+ease_pruning:
+  keep_per_item: [null, 2000, 1000, 500, 200, 100]
+  max_relative_drop: 0.001
+
+# Paired significance tests between models (stage `compare`).
+comparison:
+  alpha: 0.05  # significance level, after Holm's correction for the number of pairs
+
+# The model to serve is the best tuning.metric on validation among those that fit the budget.
+selection:
+  max_model_size_mb: 150  # the API host has 512 MB of RAM in total
+
 mlflow:
   experiment_name: movie-recsys
+  registered_model: movie-recsys  # registry name; aliases `challenger` and `champion`
   # Used only when MLFLOW_TRACKING_URI is unset, so the project works with no accounts.
   # (MLflow 3.x refuses the old ./mlruns folder store, so local runs use SQLite.)
   local_db: mlflow.db

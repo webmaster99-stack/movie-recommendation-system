@@ -1,3 +1,17 @@
+vars:
+  # Every evaluated model -> the trained model it scores with: itself, or the base model a
+  # recency variant is built on.
+  - scored_with:
+      popularity: popularity
+      item_knn: item_knn
+      ials: ials
+      ease: ease
+      sasrec: sasrec
+      item_knn_recency: item_knn
+      ials_recency: ials
+      ease_recency: ease
+      sasrec_recency: sasrec
+
 stages:
   download:
     cmd: python -m recsys.data.download
@@ -81,24 +95,191 @@ stages:
       outs:
         - models/${item}
 
+  # Validation: scores the models trained on the training split. `${key}` is the model,
+  # `${item}` the trained model it scores with (see `scored_with` above).
   evaluate:
-    foreach: [popularity, item_knn, ials, ease, sasrec]
+    foreach: ${scored_with}
     do:
-      cmd: python -m recsys.evaluation.evaluate ${item}
+      cmd: python -m recsys.evaluation.evaluate ${key}
       deps:
         - models/${item}
         - data/processed/splits/train.parquet
         - data/processed/splits/val.parquet
-        - src/recsys/evaluation
+        - src/recsys/evaluation/evaluate.py
+        - src/recsys/evaluation/metrics.py
+        - src/recsys/evaluation/protocol.py
         - src/recsys/models/__init__.py
         - src/recsys/models/base.py
         - src/recsys/models/${item}.py
+        - src/recsys/models/recency.py
         - src/recsys/utils/io.py
       params:
         - seed  # drives the bootstrap resampling
         - evaluation
+        - models.${key}  # read by the recency variants; the others get theirs from models/
       outs:
-        - data/evaluation/val/${item}.parquet
+        - data/evaluation/val/${key}.parquet
       metrics:
-        - metrics/val_${item}.json:
+        - metrics/val_${key}.json:
             cache: false
+
+  # EASE with the full weight matrix against pruned versions; fits it in memory (about 5 GB).
+  ease_pruning:
+    cmd: python -m recsys.evaluation.ease_pruning
+    deps:
+      - data/processed/splits/train.parquet
+      - data/processed/splits/val.parquet
+      - data/processed/item_map.parquet
+      - src/recsys/evaluation/ease_pruning.py
+      - src/recsys/evaluation/evaluate.py
+      - src/recsys/evaluation/metrics.py
+      - src/recsys/evaluation/protocol.py
+      - src/recsys/models/base.py
+      - src/recsys/models/ease.py
+      - src/recsys/tuning/tune.py  # reuses validation_scores
+    params:
+      - ease_pruning
+      - models.ease.l2
+      - tuning.metric
+      - evaluation.batch_size
+      - evaluation.onboarding
+    outs:
+      - metrics/ease_pruning.json:
+          cache: false
+
+  # The same hyperparameters refitted on training + validation: the models that are tested.
+  train_final:
+    foreach: [popularity, item_knn, ials, ease, sasrec]
+    do:
+      cmd: python -m recsys.models.train ${item} --final
+      deps:
+        - data/processed/splits/train.parquet
+        - data/processed/splits/val.parquet
+        - data/processed/item_map.parquet
+        - src/recsys/models/__init__.py
+        - src/recsys/models/base.py
+        - src/recsys/models/train.py
+        - src/recsys/models/${item}.py
+        - src/recsys/utils/io.py
+      params:
+        - seed
+        - models.${item}
+      outs:
+        - models/final/${item}
+
+  # Test: run once, after tuning and with nothing chosen from its results.
+  test:
+    foreach: ${scored_with}
+    do:
+      cmd: python -m recsys.evaluation.evaluate ${key} --split test
+      deps:
+        - models/final/${item}
+        - data/processed/splits/train.parquet
+        - data/processed/splits/val.parquet
+        - data/processed/splits/test.parquet
+        - src/recsys/evaluation/evaluate.py
+        - src/recsys/evaluation/metrics.py
+        - src/recsys/evaluation/protocol.py
+        - src/recsys/models/__init__.py
+        - src/recsys/models/base.py
+        - src/recsys/models/${item}.py
+        - src/recsys/models/recency.py
+        - src/recsys/utils/io.py
+      params:
+        - seed
+        - evaluation
+        - models.${key}
+      outs:
+        - data/evaluation/test/${key}.parquet
+      metrics:
+        - metrics/test_${key}.json:
+            cache: false
+
+  # Paired significance tests between all models, from the per-user results of a split.
+  compare:
+    foreach: [val, test]
+    do:
+      cmd: python -m recsys.evaluation.compare ${item}
+      deps:
+        - data/evaluation/${item}
+        - src/recsys/evaluation/compare.py
+        - src/recsys/models/__init__.py  # the list of models
+      params:
+        - seed
+        - comparison
+        - tuning.metric
+        - evaluation.bootstrap
+      outs:
+        - metrics/comparison_${item}.json:
+            cache: false
+
+  # Picks the model to serve from the validation results only.
+  select:
+    cmd: python -m recsys.registry.select
+    deps:
+      - metrics/val_popularity.json
+      - metrics/val_item_knn.json
+      - metrics/val_ials.json
+      - metrics/val_ease.json
+      - metrics/val_sasrec.json
+      - metrics/val_item_knn_recency.json
+      - metrics/val_ials_recency.json
+      - metrics/val_ease_recency.json
+      - metrics/val_sasrec_recency.json
+      - metrics/comparison_val.json
+      - src/recsys/registry/select.py
+      - src/recsys/models/__init__.py
+    params:
+      - selection
+      - tuning.metric
+    outs:
+      - metrics/selection.json:
+          cache: false
+
+  # The selected model as a self-contained serving bundle with its model card.
+  export:
+    cmd: python -m recsys.registry.export
+    deps:
+      - models/final
+      - data/processed/items.parquet
+      - data/processed/splits/train.parquet
+      - data/processed/splits/val.parquet
+      - metrics/selection.json
+      - metrics/comparison_test.json
+      - metrics/val_popularity.json
+      - metrics/val_item_knn.json
+      - metrics/val_ials.json
+      - metrics/val_ease.json
+      - metrics/val_sasrec.json
+      - metrics/val_item_knn_recency.json
+      - metrics/val_ials_recency.json
+      - metrics/val_ease_recency.json
+      - metrics/val_sasrec_recency.json
+      - metrics/test_popularity.json
+      - metrics/test_item_knn.json
+      - metrics/test_ials.json
+      - metrics/test_ease.json
+      - metrics/test_sasrec.json
+      - metrics/test_item_knn_recency.json
+      - metrics/test_ials_recency.json
+      - metrics/test_ease_recency.json
+      - metrics/test_sasrec_recency.json
+      - src/recsys/registry/export.py
+      - src/recsys/models/__init__.py
+      - src/recsys/models/base.py
+      - src/recsys/models/recency.py
+    params:
+      - preprocess
+      - models
+    outs:
+      - bundle
+
+  # Uploads the bundle to MLflow and points the registry's `challenger` alias at it.
+  # Making it the `champion` is manual: `python -m recsys.registry.promote`.
+  register:
+    cmd: python -m recsys.registry.register
+    deps:
+      - bundle
+      - src/recsys/registry/register.py
+    params:
+      - mlflow.registered_model
