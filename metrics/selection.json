@@ -1,0 +1,89 @@
+{
+  "base_model": "ease",
+  "candidates": [
+    {
+      "all": 0.237579,
+      "model": "ease_recency",
+      "model_size_mb": 76.9,
+      "onboarding": 0.369912,
+      "warm": 0.148657,
+      "within_budget": true
+    },
+    {
+      "all": 0.235005,
+      "model": "ials_recency",
+      "model_size_mb": 8.7,
+      "onboarding": 0.373137,
+      "warm": 0.142186,
+      "within_budget": true
+    },
+    {
+      "all": 0.217121,
+      "model": "sasrec_recency",
+      "model_size_mb": 5.3,
+      "onboarding": 0.324945,
+      "warm": 0.144667,
+      "within_budget": true
+    },
+    {
+      "all": 0.214758,
+      "model": "ease",
+      "model_size_mb": 76.8,
+      "onboarding": 0.3762,
+      "warm": 0.106275,
+      "within_budget": true
+    },
+    {
+      "all": 0.204077,
+      "model": "ials",
+      "model_size_mb": 8.6,
+      "onboarding": 0.365474,
+      "warm": 0.095625,
+      "within_budget": true
+    },
+    {
+      "all": 0.200263,
+      "model": "item_knn",
+      "model_size_mb": 130.8,
+      "onboarding": 0.373451,
+      "warm": 0.083887,
+      "within_budget": true
+    },
+    {
+      "all": 0.200123,
+      "model": "item_knn_recency",
+      "model_size_mb": 130.9,
+      "onboarding": 0.373151,
+      "warm": 0.083855,
+      "within_budget": true
+    },
+    {
+      "all": 0.191727,
+      "model": "popularity",
+      "model_size_mb": 0.1,
+      "onboarding": 0.292541,
+      "warm": 0.123985,
+      "within_budget": true
+    },
+    {
+      "all": 0.160995,
+      "model": "sasrec",
+      "model_size_mb": 5.2,
+      "onboarding": 0.303433,
+      "warm": 0.065282,
+      "within_budget": true
+    }
+  ],
+  "lead_over_runner_up": {
+    "ci_high": 0.004411,
+    "ci_low": 0.000798,
+    "difference": 0.002574,
+    "p_adjusted": 0.03065,
+    "significant": true
+  },
+  "max_model_size_mb": 150,
+  "metric": "ndcg_at_10",
+  "runner_up": "ials_recency",
+  "selected": "ease_recency",
+  "split": "val"
+}

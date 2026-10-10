@@ -1,4 +1,57 @@
 {
+  "all": {
+    "mrr_at_10": {
+      "ci_high": 0.354751,
+      "ci_low": 0.33987,
+      "mean": 0.347365
+    },
+    "mrr_at_20": {
+      "ci_high": 0.360946,
+      "ci_low": 0.346347,
+      "mean": 0.353745
+    },
+    "n_users": 9689,
+    "ndcg_at_10": {
+      "ci_high": 0.209167,
+      "ci_low": 0.199644,
+      "mean": 0.204077
+    },
+    "ndcg_at_20": {
+      "ci_high": 0.197741,
+      "ci_low": 0.189422,
+      "mean": 0.193199
+    },
+    "novelty_at_10": {
+      "ci_high": 2.772972,
+      "ci_low": 2.741727,
+      "mean": 2.757665
+    },
+    "novelty_at_20": {
+      "ci_high": 2.944041,
+      "ci_low": 2.913977,
+      "mean": 2.929221
+    },
+    "popularity_at_10": {
+      "ci_high": 0.19025,
+      "ci_low": 0.187101,
+      "mean": 0.18864
+    },
+    "popularity_at_20": {
+      "ci_high": 0.171953,
+      "ci_low": 0.16932,
+      "mean": 0.1706
+    },
+    "recall_at_10": {
+      "ci_high": 0.055508,
+      "ci_low": 0.051876,
+      "mean": 0.053624
+    },
+    "recall_at_20": {
+      "ci_high": 0.0919,
+      "ci_low": 0.086935,
+      "mean": 0.089307
+    }
+  },
   "model": "ials",
   "model_size_bytes": 8642775,
   "onboarding": {

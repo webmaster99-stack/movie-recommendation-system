@@ -1,0 +1,209 @@
+{
+  "all": {
+    "mrr_at_10": {
+      "ci_high": 0.340251,
+      "ci_low": 0.32265,
+      "mean": 0.331968
+    },
+    "mrr_at_20": {
+      "ci_high": 0.345821,
+      "ci_low": 0.328432,
+      "mean": 0.337632
+    },
+    "n_users": 8686,
+    "ndcg_at_10": {
+      "ci_high": 0.212392,
+      "ci_low": 0.200882,
+      "mean": 0.207091
+    },
+    "ndcg_at_20": {
+      "ci_high": 0.202911,
+      "ci_low": 0.192123,
+      "mean": 0.197873
+    },
+    "novelty_at_10": {
+      "ci_high": 1.864124,
+      "ci_low": 1.832708,
+      "mean": 1.848421
+    },
+    "novelty_at_20": {
+      "ci_high": 1.996773,
+      "ci_low": 1.967524,
+      "mean": 1.982319
+    },
+    "popularity_at_10": {
+      "ci_high": 0.316207,
+      "ci_low": 0.312377,
+      "mean": 0.314304
+    },
+    "popularity_at_20": {
+      "ci_high": 0.287413,
+      "ci_low": 0.284273,
+      "mean": 0.285813
+    },
+    "recall_at_10": {
+      "ci_high": 0.052443,
+      "ci_low": 0.048268,
+      "mean": 0.050312
+    },
+    "recall_at_20": {
+      "ci_high": 0.087513,
+      "ci_low": 0.082033,
+      "mean": 0.084672
+    }
+  },
+  "model": "item_knn_recency",
+  "model_size_bytes": 133238066,
+  "onboarding": {
+    "coverage_at_10": 0.039354,
+    "coverage_at_20": 0.056715,
+    "mrr_at_10": {
+      "ci_high": 0.601923,
+      "ci_low": 0.575058,
+      "mean": 0.587983
+    },
+    "mrr_at_20": {
+      "ci_high": 0.605955,
+      "ci_low": 0.579514,
+      "mean": 0.59237
+    },
+    "n_users": 3436,
+    "ndcg_at_10": {
+      "ci_high": 0.406178,
+      "ci_low": 0.386571,
+      "mean": 0.396084
+    },
+    "ndcg_at_20": {
+      "ci_high": 0.383508,
+      "ci_low": 0.36699,
+      "mean": 0.375193
+    },
+    "novelty_at_10": {
+      "ci_high": 1.692159,
+      "ci_low": 1.633117,
+      "mean": 1.661886
+    },
+    "novelty_at_20": {
+      "ci_high": 1.839907,
+      "ci_low": 1.786324,
+      "mean": 1.812416
+    },
+    "popularity_at_10": {
+      "ci_high": 0.362567,
+      "ci_low": 0.356028,
+      "mean": 0.359352
+    },
+    "popularity_at_20": {
+      "ci_high": 0.324467,
+      "ci_low": 0.319488,
+      "mean": 0.321996
+    },
+    "recall_at_10": {
+      "ci_high": 0.07552,
+      "ci_low": 0.070174,
+      "mean": 0.072955
+    },
+    "recall_at_20": {
+      "ci_high": 0.127481,
+      "ci_low": 0.119797,
+      "mean": 0.123745
+    }
+  },
+  "split": "test",
+  "warm": {
+    "coverage_at_10": 0.032532,
+    "coverage_at_20": 0.044649,
+    "mrr_at_10": {
+      "ci_high": 0.173034,
+      "ci_low": 0.155635,
+      "mean": 0.164412
+    },
+    "mrr_at_20": {
+      "ci_high": 0.179299,
+      "ci_low": 0.16243,
+      "mean": 0.170912
+    },
+    "n_users": 5250,
+    "ndcg_at_10": {
+      "ci_high": 0.088011,
+      "ci_low": 0.078709,
+      "mean": 0.083399
+    },
+    "ndcg_at_20": {
+      "ci_high": 0.085882,
+      "ci_low": 0.077616,
+      "mean": 0.081821
+    },
+    "novelty_at_10": {
+      "ci_high": 1.985515,
+      "ci_low": 1.955082,
+      "mean": 1.970504
+    },
+    "novelty_at_20": {
+      "ci_high": 2.108305,
+      "ci_low": 2.079185,
+      "mean": 2.093516
+    },
+    "popularity_at_10": {
+      "ci_high": 0.286887,
+      "ci_low": 0.282935,
+      "mean": 0.28482
+    },
+    "popularity_at_20": {
+      "ci_high": 0.26379,
+      "ci_low": 0.260577,
+      "mean": 0.262132
+    },
+    "recall_at_10": {
+      "ci_high": 0.03808,
+      "ci_low": 0.032723,
+      "mean": 0.035492
+    },
+    "recall_at_20": {
+      "ci_high": 0.062622,
+      "ci_low": 0.055476,
+      "mean": 0.0591
+    },
+    "segments": {
+      "history_20_to_99": {
+        "mrr_at_10": 0.186064,
+        "mrr_at_20": 0.192686,
+        "n_users": 1294,
+        "ndcg_at_10": 0.103776,
+        "ndcg_at_20": 0.105914,
+        "novelty_at_10": 1.779252,
+        "novelty_at_20": 1.900618,
+        "popularity_at_10": 0.321243,
+        "popularity_at_20": 0.295055,
+        "recall_at_10": 0.055854,
+        "recall_at_20": 0.091884
+      },
+      "history_ge_100": {
+        "mrr_at_10": 0.148718,
+        "mrr_at_20": 0.15524,
+        "n_users": 3763,
+        "ndcg_at_10": 0.069689,
+        "ndcg_at_20": 0.066877,
+        "novelty_at_10": 2.032959,
+        "novelty_at_20": 2.157777,
+        "popularity_at_10": 0.270499,
+        "popularity_at_20": 0.249236,
+        "recall_at_10": 0.025963,
+        "recall_at_20": 0.044246
+      },
+      "history_lt_20": {
+        "mrr_at_10": 0.325224,
+        "mrr_at_20": 0.330479,
+        "n_users": 193,
+        "ndcg_at_10": 0.214092,
+        "ndcg_at_20": 0.211662,
+        "novelty_at_10": 2.035076,
+        "novelty_at_20": 2.133901,
+        "popularity_at_10": 0.319842,
+        "popularity_at_20": 0.292842,
+        "recall_at_10": 0.08477,
+        "recall_at_20": 0.128902
+      }
+    }
+  }
+}

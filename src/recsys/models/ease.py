@@ -59,6 +59,30 @@ def _invert_spd_in_place(a: npt.NDArray[np.float64]) -> None:
         a[start:stop, stop:] = a[stop:, start:stop].T
 
 
+def prune(weights: npt.NDArray[np.float32], keep: int) -> sp.csr_matrix:
+    """Keep the `keep` largest weights (by absolute value) of every row, as a sparse matrix."""
+    n_items = weights.shape[1]
+    keep = min(keep, n_items - 1)
+    columns: list[npt.NDArray[np.int32]] = []
+    values: list[npt.NDArray[np.float32]] = []
+    for start in range(0, len(weights), _BLOCK_ROWS):
+        block = weights[start : start + _BLOCK_ROWS]
+        top = top_k(np.abs(block), keep)
+        columns.append(top)
+        values.append(np.take_along_axis(block, top, axis=1))
+    pruned = sp.csr_matrix(
+        (
+            np.concatenate(values).ravel(),
+            np.concatenate(columns).ravel(),
+            np.arange(0, len(weights) * keep + 1, keep),
+        ),
+        shape=weights.shape,
+    )
+    pruned.eliminate_zeros()
+    pruned.sort_indices()
+    return pruned
+
+
 class EASE(Recommender):
     name = "ease"
 
@@ -85,37 +109,20 @@ class EASE(Recommender):
         _invert_spd_in_place(p)
         scale = -1.0 / np.diag(p)
 
-        keep = None if self.keep_per_item is None else min(self.keep_per_item, n_items - 1)
-        dense = np.empty((n_items, n_items), dtype=np.float32) if keep is None else None
-        columns: list[npt.NDArray[np.int32]] = []
-        values: list[npt.NDArray[np.float32]] = []
+        # Pruned block by block, so the dense float32 matrix never exists next to `p`.
+        blocks: list[Any] = []
         for start in range(0, n_items, _BLOCK_ROWS):
             block = (p[start : start + _BLOCK_ROWS] * scale).astype(np.float32)
             rows = np.arange(len(block))
             block[rows, start + rows] = 0.0  # a movie never predicts itself
-            if dense is not None:
-                dense[start : start + _BLOCK_ROWS] = block
-            elif keep is not None:
-                top = top_k(np.abs(block), keep)
-                columns.append(top)
-                values.append(np.take_along_axis(block, top, axis=1))
+            blocks.append(block if self.keep_per_item is None else prune(block, self.keep_per_item))
         del p
 
         self.weights: npt.NDArray[np.float32] | sp.csr_matrix
-        if dense is not None:
-            self.weights = dense
-        elif keep is not None:
-            weights = sp.csr_matrix(
-                (
-                    np.concatenate(values).ravel(),
-                    np.concatenate(columns).ravel(),
-                    np.arange(0, n_items * keep + 1, keep),
-                ),
-                shape=(n_items, n_items),
-            )
-            weights.eliminate_zeros()
-            weights.sort_indices()
-            self.weights = weights
+        if self.keep_per_item is None:
+            self.weights = np.concatenate(blocks)
+        else:
+            self.weights = sp.vstack(blocks, format="csr")
         self.n_items = n_items
         return self
 

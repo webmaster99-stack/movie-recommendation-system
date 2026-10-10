@@ -1,0 +1,38 @@
+# Laid over params.yaml by scripts/repro_check.py, which runs the pipeline on a small synthetic
+# dataset (1,500 users, 400 movies, 2021-2023). Only values that must be smaller for that data
+# or for CI's time budget are listed; everything else is params.yaml as it is.
+
+preprocess:
+  start_date: "2021-01-01"
+  max_items: 300
+  min_item_interactions: 5
+
+split:
+  val_start: "2022-10-01"
+  test_start: "2023-04-01"
+
+models:
+  item_knn:
+    k: 20
+  ials:
+    factors: 8
+    iterations: 3
+  ease:
+    l2: 50.0
+    keep_per_item: 50
+  sasrec:
+    hidden_dim: 16
+    max_len: 20
+    epochs: 2
+    batch_size: 64
+    n_negatives: 64
+
+ease_pruning:
+  keep_per_item: [null, 100, 50, 20]
+
+evaluation:
+  batch_size: 256
+  history_segments: [10, 30]
+  bootstrap:
+    n_resamples: 100
+  latency_users: 5

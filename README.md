@@ -27,42 +27,107 @@ Datasets: History and Context.* ACM TiiS 5, 4: 19:1–19:19.
 
 Optional: copy `.env.example` to `.env` to log runs to DagsHub instead of the local `mlflow.db`.
 
-## Results so far (validation split)
+## Results
 
-Every model ranks the full catalog of 19,642 movies; movies the user has already seen are
-excluded. Brackets are 95% bootstrap confidence intervals over users. Hyperparameters are
-tuned on this split (see below), so the numbers are optimistic; the untouched test split is
-evaluated once, in Phase 4.
+Nine candidates are compared: the five algorithms, plus a recency variant of each personalised
+one. Every model ranks the full catalog of 19,642 movies, with movies the user has already
+seen excluded. Numbers are NDCG@10. "Returning" users have history before the split date;
+"new" users don't, so their first 10 likes are the history and the rest are predicted.
 
-| Scenario | Model | NDCG@10 | Recall@10 | MRR@10 | Coverage@10 | Size |
-|---|---|---|---|---|---|---|
-| Warm (5,795 returning users) | Popularity (30-day half-life) | **0.124** [0.119, 0.128] | **0.063** | **0.278** | 0.6% | 0.1 MB |
-| | Item-kNN | 0.084 [0.079, 0.088] | 0.035 | 0.166 | 3.4% | 131 MB |
-| | iALS | 0.096 [0.092, 0.100] | 0.041 | 0.192 | 7.9% | 9 MB |
-| | EASE | 0.106 [0.101, 0.110] | 0.046 | 0.206 | **8.2%** | 154 MB |
-| | SASRec | 0.065 [0.062, 0.068] | 0.029 | 0.137 | 8.1% | 5 MB |
-| Onboarding (3,894 new users, first 10 likes as history) | Popularity (30-day half-life) | 0.293 [0.285, 0.301] | 0.054 | 0.409 | 0.1% | |
-| | Item-kNN | 0.373 [0.365, 0.383] | 0.072 | 0.568 | 4.3% | |
-| | iALS | 0.365 [0.357, 0.374] | 0.072 | 0.579 | 4.3% | |
-| | EASE | **0.377** [0.369, 0.385] | **0.077** | **0.586** | **6.6%** | |
-| | SASRec | 0.303 [0.296, 0.312] | 0.058 | 0.491 | 5.6% | |
+| Model | Val, all users | Val, returning | Val, new | Test, all users | Test, returning | Test, new | Size |
+|---|---|---|---|---|---|---|---|
+| **EASE + recency** (selected) | **0.238** | **0.149** | 0.370 | 0.234 | **0.136** | 0.383 | 77 MB |
+| iALS + recency | 0.235 | 0.142 | 0.373 | **0.234** | 0.135 | 0.384 | 9 MB |
+| SASRec + recency | 0.217 | 0.145 | 0.325 | 0.210 | 0.127 | 0.336 | 5 MB |
+| EASE | 0.215 | 0.106 | **0.376** | 0.221 | 0.108 | 0.393 | 77 MB |
+| iALS | 0.204 | 0.096 | 0.365 | 0.209 | 0.096 | 0.382 | 9 MB |
+| Item-kNN | 0.200 | 0.084 | 0.373 | 0.207 | 0.084 | **0.396** | 131 MB |
+| Item-kNN + recency | 0.200 | 0.084 | 0.373 | 0.207 | 0.083 | **0.396** | 131 MB |
+| Popularity (30-day half-life) | 0.192 | 0.124 | 0.293 | 0.176 | 0.114 | 0.270 | 0.1 MB |
+| SASRec | 0.161 | 0.065 | 0.303 | 0.169 | 0.066 | 0.326 | 5 MB |
+
+Validation: 9,689 users (5,795 returning, 3,894 new). Test: 8,686 users (5,250 returning,
+3,436 new). Hyperparameters were tuned on validation, so those columns are optimistic. The
+test columns come from models refitted on train + validation and evaluated once, after the
+choice was made.
 
 What the table says:
 
-- **EASE is the best personalised model** in both scenarios, ahead of iALS and Item-kNN.
-- **Recency beats personalisation for returning users.** Popularity that halves an
-  interaction's weight every 30 days tops the warm scenario: in 2022 people mostly rated what
-  had just come out, and none of the personalised models look at dates yet.
-- **SASRec is limited by compute, not by design.** It trains on a laptop CPU at about two
-  minutes per epoch, so it gets 10 epochs and its score was still rising when training stopped.
-- EASE is stored with the 1,000 strongest weights per movie instead of the full 1.5 GB matrix.
+- **The selected model is EASE with a recency prior.** It has the best validation NDCG@10
+  over all users among the models within the 150 MB serving budget. Its lead over iALS +
+  recency is 0.0026 [0.0008, 0.0044], significant after Holm correction (p = 0.031).
+- **On the test split the top two are tied.** iALS + recency is ahead by 0.0001
+  [-0.0018, 0.0019] (p = 0.95), at a ninth of the size. The selection rule only looks at
+  validation, so the choice stands, but iALS + recency is an equally good, much smaller
+  alternative.
+- **Recency is worth more than the choice of algorithm.** Adding the prior lifts EASE from
+  0.215 to 0.238, iALS from 0.204 to 0.235 and SASRec from 0.161 to 0.217 on validation, all
+  from returning users, who mostly rate what has just come out. For new users it changes
+  little or costs a little.
+- **Item-kNN gains nothing from recency**: its search settled on a weight close to zero.
+- **SASRec is limited by compute, not by design.** It trains on a laptop CPU for 10 epochs
+  and its score was still rising when training stopped.
 
-Full numbers, including @20, novelty and results by history length: `uv run dvc metrics show`.
+Confidence intervals, @20, coverage, novelty, results by history length and every pairwise
+test are in `metrics/` (`uv run dvc metrics show`) and in `notebooks/02_results.ipynb`.
+
+### Recency variants
+
+A recency variant leaves the base model as it is and changes only the score: each movie's
+time-decayed like count (the same quantity the Popularity model ranks by) is standardised
+and added to the user's standardised personalised scores, times a weight. The base model is
+not retrained, and serving needs one extra number per movie.
+
+| Model | Half-life | Weight | Val NDCG@10: base | With recency |
+|---|---|---|---|---|
+| EASE | 11 days | 9.07 | 0.215 | 0.238 |
+| iALS | 7 days | 4.11 | 0.204 | 0.235 |
+| SASRec | 11 days | 2.09 | 0.161 | 0.217 |
+| Item-kNN | 246 days | 0.05 | 0.200 | 0.200 |
+
+### EASE pruning
+
+The full EASE weight matrix is 1.5 GB, ten times the serving budget, so only the
+largest-magnitude weights per movie are kept. The `ease_pruning` stage measures the cost
+(`metrics/ease_pruning.json`); `params.yaml` uses the smallest setting that loses at most
+0.1% of the unpruned NDCG@10.
+
+| Weights kept per movie | Size | Val NDCG@10, all users | Change |
+|---|---|---|---|
+| all 19,642 (unpruned) | 1,543 MB | 0.2148 | |
+| 2,000 | 314 MB | 0.2147 | -0.04% |
+| 1,000 | 157 MB | 0.2146 | -0.08% |
+| **500** (used) | 79 MB | 0.2148 | -0.02% |
+| 200 | 31 MB | 0.2140 | -0.39% |
+| 100 | 16 MB | 0.2128 | -0.93% |
+
+### Selection, bundle and registry
 
 ```bash
-uv run dvc repro                     # data -> train -> evaluate, all models
-uv run dvc repro evaluate@item_knn   # a single model
+uv run dvc repro                              # data -> train -> evaluate -> compare -> select -> export -> register
+uv run dvc repro evaluate@item_knn            # a single model on validation (`test@item_knn` for test)
+uv run python -m recsys.registry.promote      # move the `champion` alias to the current challenger
 ```
+
+- `compare` runs paired tests between all models on the same users: a bootstrap confidence
+  interval of the mean difference and a paired t-test, Holm-corrected
+  (`metrics/comparison_val.json`, `metrics/comparison_test.json`).
+- `select` picks the best validation NDCG@10 over all users among the models within
+  `selection.max_model_size_mb` (`metrics/selection.json`).
+- `export` writes `bundle/`: the selected model refitted on train + validation, the movie
+  catalog, metadata, and a model card (`bundle/model_card.md`).
+- `register` uploads the bundle to MLflow as a new version of `movie-recsys` with the
+  `challenger` alias. Promotion to `champion` is a deliberate manual step.
+
+### Reproducibility check
+
+```bash
+uv run python scripts/repro_check.py
+```
+
+Runs the whole pipeline twice on a small synthetic dataset, in a throwaway copy of the
+project, and fails if any output file differs between the two runs. CI runs it on every pull
+request (`.github/workflows/repro-check.yml`).
 
 ### Tuning
 
@@ -81,6 +146,7 @@ spaces and trial counts are in `params.yaml` under `tuning`; every trial is reco
 
 ```bash
 uv run python -m recsys.tuning.tune ease   # rerun one search (minutes to hours per model)
+uv run python -m recsys.tuning.tune ease_recency   # a recency variant; needs the base model in models/
 ```
 
 Tuning is not part of `dvc repro`: the pipeline reads the tuned values from `params.yaml`, so
@@ -92,7 +158,7 @@ rebuilding it never repeats a search.
 - [x] 1. Data pipeline (DVC)
 - [x] 2. Evaluation framework + baselines (Popularity, Item-kNN)
 - [x] 3. iALS, EASE, SASRec + tuning
-- [ ] 4. Model selection + registry
+- [x] 4. Model selection + registry
 - [ ] 5. API
 - [ ] 6. Frontend
 - [ ] 7. Deployment + CI/CD

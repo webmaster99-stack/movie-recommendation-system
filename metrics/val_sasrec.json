@@ -1,4 +1,57 @@
 {
+  "all": {
+    "mrr_at_10": {
+      "ci_high": 0.286747,
+      "ci_low": 0.272015,
+      "mean": 0.279186
+    },
+    "mrr_at_20": {
+      "ci_high": 0.294027,
+      "ci_low": 0.279514,
+      "mean": 0.286563
+    },
+    "n_users": 9689,
+    "ndcg_at_10": {
+      "ci_high": 0.165519,
+      "ci_low": 0.156743,
+      "mean": 0.160995
+    },
+    "ndcg_at_20": {
+      "ci_high": 0.162617,
+      "ci_low": 0.154627,
+      "mean": 0.158386
+    },
+    "novelty_at_10": {
+      "ci_high": 3.871619,
+      "ci_low": 3.805657,
+      "mean": 3.839613
+    },
+    "novelty_at_20": {
+      "ci_high": 3.906578,
+      "ci_low": 3.840596,
+      "mean": 3.873564
+    },
+    "popularity_at_10": {
+      "ci_high": 0.135511,
+      "ci_low": 0.131105,
+      "mean": 0.133227
+    },
+    "popularity_at_20": {
+      "ci_high": 0.132114,
+      "ci_low": 0.12816,
+      "mean": 0.130055
+    },
+    "recall_at_10": {
+      "ci_high": 0.041993,
+      "ci_low": 0.038792,
+      "mean": 0.040469
+    },
+    "recall_at_20": {
+      "ci_high": 0.075125,
+      "ci_low": 0.070702,
+      "mean": 0.072927
+    }
+  },
   "model": "sasrec",
   "model_size_bytes": 5247556,
   "onboarding": {

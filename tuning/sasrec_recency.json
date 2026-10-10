@@ -1,0 +1,217 @@
+{
+  "best_params": {
+    "half_life_days": 11,
+    "weight": 2.086
+  },
+  "best_scores": {
+    "all": 0.217121,
+    "onboarding": 0.324945,
+    "warm": 0.144667
+  },
+  "best_trial": 16,
+  "metric": "ndcg_at_10",
+  "model": "sasrec_recency",
+  "seed": 42,
+  "trials": [
+    {
+      "all": 0.195514,
+      "number": 0,
+      "onboarding": 0.342231,
+      "params": {
+        "half_life_days": 30,
+        "weight": 0.5
+      },
+      "warm": 0.096926
+    },
+    {
+      "all": 0.193947,
+      "number": 1,
+      "onboarding": 0.297443,
+      "params": {
+        "half_life_days": 29,
+        "weight": 14.89
+      },
+      "warm": 0.124403
+    },
+    {
+      "all": 0.195137,
+      "number": 2,
+      "onboarding": 0.344083,
+      "params": {
+        "half_life_days": 124,
+        "weight": 1.806
+      },
+      "warm": 0.095052
+    },
+    {
+      "all": 0.176022,
+      "number": 3,
+      "onboarding": 0.321916,
+      "params": {
+        "half_life_days": 12,
+        "weight": 0.1273
+      },
+      "warm": 0.077988
+    },
+    {
+      "all": 0.184845,
+      "number": 4,
+      "onboarding": 0.242581,
+      "params": {
+        "half_life_days": 8,
+        "weight": 8.97
+      },
+      "warm": 0.146048
+    },
+    {
+      "all": 0.199719,
+      "number": 5,
+      "onboarding": 0.336011,
+      "params": {
+        "half_life_days": 73,
+        "weight": 3.479
+      },
+      "warm": 0.108137
+    },
+    {
+      "all": 0.173787,
+      "number": 6,
+      "onboarding": 0.23241,
+      "params": {
+        "half_life_days": 7,
+        "weight": 16.7
+      },
+      "warm": 0.134395
+    },
+    {
+      "all": 0.171767,
+      "number": 7,
+      "onboarding": 0.318056,
+      "params": {
+        "half_life_days": 186,
+        "weight": 0.1784
+      },
+      "warm": 0.073468
+    },
+    {
+      "all": 0.177693,
+      "number": 8,
+      "onboarding": 0.323836,
+      "params": {
+        "half_life_days": 14,
+        "weight": 0.15
+      },
+      "warm": 0.079491
+    },
+    {
+      "all": 0.207382,
+      "number": 9,
+      "onboarding": 0.34242,
+      "params": {
+        "half_life_days": 22,
+        "weight": 1.16
+      },
+      "warm": 0.116643
+    },
+    {
+      "all": 0.19813,
+      "number": 10,
+      "onboarding": 0.343504,
+      "params": {
+        "half_life_days": 23,
+        "weight": 0.5265
+      },
+      "warm": 0.100444
+    },
+    {
+      "all": 0.178263,
+      "number": 11,
+      "onboarding": 0.326718,
+      "params": {
+        "half_life_days": 160,
+        "weight": 15.7
+      },
+      "warm": 0.078507
+    },
+    {
+      "all": 0.199189,
+      "number": 12,
+      "onboarding": 0.331863,
+      "params": {
+        "half_life_days": 71,
+        "weight": 4.593
+      },
+      "warm": 0.110038
+    },
+    {
+      "all": 0.207834,
+      "number": 13,
+      "onboarding": 0.343447,
+      "params": {
+        "half_life_days": 7,
+        "weight": 0.6798
+      },
+      "warm": 0.116707
+    },
+    {
+      "all": 0.206309,
+      "number": 14,
+      "onboarding": 0.344359,
+      "params": {
+        "half_life_days": 8,
+        "weight": 0.6529
+      },
+      "warm": 0.113546
+    },
+    {
+      "all": 0.210338,
+      "number": 15,
+      "onboarding": 0.327405,
+      "params": {
+        "half_life_days": 18,
+        "weight": 2.144
+      },
+      "warm": 0.131674
+    },
+    {
+      "all": 0.217121,
+      "number": 16,
+      "onboarding": 0.324945,
+      "params": {
+        "half_life_days": 11,
+        "weight": 2.086
+      },
+      "warm": 0.144667
+    },
+    {
+      "all": 0.165868,
+      "number": 17,
+      "onboarding": 0.309757,
+      "params": {
+        "half_life_days": 60,
+        "weight": 0.06023
+      },
+      "warm": 0.06918
+    },
+    {
+      "all": 0.204847,
+      "number": 18,
+      "onboarding": 0.312461,
+      "params": {
+        "half_life_days": 21,
+        "weight": 3.593
+      },
+      "warm": 0.132534
+    },
+    {
+      "all": 0.214508,
+      "number": 19,
+      "onboarding": 0.335475,
+      "params": {
+        "half_life_days": 11,
+        "weight": 1.397
+      },
+      "warm": 0.133223
+    }
+  ]
+}

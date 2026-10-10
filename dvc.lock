@@ -161,8 +161,8 @@ stages:
       size: 31410215
     - path: src/recsys/models/__init__.py
       hash: md5
-      md5: 36c4b440fdb6f0bb1c4221e909830b81
-      size: 910
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
     - path: src/recsys/models/base.py
       hash: md5
       md5: e4366fc28fa17f20253229b8ead90ade
@@ -173,8 +173,8 @@ stages:
       size: 2012
     - path: src/recsys/models/train.py
       hash: md5
-      md5: 7ba02bec3cc1ffdc0f5e80f6ffc54a9d
-      size: 1828
+      md5: 85b4a9d314a2750c1146d3b8709748f1
+      size: 2717
     - path: src/recsys/utils/io.py
       hash: md5
       md5: 0cae415f444058509ef9a420b7b5e34a
@@ -203,8 +203,8 @@ stages:
       size: 31410215
     - path: src/recsys/models/__init__.py
       hash: md5
-      md5: 36c4b440fdb6f0bb1c4221e909830b81
-      size: 910
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
     - path: src/recsys/models/base.py
       hash: md5
       md5: e4366fc28fa17f20253229b8ead90ade
@@ -215,8 +215,8 @@ stages:
       size: 5401
     - path: src/recsys/models/train.py
       hash: md5
-      md5: 7ba02bec3cc1ffdc0f5e80f6ffc54a9d
-      size: 1828
+      md5: 85b4a9d314a2750c1146d3b8709748f1
+      size: 2717
     - path: src/recsys/utils/io.py
       hash: md5
       md5: 0cae415f444058509ef9a420b7b5e34a
@@ -250,15 +250,22 @@ stages:
       md5: d6f6932b40e7c01275d548e4969e4364.dir
       size: 78788
       nfiles: 2
-    - path: src/recsys/evaluation
+    - path: src/recsys/evaluation/evaluate.py
       hash: md5
-      md5: 102cccc5ecfadeb823e1e79f0f8c5ef8.dir
-      size: 37362
-      nfiles: 8
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
     - path: src/recsys/models/__init__.py
       hash: md5
-      md5: 36c4b440fdb6f0bb1c4221e909830b81
-      size: 910
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
     - path: src/recsys/models/base.py
       hash: md5
       md5: e4366fc28fa17f20253229b8ead90ade
@@ -267,6 +274,10 @@ stages:
       hash: md5
       md5: 0a1f0614a31cd70358586a9124b639d0
       size: 2012
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
     - path: src/recsys/utils/io.py
       hash: md5
       md5: 0cae415f444058509ef9a420b7b5e34a
@@ -287,6 +298,8 @@ stages:
             n_resamples: 1000
             confidence: 0.95
           latency_users: 200
+        models.popularity:
+          half_life_days: 30
         seed: 42
     outs:
     - path: data/evaluation/val/popularity.parquet
@@ -295,8 +308,8 @@ stages:
       size: 396734
     - path: metrics/val_popularity.json
       hash: md5
-      md5: c6323da511536d12b1422a83bca73ad2
-      size: 3591
+      md5: d59b7e8ac6b5189e78fb0d2376fba8d2
+      size: 4676
   evaluate@item_knn:
     cmd: python -m recsys.evaluation.evaluate item_knn
     deps:
@@ -313,15 +326,22 @@ stages:
       md5: 0bebe175c46f245db94124dbc0207665.dir
       size: 130823050
       nfiles: 4
-    - path: src/recsys/evaluation
+    - path: src/recsys/evaluation/evaluate.py
       hash: md5
-      md5: 102cccc5ecfadeb823e1e79f0f8c5ef8.dir
-      size: 37362
-      nfiles: 8
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
     - path: src/recsys/models/__init__.py
       hash: md5
-      md5: 36c4b440fdb6f0bb1c4221e909830b81
-      size: 910
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
     - path: src/recsys/models/base.py
       hash: md5
       md5: e4366fc28fa17f20253229b8ead90ade
@@ -330,6 +350,10 @@ stages:
       hash: md5
       md5: 1a90095bec72f0ab15450c4c0f5ff78a
       size: 5401
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
     - path: src/recsys/utils/io.py
       hash: md5
       md5: 0cae415f444058509ef9a420b7b5e34a
@@ -350,6 +374,10 @@ stages:
             n_resamples: 1000
             confidence: 0.95
           latency_users: 200
+        models.item_knn:
+          k: 853
+          similarity: cosine
+          shrinkage: 19.53
         seed: 42
     outs:
     - path: data/evaluation/val/item_knn.parquet
@@ -358,8 +386,8 @@ stages:
       size: 526411
     - path: metrics/val_item_knn.json
       hash: md5
-      md5: d05ebcb4c59f1155fc734246258fbc30
-      size: 3599
+      md5: ac04ca451dafd8c14f133974e5f2fe91
+      size: 4678
   train@ials:
     cmd: python -m recsys.models.train ials
     deps:
@@ -373,8 +401,8 @@ stages:
       size: 31410215
     - path: src/recsys/models/__init__.py
       hash: md5
-      md5: 36c4b440fdb6f0bb1c4221e909830b81
-      size: 910
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
     - path: src/recsys/models/base.py
       hash: md5
       md5: e4366fc28fa17f20253229b8ead90ade
@@ -385,8 +413,8 @@ stages:
       size: 4275
     - path: src/recsys/models/train.py
       hash: md5
-      md5: 7ba02bec3cc1ffdc0f5e80f6ffc54a9d
-      size: 1828
+      md5: 85b4a9d314a2750c1146d3b8709748f1
+      size: 2717
     - path: src/recsys/utils/io.py
       hash: md5
       md5: 0cae415f444058509ef9a420b7b5e34a
@@ -418,20 +446,20 @@ stages:
       size: 31410215
     - path: src/recsys/models/__init__.py
       hash: md5
-      md5: 36c4b440fdb6f0bb1c4221e909830b81
-      size: 910
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
     - path: src/recsys/models/base.py
       hash: md5
       md5: e4366fc28fa17f20253229b8ead90ade
       size: 4187
     - path: src/recsys/models/ease.py
       hash: md5
-      md5: e555fd51d3cd8682ed544ee4208327f1
-      size: 6072
+      md5: beff2146ec4f7a4a8d06f542aa9760c8
+      size: 6261
     - path: src/recsys/models/train.py
       hash: md5
-      md5: 7ba02bec3cc1ffdc0f5e80f6ffc54a9d
-      size: 1828
+      md5: 85b4a9d314a2750c1146d3b8709748f1
+      size: 2717
     - path: src/recsys/utils/io.py
       hash: md5
       md5: 0cae415f444058509ef9a420b7b5e34a
@@ -440,13 +468,13 @@ stages:
       params.yaml:
         models.ease:
           l2: 1138.0
-          keep_per_item: 1000
+          keep_per_item: 500
         seed: 42
     outs:
     - path: models/ease
       hash: md5
-      md5: 3b0e38308f8a9cf046e43c47b3d1e448.dir
-      size: 153485633
+      md5: c89001d7cce239d05cc8e938dbd300b5.dir
+      size: 76821632
       nfiles: 4
   train@sasrec:
     cmd: python -m recsys.models.train sasrec
@@ -461,8 +489,8 @@ stages:
       size: 31410215
     - path: src/recsys/models/__init__.py
       hash: md5
-      md5: 36c4b440fdb6f0bb1c4221e909830b81
-      size: 910
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
     - path: src/recsys/models/base.py
       hash: md5
       md5: e4366fc28fa17f20253229b8ead90ade
@@ -473,8 +501,8 @@ stages:
       size: 11236
     - path: src/recsys/models/train.py
       hash: md5
-      md5: 7ba02bec3cc1ffdc0f5e80f6ffc54a9d
-      size: 1828
+      md5: 85b4a9d314a2750c1146d3b8709748f1
+      size: 2717
     - path: src/recsys/utils/io.py
       hash: md5
       md5: 0cae415f444058509ef9a420b7b5e34a
@@ -516,15 +544,22 @@ stages:
       md5: fafa94c022b1152c5c610af9c6e881ec.dir
       size: 8642775
       nfiles: 2
-    - path: src/recsys/evaluation
+    - path: src/recsys/evaluation/evaluate.py
       hash: md5
-      md5: 102cccc5ecfadeb823e1e79f0f8c5ef8.dir
-      size: 37362
-      nfiles: 8
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
     - path: src/recsys/models/__init__.py
       hash: md5
-      md5: 36c4b440fdb6f0bb1c4221e909830b81
-      size: 910
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
     - path: src/recsys/models/base.py
       hash: md5
       md5: e4366fc28fa17f20253229b8ead90ade
@@ -533,6 +568,10 @@ stages:
       hash: md5
       md5: f979c009667ecc48d68aac14325d420f
       size: 4275
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
     - path: src/recsys/utils/io.py
       hash: md5
       md5: 0cae415f444058509ef9a420b7b5e34a
@@ -553,6 +592,11 @@ stages:
             n_resamples: 1000
             confidence: 0.95
           latency_users: 200
+        models.ials:
+          factors: 110
+          regularization: 19.25
+          alpha: 2.945
+          iterations: 21
         seed: 42
     outs:
     - path: data/evaluation/val/ials.parquet
@@ -561,8 +605,8 @@ stages:
       size: 536247
     - path: metrics/val_ials.json
       hash: md5
-      md5: e607c1316c54212c3e0db1e681014a3a
-      size: 3593
+      md5: 380c1981dceccbb08b6b3aefe585195d
+      size: 4671
   evaluate@ease:
     cmd: python -m recsys.evaluation.evaluate ease
     deps:
@@ -576,26 +620,37 @@ stages:
       size: 2615608
     - path: models/ease
       hash: md5
-      md5: 3b0e38308f8a9cf046e43c47b3d1e448.dir
-      size: 153485633
+      md5: c89001d7cce239d05cc8e938dbd300b5.dir
+      size: 76821632
       nfiles: 4
-    - path: src/recsys/evaluation
+    - path: src/recsys/evaluation/evaluate.py
       hash: md5
-      md5: 102cccc5ecfadeb823e1e79f0f8c5ef8.dir
-      size: 37362
-      nfiles: 8
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
     - path: src/recsys/models/__init__.py
       hash: md5
-      md5: 36c4b440fdb6f0bb1c4221e909830b81
-      size: 910
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
     - path: src/recsys/models/base.py
       hash: md5
       md5: e4366fc28fa17f20253229b8ead90ade
       size: 4187
     - path: src/recsys/models/ease.py
       hash: md5
-      md5: e555fd51d3cd8682ed544ee4208327f1
-      size: 6072
+      md5: beff2146ec4f7a4a8d06f542aa9760c8
+      size: 6261
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
     - path: src/recsys/utils/io.py
       hash: md5
       md5: 0cae415f444058509ef9a420b7b5e34a
@@ -616,16 +671,19 @@ stages:
             n_resamples: 1000
             confidence: 0.95
           latency_users: 200
+        models.ease:
+          l2: 1138.0
+          keep_per_item: 500
         seed: 42
     outs:
     - path: data/evaluation/val/ease.parquet
       hash: md5
-      md5: 0b0a4c8ac1d7570b6b988abafc656929
-      size: 538065
+      md5: cb6cd24957d9c69adf2a7a519242824d
+      size: 537848
     - path: metrics/val_ease.json
       hash: md5
-      md5: 9fd68740e3853fc4c7a9e76adcd8c8f7
-      size: 3588
+      md5: 42d53b1601b0dce5706d1a4d000b1926
+      size: 4674
   evaluate@sasrec:
     cmd: python -m recsys.evaluation.evaluate sasrec
     deps:
@@ -642,19 +700,30 @@ stages:
       md5: 7ec8130a6e148ad38cd751d81814fbd3.dir
       size: 5247556
       nfiles: 29
-    - path: src/recsys/evaluation
+    - path: src/recsys/evaluation/evaluate.py
       hash: md5
-      md5: 102cccc5ecfadeb823e1e79f0f8c5ef8.dir
-      size: 37362
-      nfiles: 8
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
     - path: src/recsys/models/__init__.py
       hash: md5
-      md5: 36c4b440fdb6f0bb1c4221e909830b81
-      size: 910
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
     - path: src/recsys/models/base.py
       hash: md5
       md5: e4366fc28fa17f20253229b8ead90ade
       size: 4187
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
     - path: src/recsys/models/sasrec.py
       hash: md5
       md5: 1ab78ea68718ed891037554b1c0df09c
@@ -679,6 +748,18 @@ stages:
             n_resamples: 1000
             confidence: 0.95
           latency_users: 200
+        models.sasrec:
+          hidden_dim: 64
+          n_blocks: 2
+          n_heads: 1
+          max_len: 50
+          dropout: 0.2395
+          learning_rate: 0.002352
+          weight_decay: 0.0
+          epochs: 10
+          batch_size: 256
+          n_negatives: 1024
+          max_users:
         seed: 42
     outs:
     - path: data/evaluation/val/sasrec.parquet
@@ -687,5 +768,1669 @@ stages:
       size: 525831
     - path: metrics/val_sasrec.json
       hash: md5
-      md5: a94fa1ee40efabaab67ccc15a4553eac
-      size: 3591
+      md5: f3bb229fcebbbc53c6c5f870fbf37f54
+      size: 4676
+  ease_pruning:
+    cmd: python -m recsys.evaluation.ease_pruning
+    deps:
+    - path: data/processed/item_map.parquet
+      hash: md5
+      md5: 50c8c1928ec87e61c58246de59f8f7fc
+      size: 175578
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: src/recsys/evaluation/ease_pruning.py
+      hash: md5
+      md5: bdc28c6049db9186ea22c68d9d5c92ec
+      size: 3649
+    - path: src/recsys/evaluation/evaluate.py
+      hash: md5
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/ease.py
+      hash: md5
+      md5: beff2146ec4f7a4a8d06f542aa9760c8
+      size: 6261
+    - path: src/recsys/tuning/tune.py
+      hash: md5
+      md5: 49d55ac20d792b19ad10ae49589a0a3c
+      size: 8160
+    params:
+      params.yaml:
+        ease_pruning:
+          keep_per_item:
+          - 
+          - 2000
+          - 1000
+          - 500
+          - 200
+          - 100
+          max_relative_drop: 0.001
+        evaluation.batch_size: 1024
+        evaluation.onboarding:
+          n_history: 10
+        models.ease.l2: 1138.0
+        tuning.metric: ndcg_at_10
+    outs:
+    - path: metrics/ease_pruning.json
+      hash: md5
+      md5: bdb4211fb2be4021ccbcf4bd200862c0
+      size: 1167
+  evaluate@item_knn_recency:
+    cmd: python -m recsys.evaluation.evaluate item_knn_recency
+    deps:
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: models/item_knn
+      hash: md5
+      md5: 0bebe175c46f245db94124dbc0207665.dir
+      size: 130823050
+      nfiles: 4
+    - path: src/recsys/evaluation/evaluate.py
+      hash: md5
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/item_knn.py
+      hash: md5
+      md5: 1a90095bec72f0ab15450c4c0f5ff78a
+      size: 5401
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        evaluation:
+          ks:
+          - 10
+          - 20
+          batch_size: 1024
+          onboarding:
+            n_history: 10
+          history_segments:
+          - 20
+          - 100
+          bootstrap:
+            n_resamples: 1000
+            confidence: 0.95
+          latency_users: 200
+        models.item_knn_recency:
+          half_life_days: 246
+          weight: 0.05231
+        seed: 42
+    outs:
+    - path: data/evaluation/val/item_knn_recency.parquet
+      hash: md5
+      md5: f2de2ad67d590c9677d73e4690ca6a42
+      size: 526495
+    - path: metrics/val_item_knn_recency.json
+      hash: md5
+      md5: e1641caa11a9b058281c04fed4a900b4
+      size: 4678
+  evaluate@ials_recency:
+    cmd: python -m recsys.evaluation.evaluate ials_recency
+    deps:
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: models/ials
+      hash: md5
+      md5: fafa94c022b1152c5c610af9c6e881ec.dir
+      size: 8642775
+      nfiles: 2
+    - path: src/recsys/evaluation/evaluate.py
+      hash: md5
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/ials.py
+      hash: md5
+      md5: f979c009667ecc48d68aac14325d420f
+      size: 4275
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        evaluation:
+          ks:
+          - 10
+          - 20
+          batch_size: 1024
+          onboarding:
+            n_history: 10
+          history_segments:
+          - 20
+          - 100
+          bootstrap:
+            n_resamples: 1000
+            confidence: 0.95
+          latency_users: 200
+        models.ials_recency:
+          half_life_days: 7
+          weight: 4.108
+        seed: 42
+    outs:
+    - path: data/evaluation/val/ials_recency.parquet
+      hash: md5
+      md5: 711f5eba43b3d858ea80e3b43d09fba8
+      size: 542110
+    - path: metrics/val_ials_recency.json
+      hash: md5
+      md5: ce853e64a39ab056a4304ff70ac716ac
+      size: 4681
+  evaluate@ease_recency:
+    cmd: python -m recsys.evaluation.evaluate ease_recency
+    deps:
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: models/ease
+      hash: md5
+      md5: c89001d7cce239d05cc8e938dbd300b5.dir
+      size: 76821632
+      nfiles: 4
+    - path: src/recsys/evaluation/evaluate.py
+      hash: md5
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/ease.py
+      hash: md5
+      md5: beff2146ec4f7a4a8d06f542aa9760c8
+      size: 6261
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        evaluation:
+          ks:
+          - 10
+          - 20
+          batch_size: 1024
+          onboarding:
+            n_history: 10
+          history_segments:
+          - 20
+          - 100
+          bootstrap:
+            n_resamples: 1000
+            confidence: 0.95
+          latency_users: 200
+        models.ease_recency:
+          half_life_days: 11
+          weight: 9.071
+        seed: 42
+    outs:
+    - path: data/evaluation/val/ease_recency.parquet
+      hash: md5
+      md5: bd0b642d829f7d5aa9f566ca99ebdf35
+      size: 541767
+    - path: metrics/val_ease_recency.json
+      hash: md5
+      md5: 8b46cbdae75bb1b73abe89852474065b
+      size: 4682
+  evaluate@sasrec_recency:
+    cmd: python -m recsys.evaluation.evaluate sasrec_recency
+    deps:
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: models/sasrec
+      hash: md5
+      md5: 7ec8130a6e148ad38cd751d81814fbd3.dir
+      size: 5247556
+      nfiles: 29
+    - path: src/recsys/evaluation/evaluate.py
+      hash: md5
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
+    - path: src/recsys/models/sasrec.py
+      hash: md5
+      md5: 1ab78ea68718ed891037554b1c0df09c
+      size: 11236
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        evaluation:
+          ks:
+          - 10
+          - 20
+          batch_size: 1024
+          onboarding:
+            n_history: 10
+          history_segments:
+          - 20
+          - 100
+          bootstrap:
+            n_resamples: 1000
+            confidence: 0.95
+          latency_users: 200
+        models.sasrec_recency:
+          half_life_days: 11
+          weight: 2.086
+        seed: 42
+    outs:
+    - path: data/evaluation/val/sasrec_recency.parquet
+      hash: md5
+      md5: 9f80e634e802c0bd05063f94c6068cd9
+      size: 513485
+    - path: metrics/val_sasrec_recency.json
+      hash: md5
+      md5: 48aa142618553301dbba8cc71c78ab37
+      size: 4677
+  train_final@popularity:
+    cmd: python -m recsys.models.train popularity --final
+    deps:
+    - path: data/processed/item_map.parquet
+      hash: md5
+      md5: 50c8c1928ec87e61c58246de59f8f7fc
+      size: 175578
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/popularity.py
+      hash: md5
+      md5: 0a1f0614a31cd70358586a9124b639d0
+      size: 2012
+    - path: src/recsys/models/train.py
+      hash: md5
+      md5: 85b4a9d314a2750c1146d3b8709748f1
+      size: 2717
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        models.popularity:
+          half_life_days: 30
+        seed: 42
+    outs:
+    - path: models/final/popularity
+      hash: md5
+      md5: c213423463d55b1a71f1584fbe9baa15.dir
+      size: 78788
+      nfiles: 2
+  train_final@item_knn:
+    cmd: python -m recsys.models.train item_knn --final
+    deps:
+    - path: data/processed/item_map.parquet
+      hash: md5
+      md5: 50c8c1928ec87e61c58246de59f8f7fc
+      size: 175578
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/item_knn.py
+      hash: md5
+      md5: 1a90095bec72f0ab15450c4c0f5ff78a
+      size: 5401
+    - path: src/recsys/models/train.py
+      hash: md5
+      md5: 85b4a9d314a2750c1146d3b8709748f1
+      size: 2717
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        models.item_knn:
+          k: 853
+          similarity: cosine
+          shrinkage: 19.53
+        seed: 42
+    outs:
+    - path: models/final/item_knn
+      hash: md5
+      md5: 26dcd9a74fc98f09fcb6e2294f8cff24.dir
+      size: 133159498
+      nfiles: 4
+  train_final@ials:
+    cmd: python -m recsys.models.train ials --final
+    deps:
+    - path: data/processed/item_map.parquet
+      hash: md5
+      md5: 50c8c1928ec87e61c58246de59f8f7fc
+      size: 175578
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/ials.py
+      hash: md5
+      md5: f979c009667ecc48d68aac14325d420f
+      size: 4275
+    - path: src/recsys/models/train.py
+      hash: md5
+      md5: 85b4a9d314a2750c1146d3b8709748f1
+      size: 2717
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        models.ials:
+          factors: 110
+          regularization: 19.25
+          alpha: 2.945
+          iterations: 21
+        seed: 42
+    outs:
+    - path: models/final/ials
+      hash: md5
+      md5: 952c022040503c05d05e77e4a08b901b.dir
+      size: 8642775
+      nfiles: 2
+  train_final@ease:
+    cmd: python -m recsys.models.train ease --final
+    deps:
+    - path: data/processed/item_map.parquet
+      hash: md5
+      md5: 50c8c1928ec87e61c58246de59f8f7fc
+      size: 175578
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/ease.py
+      hash: md5
+      md5: beff2146ec4f7a4a8d06f542aa9760c8
+      size: 6261
+    - path: src/recsys/models/train.py
+      hash: md5
+      md5: 85b4a9d314a2750c1146d3b8709748f1
+      size: 2717
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        models.ease:
+          l2: 1138.0
+          keep_per_item: 500
+        seed: 42
+    outs:
+    - path: models/final/ease
+      hash: md5
+      md5: f9426be897b28fd474391e85b2861bf8.dir
+      size: 78157632
+      nfiles: 4
+  train_final@sasrec:
+    cmd: python -m recsys.models.train sasrec --final
+    deps:
+    - path: data/processed/item_map.parquet
+      hash: md5
+      md5: 50c8c1928ec87e61c58246de59f8f7fc
+      size: 175578
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/sasrec.py
+      hash: md5
+      md5: 1ab78ea68718ed891037554b1c0df09c
+      size: 11236
+    - path: src/recsys/models/train.py
+      hash: md5
+      md5: 85b4a9d314a2750c1146d3b8709748f1
+      size: 2717
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        models.sasrec:
+          hidden_dim: 64
+          n_blocks: 2
+          n_heads: 1
+          max_len: 50
+          dropout: 0.2395
+          learning_rate: 0.002352
+          weight_decay: 0.0
+          epochs: 10
+          batch_size: 256
+          n_negatives: 1024
+          max_users:
+        seed: 42
+    outs:
+    - path: models/final/sasrec
+      hash: md5
+      md5: 210c73b97ed689dfd06df78a21b3b3bc.dir
+      size: 5247556
+      nfiles: 29
+  test@popularity:
+    cmd: python -m recsys.evaluation.evaluate popularity --split test
+    deps:
+    - path: data/processed/splits/test.parquet
+      hash: md5
+      md5: 7ce8d00a8154812c1b9e7c4b0d206355
+      size: 2367485
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: models/final/popularity
+      hash: md5
+      md5: c213423463d55b1a71f1584fbe9baa15.dir
+      size: 78788
+      nfiles: 2
+    - path: src/recsys/evaluation/evaluate.py
+      hash: md5
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/popularity.py
+      hash: md5
+      md5: 0a1f0614a31cd70358586a9124b639d0
+      size: 2012
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        evaluation:
+          ks:
+          - 10
+          - 20
+          batch_size: 1024
+          onboarding:
+            n_history: 10
+          history_segments:
+          - 20
+          - 100
+          bootstrap:
+            n_resamples: 1000
+            confidence: 0.95
+          latency_users: 200
+        models.popularity:
+          half_life_days: 30
+        seed: 42
+    outs:
+    - path: data/evaluation/test/popularity.parquet
+      hash: md5
+      md5: 6a3bbe249c03eeb4e0d6e1a392156023
+      size: 344622
+    - path: metrics/test_popularity.json
+      hash: md5
+      md5: cf140016f28d3e37e5a4bc79c3f5a997
+      size: 4677
+  test@item_knn:
+    cmd: python -m recsys.evaluation.evaluate item_knn --split test
+    deps:
+    - path: data/processed/splits/test.parquet
+      hash: md5
+      md5: 7ce8d00a8154812c1b9e7c4b0d206355
+      size: 2367485
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: models/final/item_knn
+      hash: md5
+      md5: 26dcd9a74fc98f09fcb6e2294f8cff24.dir
+      size: 133159498
+      nfiles: 4
+    - path: src/recsys/evaluation/evaluate.py
+      hash: md5
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/item_knn.py
+      hash: md5
+      md5: 1a90095bec72f0ab15450c4c0f5ff78a
+      size: 5401
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        evaluation:
+          ks:
+          - 10
+          - 20
+          batch_size: 1024
+          onboarding:
+            n_history: 10
+          history_segments:
+          - 20
+          - 100
+          bootstrap:
+            n_resamples: 1000
+            confidence: 0.95
+          latency_users: 200
+        models.item_knn:
+          k: 853
+          similarity: cosine
+          shrinkage: 19.53
+        seed: 42
+    outs:
+    - path: data/evaluation/test/item_knn.parquet
+      hash: md5
+      md5: 63b0496a6ea30f663b57d6b982ba72ed
+      size: 475751
+    - path: metrics/test_item_knn.json
+      hash: md5
+      md5: 98ce807c79635419bff7dc5df7d863c8
+      size: 4673
+  test@ials:
+    cmd: python -m recsys.evaluation.evaluate ials --split test
+    deps:
+    - path: data/processed/splits/test.parquet
+      hash: md5
+      md5: 7ce8d00a8154812c1b9e7c4b0d206355
+      size: 2367485
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: models/final/ials
+      hash: md5
+      md5: 952c022040503c05d05e77e4a08b901b.dir
+      size: 8642775
+      nfiles: 2
+    - path: src/recsys/evaluation/evaluate.py
+      hash: md5
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/ials.py
+      hash: md5
+      md5: f979c009667ecc48d68aac14325d420f
+      size: 4275
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        evaluation:
+          ks:
+          - 10
+          - 20
+          batch_size: 1024
+          onboarding:
+            n_history: 10
+          history_segments:
+          - 20
+          - 100
+          bootstrap:
+            n_resamples: 1000
+            confidence: 0.95
+          latency_users: 200
+        models.ials:
+          factors: 110
+          regularization: 19.25
+          alpha: 2.945
+          iterations: 21
+        seed: 42
+    outs:
+    - path: data/evaluation/test/ials.parquet
+      hash: md5
+      md5: aefc981932a73aae7e5c1dd1911e704b
+      size: 484007
+    - path: metrics/test_ials.json
+      hash: md5
+      md5: b84a9659080ba8a4651f08e74c91780f
+      size: 4673
+  test@ease:
+    cmd: python -m recsys.evaluation.evaluate ease --split test
+    deps:
+    - path: data/processed/splits/test.parquet
+      hash: md5
+      md5: 7ce8d00a8154812c1b9e7c4b0d206355
+      size: 2367485
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: models/final/ease
+      hash: md5
+      md5: f9426be897b28fd474391e85b2861bf8.dir
+      size: 78157632
+      nfiles: 4
+    - path: src/recsys/evaluation/evaluate.py
+      hash: md5
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/ease.py
+      hash: md5
+      md5: beff2146ec4f7a4a8d06f542aa9760c8
+      size: 6261
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        evaluation:
+          ks:
+          - 10
+          - 20
+          batch_size: 1024
+          onboarding:
+            n_history: 10
+          history_segments:
+          - 20
+          - 100
+          bootstrap:
+            n_resamples: 1000
+            confidence: 0.95
+          latency_users: 200
+        models.ease:
+          l2: 1138.0
+          keep_per_item: 500
+        seed: 42
+    outs:
+    - path: data/evaluation/test/ease.parquet
+      hash: md5
+      md5: bed0e4b9d5e6d3f060d0907f8ce28c96
+      size: 487776
+    - path: metrics/test_ease.json
+      hash: md5
+      md5: 51270ff693e57d009095fe657a566186
+      size: 4677
+  test@sasrec:
+    cmd: python -m recsys.evaluation.evaluate sasrec --split test
+    deps:
+    - path: data/processed/splits/test.parquet
+      hash: md5
+      md5: 7ce8d00a8154812c1b9e7c4b0d206355
+      size: 2367485
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: models/final/sasrec
+      hash: md5
+      md5: 210c73b97ed689dfd06df78a21b3b3bc.dir
+      size: 5247556
+      nfiles: 29
+    - path: src/recsys/evaluation/evaluate.py
+      hash: md5
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
+    - path: src/recsys/models/sasrec.py
+      hash: md5
+      md5: 1ab78ea68718ed891037554b1c0df09c
+      size: 11236
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        evaluation:
+          ks:
+          - 10
+          - 20
+          batch_size: 1024
+          onboarding:
+            n_history: 10
+          history_segments:
+          - 20
+          - 100
+          bootstrap:
+            n_resamples: 1000
+            confidence: 0.95
+          latency_users: 200
+        models.sasrec:
+          hidden_dim: 64
+          n_blocks: 2
+          n_heads: 1
+          max_len: 50
+          dropout: 0.2395
+          learning_rate: 0.002352
+          weight_decay: 0.0
+          epochs: 10
+          batch_size: 256
+          n_negatives: 1024
+          max_users:
+        seed: 42
+    outs:
+    - path: data/evaluation/test/sasrec.parquet
+      hash: md5
+      md5: 72ab1fa4479ca6c8b33d186eb87f6675
+      size: 474753
+    - path: metrics/test_sasrec.json
+      hash: md5
+      md5: 8ae14788929843221584c6bfd9c73d0e
+      size: 4672
+  test@item_knn_recency:
+    cmd: python -m recsys.evaluation.evaluate item_knn_recency --split test
+    deps:
+    - path: data/processed/splits/test.parquet
+      hash: md5
+      md5: 7ce8d00a8154812c1b9e7c4b0d206355
+      size: 2367485
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: models/final/item_knn
+      hash: md5
+      md5: 26dcd9a74fc98f09fcb6e2294f8cff24.dir
+      size: 133159498
+      nfiles: 4
+    - path: src/recsys/evaluation/evaluate.py
+      hash: md5
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/item_knn.py
+      hash: md5
+      md5: 1a90095bec72f0ab15450c4c0f5ff78a
+      size: 5401
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        evaluation:
+          ks:
+          - 10
+          - 20
+          batch_size: 1024
+          onboarding:
+            n_history: 10
+          history_segments:
+          - 20
+          - 100
+          bootstrap:
+            n_resamples: 1000
+            confidence: 0.95
+          latency_users: 200
+        models.item_knn_recency:
+          half_life_days: 246
+          weight: 0.05231
+        seed: 42
+    outs:
+    - path: data/evaluation/test/item_knn_recency.parquet
+      hash: md5
+      md5: c6c71e941ffe76640fe843f710fe3362
+      size: 474490
+    - path: metrics/test_item_knn_recency.json
+      hash: md5
+      md5: f52256b23be9e3527ea0c069bdd73b30
+      size: 4689
+  test@ials_recency:
+    cmd: python -m recsys.evaluation.evaluate ials_recency --split test
+    deps:
+    - path: data/processed/splits/test.parquet
+      hash: md5
+      md5: 7ce8d00a8154812c1b9e7c4b0d206355
+      size: 2367485
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: models/final/ials
+      hash: md5
+      md5: 952c022040503c05d05e77e4a08b901b.dir
+      size: 8642775
+      nfiles: 2
+    - path: src/recsys/evaluation/evaluate.py
+      hash: md5
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/ials.py
+      hash: md5
+      md5: f979c009667ecc48d68aac14325d420f
+      size: 4275
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        evaluation:
+          ks:
+          - 10
+          - 20
+          batch_size: 1024
+          onboarding:
+            n_history: 10
+          history_segments:
+          - 20
+          - 100
+          bootstrap:
+            n_resamples: 1000
+            confidence: 0.95
+          latency_users: 200
+        models.ials_recency:
+          half_life_days: 7
+          weight: 4.108
+        seed: 42
+    outs:
+    - path: data/evaluation/test/ials_recency.parquet
+      hash: md5
+      md5: 0703f5dce69a29e41916de890e5bcd4f
+      size: 487910
+    - path: metrics/test_ials_recency.json
+      hash: md5
+      md5: 22387f457d4bf59a9da3d627f496ad2a
+      size: 4683
+  test@ease_recency:
+    cmd: python -m recsys.evaluation.evaluate ease_recency --split test
+    deps:
+    - path: data/processed/splits/test.parquet
+      hash: md5
+      md5: 7ce8d00a8154812c1b9e7c4b0d206355
+      size: 2367485
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: models/final/ease
+      hash: md5
+      md5: f9426be897b28fd474391e85b2861bf8.dir
+      size: 78157632
+      nfiles: 4
+    - path: src/recsys/evaluation/evaluate.py
+      hash: md5
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/ease.py
+      hash: md5
+      md5: beff2146ec4f7a4a8d06f542aa9760c8
+      size: 6261
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        evaluation:
+          ks:
+          - 10
+          - 20
+          batch_size: 1024
+          onboarding:
+            n_history: 10
+          history_segments:
+          - 20
+          - 100
+          bootstrap:
+            n_resamples: 1000
+            confidence: 0.95
+          latency_users: 200
+        models.ease_recency:
+          half_life_days: 11
+          weight: 9.071
+        seed: 42
+    outs:
+    - path: data/evaluation/test/ease_recency.parquet
+      hash: md5
+      md5: 6d89bfbfe6101d25c518600c7cbb919c
+      size: 489018
+    - path: metrics/test_ease_recency.json
+      hash: md5
+      md5: d2439e5171331955771962fb43d86eb4
+      size: 4682
+  test@sasrec_recency:
+    cmd: python -m recsys.evaluation.evaluate sasrec_recency --split test
+    deps:
+    - path: data/processed/splits/test.parquet
+      hash: md5
+      md5: 7ce8d00a8154812c1b9e7c4b0d206355
+      size: 2367485
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: models/final/sasrec
+      hash: md5
+      md5: 210c73b97ed689dfd06df78a21b3b3bc.dir
+      size: 5247556
+      nfiles: 29
+    - path: src/recsys/evaluation/evaluate.py
+      hash: md5
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/metrics.py
+      hash: md5
+      md5: da55bb8d8e751bf7f37e70d658d5fa8b
+      size: 3058
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
+    - path: src/recsys/models/sasrec.py
+      hash: md5
+      md5: 1ab78ea68718ed891037554b1c0df09c
+      size: 11236
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        evaluation:
+          ks:
+          - 10
+          - 20
+          batch_size: 1024
+          onboarding:
+            n_history: 10
+          history_segments:
+          - 20
+          - 100
+          bootstrap:
+            n_resamples: 1000
+            confidence: 0.95
+          latency_users: 200
+        models.sasrec_recency:
+          half_life_days: 11
+          weight: 2.086
+        seed: 42
+    outs:
+    - path: data/evaluation/test/sasrec_recency.parquet
+      hash: md5
+      md5: 946ea4e22c1068f95bf89a0a5abd379c
+      size: 456173
+    - path: metrics/test_sasrec_recency.json
+      hash: md5
+      md5: 15a7b4247ca05eb206b717beb25ca5f4
+      size: 4689
+  compare@val:
+    cmd: python -m recsys.evaluation.compare val
+    deps:
+    - path: data/evaluation/val
+      hash: md5
+      md5: 12285ad6713c351dc71f8596f013fc69.dir
+      size: 4646928
+      nfiles: 9
+    - path: src/recsys/evaluation/compare.py
+      hash: md5
+      md5: 4814aa0954d844b01fafa956e9917a32
+      size: 5401
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    params:
+      params.yaml:
+        comparison:
+          alpha: 0.05
+        evaluation.bootstrap:
+          n_resamples: 1000
+          confidence: 0.95
+        seed: 42
+        tuning.metric: ndcg_at_10
+    outs:
+    - path: metrics/comparison_val.json
+      hash: md5
+      md5: 0415cfb090bdff1c1ac87f5cea4b27b2
+      size: 31923
+  compare@test:
+    cmd: python -m recsys.evaluation.compare test
+    deps:
+    - path: data/evaluation/test
+      hash: md5
+      md5: 69551c2775e880cbd37ba7c66148c6c6.dir
+      size: 4174500
+      nfiles: 9
+    - path: src/recsys/evaluation/compare.py
+      hash: md5
+      md5: 4814aa0954d844b01fafa956e9917a32
+      size: 5401
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    params:
+      params.yaml:
+        comparison:
+          alpha: 0.05
+        evaluation.bootstrap:
+          n_resamples: 1000
+          confidence: 0.95
+        seed: 42
+        tuning.metric: ndcg_at_10
+    outs:
+    - path: metrics/comparison_test.json
+      hash: md5
+      md5: b7279a513f4d885a9226cd146f66f0b8
+      size: 31896
+  select:
+    cmd: python -m recsys.registry.select
+    deps:
+    - path: metrics/comparison_val.json
+      hash: md5
+      md5: 0415cfb090bdff1c1ac87f5cea4b27b2
+      size: 31923
+    - path: metrics/val_ease.json
+      hash: md5
+      md5: 42d53b1601b0dce5706d1a4d000b1926
+      size: 4674
+    - path: metrics/val_ease_recency.json
+      hash: md5
+      md5: 8b46cbdae75bb1b73abe89852474065b
+      size: 4682
+    - path: metrics/val_ials.json
+      hash: md5
+      md5: 380c1981dceccbb08b6b3aefe585195d
+      size: 4671
+    - path: metrics/val_ials_recency.json
+      hash: md5
+      md5: ce853e64a39ab056a4304ff70ac716ac
+      size: 4681
+    - path: metrics/val_item_knn.json
+      hash: md5
+      md5: ac04ca451dafd8c14f133974e5f2fe91
+      size: 4678
+    - path: metrics/val_item_knn_recency.json
+      hash: md5
+      md5: e1641caa11a9b058281c04fed4a900b4
+      size: 4678
+    - path: metrics/val_popularity.json
+      hash: md5
+      md5: d59b7e8ac6b5189e78fb0d2376fba8d2
+      size: 4676
+    - path: metrics/val_sasrec.json
+      hash: md5
+      md5: f3bb229fcebbbc53c6c5f870fbf37f54
+      size: 4676
+    - path: metrics/val_sasrec_recency.json
+      hash: md5
+      md5: 48aa142618553301dbba8cc71c78ab37
+      size: 4677
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/registry/select.py
+      hash: md5
+      md5: 0d51331c0bf24d3c07b9da3950295d3a
+      size: 3131
+    params:
+      params.yaml:
+        selection:
+          max_model_size_mb: 150
+        tuning.metric: ndcg_at_10
+    outs:
+    - path: metrics/selection.json
+      hash: md5
+      md5: b7d1bdb228672ada0f7219fb897d216c
+      size: 1917
+  export:
+    cmd: python -m recsys.registry.export
+    deps:
+    - path: data/processed/items.parquet
+      hash: md5
+      md5: ab61fe6a1bd0ea374a5a0538f48559ce
+      size: 701413
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: metrics/comparison_test.json
+      hash: md5
+      md5: b7279a513f4d885a9226cd146f66f0b8
+      size: 31896
+    - path: metrics/selection.json
+      hash: md5
+      md5: b7d1bdb228672ada0f7219fb897d216c
+      size: 1917
+    - path: metrics/test_ease.json
+      hash: md5
+      md5: 51270ff693e57d009095fe657a566186
+      size: 4677
+    - path: metrics/test_ease_recency.json
+      hash: md5
+      md5: d2439e5171331955771962fb43d86eb4
+      size: 4682
+    - path: metrics/test_ials.json
+      hash: md5
+      md5: b84a9659080ba8a4651f08e74c91780f
+      size: 4673
+    - path: metrics/test_ials_recency.json
+      hash: md5
+      md5: 22387f457d4bf59a9da3d627f496ad2a
+      size: 4683
+    - path: metrics/test_item_knn.json
+      hash: md5
+      md5: 98ce807c79635419bff7dc5df7d863c8
+      size: 4673
+    - path: metrics/test_item_knn_recency.json
+      hash: md5
+      md5: f52256b23be9e3527ea0c069bdd73b30
+      size: 4689
+    - path: metrics/test_popularity.json
+      hash: md5
+      md5: cf140016f28d3e37e5a4bc79c3f5a997
+      size: 4677
+    - path: metrics/test_sasrec.json
+      hash: md5
+      md5: 8ae14788929843221584c6bfd9c73d0e
+      size: 4672
+    - path: metrics/test_sasrec_recency.json
+      hash: md5
+      md5: 15a7b4247ca05eb206b717beb25ca5f4
+      size: 4689
+    - path: metrics/val_ease.json
+      hash: md5
+      md5: 42d53b1601b0dce5706d1a4d000b1926
+      size: 4674
+    - path: metrics/val_ease_recency.json
+      hash: md5
+      md5: 8b46cbdae75bb1b73abe89852474065b
+      size: 4682
+    - path: metrics/val_ials.json
+      hash: md5
+      md5: 380c1981dceccbb08b6b3aefe585195d
+      size: 4671
+    - path: metrics/val_ials_recency.json
+      hash: md5
+      md5: ce853e64a39ab056a4304ff70ac716ac
+      size: 4681
+    - path: metrics/val_item_knn.json
+      hash: md5
+      md5: ac04ca451dafd8c14f133974e5f2fe91
+      size: 4678
+    - path: metrics/val_item_knn_recency.json
+      hash: md5
+      md5: e1641caa11a9b058281c04fed4a900b4
+      size: 4678
+    - path: metrics/val_popularity.json
+      hash: md5
+      md5: d59b7e8ac6b5189e78fb0d2376fba8d2
+      size: 4676
+    - path: metrics/val_sasrec.json
+      hash: md5
+      md5: f3bb229fcebbbc53c6c5f870fbf37f54
+      size: 4676
+    - path: metrics/val_sasrec_recency.json
+      hash: md5
+      md5: 48aa142618553301dbba8cc71c78ab37
+      size: 4677
+    - path: models/final
+      hash: md5
+      md5: c6c633ca2851f6442a2df5b144c5f2f2.dir
+      size: 225286249
+      nfiles: 41
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
+    - path: src/recsys/registry/export.py
+      hash: md5
+      md5: 166f16758a857d7f4fca88a6094a6407
+      size: 11170
+    params:
+      params.yaml:
+        models:
+          popularity:
+            half_life_days: 30
+          item_knn:
+            k: 853
+            similarity: cosine
+            shrinkage: 19.53
+          ials:
+            factors: 110
+            regularization: 19.25
+            alpha: 2.945
+            iterations: 21
+          ease:
+            l2: 1138.0
+            keep_per_item: 500
+          sasrec:
+            hidden_dim: 64
+            n_blocks: 2
+            n_heads: 1
+            max_len: 50
+            dropout: 0.2395
+            learning_rate: 0.002352
+            weight_decay: 0.0
+            epochs: 10
+            batch_size: 256
+            n_negatives: 1024
+            max_users:
+          item_knn_recency:
+            half_life_days: 246
+            weight: 0.05231
+          ials_recency:
+            half_life_days: 7
+            weight: 4.108
+          ease_recency:
+            half_life_days: 11
+            weight: 9.071
+          sasrec_recency:
+            half_life_days: 11
+            weight: 2.086
+        preprocess:
+          start_date: '2015-01-01'
+          end_date:
+          positive_threshold: 3.5
+          max_items: 20000
+          min_user_interactions: 5
+          min_item_interactions: 10
+    outs:
+    - path: bundle
+      hash: md5
+      md5: b227fb264ffb4aa26c6c9220ba3d3e1a.dir
+      size: 81109479
+      nfiles: 9
+  register:
+    cmd: python -m recsys.registry.register
+    deps:
+    - path: bundle
+      hash: md5
+      md5: b227fb264ffb4aa26c6c9220ba3d3e1a.dir
+      size: 81109479
+      nfiles: 9
+    - path: src/recsys/registry/register.py
+      hash: md5
+      md5: 829c8738fec71c056aed13424be6a4b9
+      size: 2694
+    params:
+      params.yaml:
+        mlflow.registered_model: movie-recsys

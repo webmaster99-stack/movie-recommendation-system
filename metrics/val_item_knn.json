@@ -1,4 +1,57 @@
 {
+  "all": {
+    "mrr_at_10": {
+      "ci_high": 0.335616,
+      "ci_low": 0.319591,
+      "mean": 0.3273
+    },
+    "mrr_at_20": {
+      "ci_high": 0.341589,
+      "ci_low": 0.325576,
+      "mean": 0.333283
+    },
+    "n_users": 9689,
+    "ndcg_at_10": {
+      "ci_high": 0.2059,
+      "ci_low": 0.19511,
+      "mean": 0.200263
+    },
+    "ndcg_at_20": {
+      "ci_high": 0.197883,
+      "ci_low": 0.188103,
+      "mean": 0.192628
+    },
+    "novelty_at_10": {
+      "ci_high": 1.860713,
+      "ci_low": 1.832473,
+      "mean": 1.847171
+    },
+    "novelty_at_20": {
+      "ci_high": 1.992794,
+      "ci_low": 1.966407,
+      "mean": 1.979662
+    },
+    "popularity_at_10": {
+      "ci_high": 0.316006,
+      "ci_low": 0.312441,
+      "mean": 0.314164
+    },
+    "popularity_at_20": {
+      "ci_high": 0.287252,
+      "ci_low": 0.284453,
+      "mean": 0.28584
+    },
+    "recall_at_10": {
+      "ci_high": 0.051695,
+      "ci_low": 0.048068,
+      "mean": 0.049815
+    },
+    "recall_at_20": {
+      "ci_high": 0.086881,
+      "ci_low": 0.08196,
+      "mean": 0.084356
+    }
+  },
   "model": "item_knn",
   "model_size_bytes": 130823050,
   "onboarding": {

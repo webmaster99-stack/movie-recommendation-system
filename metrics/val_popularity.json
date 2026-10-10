@@ -1,4 +1,57 @@
 {
+  "all": {
+    "mrr_at_10": {
+      "ci_high": 0.338293,
+      "ci_low": 0.323168,
+      "mean": 0.330559
+    },
+    "mrr_at_20": {
+      "ci_high": 0.347283,
+      "ci_low": 0.332461,
+      "mean": 0.339693
+    },
+    "n_users": 9689,
+    "ndcg_at_10": {
+      "ci_high": 0.196525,
+      "ci_low": 0.187116,
+      "mean": 0.191727
+    },
+    "ndcg_at_20": {
+      "ci_high": 0.193716,
+      "ci_low": 0.185203,
+      "mean": 0.189365
+    },
+    "novelty_at_10": {
+      "ci_high": 2.098874,
+      "ci_low": 2.069578,
+      "mean": 2.084103
+    },
+    "novelty_at_20": {
+      "ci_high": 2.404511,
+      "ci_low": 2.384061,
+      "mean": 2.393982
+    },
+    "popularity_at_10": {
+      "ci_high": 0.349805,
+      "ci_low": 0.346817,
+      "mean": 0.348352
+    },
+    "popularity_at_20": {
+      "ci_high": 0.297115,
+      "ci_low": 0.295053,
+      "mean": 0.296079
+    },
+    "recall_at_10": {
+      "ci_high": 0.061465,
+      "ci_low": 0.056716,
+      "mean": 0.059048
+    },
+    "recall_at_20": {
+      "ci_high": 0.10128,
+      "ci_low": 0.095255,
+      "mean": 0.098172
+    }
+  },
   "model": "popularity",
   "model_size_bytes": 78788,
   "onboarding": {
