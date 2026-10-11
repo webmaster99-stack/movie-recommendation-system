@@ -21,6 +21,19 @@ dependencies = [
 ]
 
 [dependency-groups]
+# Everything the serving image installs (`uv sync --only-group api`), and nothing else: no
+# pandas, implicit, torch or mlflow, which would not fit the host's 512 MB.
+api = [
+    "fastapi>=0.142.2",
+    "httpx>=0.28.1",
+    "numpy>=2.5.3",
+    "psycopg[binary]>=3.3.6",
+    "pydantic-settings>=2.15.0",
+    "pyjwt[crypto]>=2.15.1",
+    "scipy>=1.18.1",
+    "sqlalchemy>=2.1.1",
+    "uvicorn>=0.54.0",
+]
 dev = [
     "dvc>=3.55",
     "pytest>=8.3",
@@ -37,6 +50,9 @@ notebook = [
     "nbconvert>=7.17.1",
 ]
 
+[tool.uv]
+default-groups = ["dev", "api"]  # the API's tests run in the same environment as the rest
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -49,6 +65,7 @@ line-length = 100
 target-version = "py312"
 # Third-party Claude Code skills ship their own Python scripts; they aren't project code.
 extend-exclude = [".claude"]
+src = ["src", "api"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "SIM", "NPY", "PD"]
@@ -57,7 +74,8 @@ select = ["E", "F", "W", "I", "B", "UP", "SIM", "NPY", "PD"]
 python_version = "3.12"
 strict = true
 ignore_missing_imports = true
-files = ["src"]
+files = ["src", "api/recsys_api"]
+mypy_path = ["api"]
 
 [[tool.mypy.overrides]]
 # MLflow is huge; analyzing its source makes mypy take minutes. Treat it as untyped.
@@ -65,7 +83,8 @@ module = ["mlflow", "mlflow.*"]
 follow_imports = "skip"
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "api/tests"]
+pythonpath = ["api"]
 addopts = "-q"
 
 # CPU-only PyTorch on every platform: PyPI's Linux wheels bundle gigabytes of CUDA libraries.

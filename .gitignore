@@ -22,6 +22,9 @@ htmlcov/
 /mlruns/
 /mlartifacts/
 
+# Local API database (SQLite fallback when DATABASE_URL isn't set)
+/api.db
+
 # Secrets: never commit
 .env
 .env.*
