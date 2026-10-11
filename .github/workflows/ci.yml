@@ -20,4 +20,4 @@ jobs:
       - name: Type check
         run: uv run mypy
       - name: Tests
-        run: uv run pytest --cov=recsys
+        run: uv run pytest --cov=recsys --cov=recsys_api

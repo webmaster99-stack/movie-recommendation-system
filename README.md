@@ -152,6 +152,64 @@ uv run python -m recsys.tuning.tune ease_recency   # a recency variant; needs th
 Tuning is not part of `dvc repro`: the pipeline reads the tuned values from `params.yaml`, so
 rebuilding it never repeats a search.
 
+## API
+
+A FastAPI service (`api/recsys_api`) that serves the selected model from `bundle/`. It runs
+on numpy and scipy alone, without the training code and its dependencies, so that it fits a
+512 MB host: under a load test in a container limited to 512 MB it peaks at about 210 MB.
+
+```bash
+uv run dvc pull bundle     # the exported model (or `uv run dvc repro export`)
+uv run uvicorn recsys_api.main:create_app --factory --app-dir api --reload
+```
+
+With no configuration it uses a local SQLite file and serves movies without posters; open
+<http://localhost:8000/docs> for the interactive documentation. `.env.example` lists the
+settings for Supabase (database and sign-in) and TMDB (posters).
+
+| Endpoint | Signed in | What it returns |
+|---|---|---|
+| `GET /health` | | Model name, registry version and the date the training data ends |
+| `GET /movies/search?q=` | | Movies by title, best match first, then most popular |
+| `GET /movies/{id}` | | One movie, with TMDB's plot summary and images |
+| `GET /movies/{id}/similar` | | Movies liked by the people who liked this one |
+| `GET /onboarding/movies` | | Well-known movies across genres for a new user to rate |
+| `GET /ratings` | yes | The user's ratings, newest first |
+| `POST /ratings` | yes | Rate a movie or change a rating (half stars, 0.5 to 5) |
+| `DELETE /ratings/{id}` | yes | Remove a rating |
+| `GET /recommendations?k=` | yes | Recommendations from the user's ratings as they are right now |
+| `POST /events` | yes | Record a click on a recommended movie |
+
+How it works:
+
+- **No retraining per user.** The model takes a list of liked movies, not a user id. A
+  request reads the user's ratings of 3.5 stars and up, oldest first, and scores the whole
+  catalog in about 5 ms, so a rating made a second ago already counts. Movies the user has
+  rated, liked or not, are never recommended. A user with no likes yet gets the most popular
+  movies.
+- **Same results as offline.** The API has its own copy of the scoring code, because the
+  training package needs pandas and PyTorch. A test loads the same saved model both ways and
+  requires identical scores and recommendations.
+- **Sign-in** is Supabase's. The frontend sends the user's access token and the API checks
+  its signature against the project's public keys. Row-level security in Postgres
+  (`supabase/migrations/`) is a second layer: the public key in the frontend can read
+  nothing but a signed-in user's own profile and ratings.
+- **Posters and plot summaries** come from TMDB, fetched on demand and cached in Postgres
+  for at most 6 months, as TMDB's terms require. They are never stored in git or DVC. This
+  product uses the TMDB API but is not endorsed or certified by TMDB.
+- **Every recommendation list is logged** with the model version, the movies shown and the
+  time it took, and clicks and ratings refer back to the list they came from. Phase 8 builds
+  its monitoring on these tables.
+
+```bash
+uv run pytest api/tests                                              # in-memory database, fake TMDB
+docker build -f docker/api.Dockerfile --build-arg MODEL_VERSION=1 -t recsys-api .
+docker run --rm --memory=512m -p 8000:8000 --env-file .env recsys-api
+```
+
+`api/loadtest/locustfile.py` simulates users who sign up, rate movies and ask for
+recommendations; its docstring has the commands.
+
 ## Build phases
 
 - [x] 0. Foundation: tooling, config, determinism, CI
@@ -159,7 +217,7 @@ rebuilding it never repeats a search.
 - [x] 2. Evaluation framework + baselines (Popularity, Item-kNN)
 - [x] 3. iALS, EASE, SASRec + tuning
 - [x] 4. Model selection + registry
-- [ ] 5. API
+- [x] 5. API
 - [ ] 6. Frontend
 - [ ] 7. Deployment + CI/CD
 - [ ] 8. Monitoring

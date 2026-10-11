@@ -1,0 +1,11 @@
+# Keeps the build context small: without this, `docker build` would upload gigabytes of data.
+# Everything is excluded except what a Dockerfile in docker/ copies.
+*
+!pyproject.toml
+!uv.lock
+!.python-version
+!README.md
+!src
+!api/recsys_api
+!bundle
+**/__pycache__
