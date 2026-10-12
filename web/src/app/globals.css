@@ -1,0 +1,125 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-display);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-velvet: var(--velvet);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+/* One theme: a dimmed auditorium. Posters bring the colour, so the interface stays in the
+   plum of the room, with the amber of marquee bulbs kept for stars and the main action. */
+:root {
+  --house: #1b1730;
+  --balcony: #262043;
+  --aisle: #332b57;
+  --screen: #f4efe6;
+  --dust: #a69fc0;
+  --bulb: #f5c453;
+  --velvet: #b8405e;
+
+  --background: var(--house);
+  --foreground: var(--screen);
+  --card: var(--balcony);
+  --card-foreground: var(--screen);
+  --popover: var(--balcony);
+  --popover-foreground: var(--screen);
+  --primary: var(--bulb);
+  --primary-foreground: var(--house);
+  --secondary: var(--aisle);
+  --secondary-foreground: var(--screen);
+  --muted: #2b2549;
+  --muted-foreground: var(--dust);
+  --accent: var(--aisle);
+  --accent-foreground: var(--screen);
+  --destructive: #ef7d98;
+  --border: rgb(244 239 230 / 12%);
+  --input: rgb(244 239 230 / 22%);
+  --ring: var(--bulb);
+  --radius: 0.5rem;
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-heading;
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  /* An admission ticket: a half-circle bitten out of each short side. */
+  .ticket {
+    --notch: 0.7rem;
+    mask:
+      radial-gradient(
+          circle at left center,
+          transparent var(--notch),
+          #000 calc(var(--notch) + 0.5px)
+        )
+        left / 51% 100% no-repeat,
+      radial-gradient(
+          circle at right center,
+          transparent var(--notch),
+          #000 calc(var(--notch) + 0.5px)
+        )
+        right / 51% 100% no-repeat;
+  }
+}

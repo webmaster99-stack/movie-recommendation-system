@@ -1,0 +1,983 @@
+{
+  "components": {
+    "schemas": {
+      "EventIn": {
+        "properties": {
+          "event_type": {
+            "const": "click",
+            "title": "Event Type",
+            "type": "string"
+          },
+          "movie_id": {
+            "title": "Movie Id",
+            "type": "integer"
+          },
+          "position": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Position"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Id"
+          }
+        },
+        "required": [
+          "event_type",
+          "movie_id"
+        ],
+        "title": "EventIn",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "Health": {
+        "properties": {
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "n_movies": {
+            "title": "N Movies",
+            "type": "integer"
+          },
+          "status": {
+            "const": "ok",
+            "default": "ok",
+            "title": "Status",
+            "type": "string"
+          },
+          "trained_through": {
+            "title": "Trained Through",
+            "type": "string"
+          }
+        },
+        "required": [
+          "model",
+          "model_version",
+          "n_movies",
+          "trained_through"
+        ],
+        "title": "Health",
+        "type": "object"
+      },
+      "MovieDetail": {
+        "properties": {
+          "backdrop_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Backdrop Url"
+          },
+          "genres": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Genres",
+            "type": "array"
+          },
+          "imdb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Imdb Id"
+          },
+          "movie_id": {
+            "title": "Movie Id",
+            "type": "integer"
+          },
+          "overview": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overview"
+          },
+          "poster_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Poster Url"
+          },
+          "release_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Release Date"
+          },
+          "runtime": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Runtime"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "tmdb_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tmdb Id"
+          },
+          "vote_average": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vote Average"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          }
+        },
+        "required": [
+          "movie_id",
+          "title",
+          "year",
+          "genres",
+          "tmdb_id",
+          "imdb_id",
+          "poster_url",
+          "overview",
+          "backdrop_url",
+          "release_date",
+          "runtime",
+          "vote_average"
+        ],
+        "title": "MovieDetail",
+        "type": "object"
+      },
+      "MovieOut": {
+        "properties": {
+          "genres": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Genres",
+            "type": "array"
+          },
+          "imdb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Imdb Id"
+          },
+          "movie_id": {
+            "title": "Movie Id",
+            "type": "integer"
+          },
+          "poster_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Poster Url"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "tmdb_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tmdb Id"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          }
+        },
+        "required": [
+          "movie_id",
+          "title",
+          "year",
+          "genres",
+          "tmdb_id",
+          "imdb_id",
+          "poster_url"
+        ],
+        "title": "MovieOut",
+        "type": "object"
+      },
+      "OnboardingMovies": {
+        "properties": {
+          "min_ratings": {
+            "title": "Min Ratings",
+            "type": "integer"
+          },
+          "movies": {
+            "items": {
+              "$ref": "#/components/schemas/MovieOut"
+            },
+            "title": "Movies",
+            "type": "array"
+          }
+        },
+        "required": [
+          "min_ratings",
+          "movies"
+        ],
+        "title": "OnboardingMovies",
+        "type": "object"
+      },
+      "RatedMovie": {
+        "properties": {
+          "movie": {
+            "$ref": "#/components/schemas/MovieOut"
+          },
+          "rating": {
+            "title": "Rating",
+            "type": "number"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "movie",
+          "rating",
+          "updated_at"
+        ],
+        "title": "RatedMovie",
+        "type": "object"
+      },
+      "RatingIn": {
+        "properties": {
+          "movie_id": {
+            "title": "Movie Id",
+            "type": "integer"
+          },
+          "rating": {
+            "maximum": 5.0,
+            "minimum": 0.5,
+            "title": "Rating",
+            "type": "number"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Id"
+          }
+        },
+        "required": [
+          "movie_id",
+          "rating"
+        ],
+        "title": "RatingIn",
+        "type": "object"
+      },
+      "RatingOut": {
+        "properties": {
+          "movie_id": {
+            "title": "Movie Id",
+            "type": "integer"
+          },
+          "rating": {
+            "title": "Rating",
+            "type": "number"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "movie_id",
+          "rating",
+          "updated_at"
+        ],
+        "title": "RatingOut",
+        "type": "object"
+      },
+      "RatingsPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RatedMovie"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "n_liked": {
+            "title": "N Liked",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total",
+          "n_liked",
+          "items"
+        ],
+        "title": "RatingsPage",
+        "type": "object"
+      },
+      "Recommendations": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/MovieOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "n_liked": {
+            "title": "N Liked",
+            "type": "integer"
+          },
+          "request_id": {
+            "format": "uuid",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "strategy": {
+            "enum": [
+              "personalised",
+              "popular"
+            ],
+            "title": "Strategy",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id",
+          "model",
+          "model_version",
+          "strategy",
+          "n_liked",
+          "items"
+        ],
+        "title": "Recommendations",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "description": "This product uses the TMDB API but is not endorsed or certified by TMDB.",
+    "title": "Movie recommender API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/events": {
+      "post": {
+        "description": "Record a click on a movie, with the recommendation list it came from if any.",
+        "operationId": "log_event_events_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Log Event"
+      }
+    },
+    "/health": {
+      "get": {
+        "description": "Cheap on purpose (no database): the frontend polls it while the free host wakes up.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health"
+      }
+    },
+    "/movies/search": {
+      "get": {
+        "operationId": "search_movies_movies_search_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": true,
+            "schema": {
+              "maxLength": 100,
+              "minLength": 1,
+              "title": "Q",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MovieOut"
+                  },
+                  "title": "Response Search Movies Movies Search Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Search Movies"
+      }
+    },
+    "/movies/{movie_id}": {
+      "get": {
+        "operationId": "get_movie_movies__movie_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "movie_id",
+            "required": true,
+            "schema": {
+              "title": "Movie Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Movie"
+      }
+    },
+    "/movies/{movie_id}/similar": {
+      "get": {
+        "description": "Movies liked by the people who liked this one, from the model's item-to-item weights.",
+        "operationId": "similar_movies_movies__movie_id__similar_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "movie_id",
+            "required": true,
+            "schema": {
+              "title": "Movie Id",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "k",
+            "required": false,
+            "schema": {
+              "default": 12,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "K",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MovieOut"
+                  },
+                  "title": "Response Similar Movies Movies  Movie Id  Similar Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Similar Movies"
+      }
+    },
+    "/onboarding/movies": {
+      "get": {
+        "description": "Well-known movies across genres for a new user to rate; `offset` pages through more.",
+        "operationId": "onboarding_movies_onboarding_movies_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 40,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingMovies"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Onboarding Movies"
+      }
+    },
+    "/ratings": {
+      "get": {
+        "description": "The caller's ratings, most recent first.",
+        "operationId": "list_ratings_ratings_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RatingsPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Ratings"
+      },
+      "post": {
+        "description": "Rate a movie, or change an earlier rating of it.",
+        "operationId": "rate_movie_ratings_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RatingIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RatingOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Rate Movie"
+      }
+    },
+    "/ratings/{movie_id}": {
+      "delete": {
+        "operationId": "delete_rating_ratings__movie_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "movie_id",
+            "required": true,
+            "schema": {
+              "title": "Movie Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Delete Rating"
+      }
+    },
+    "/recommendations": {
+      "get": {
+        "description": "Movies for the caller, computed from their ratings at the time of the call.\n\nThe model gets the liked movies, oldest first, exactly as in offline evaluation; nothing\nis retrained or stored per user, so a rating made a second ago already counts. Every\nrated movie is left out of the result, liked or not.",
+        "operationId": "recommendations_recommendations_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "k",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "K",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recommendations"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Recommendations"
+      }
+    }
+  }
+}
