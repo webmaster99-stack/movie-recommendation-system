@@ -30,6 +30,7 @@ def test_health_reports_the_model_being_served(client: TestClient, engine: Engin
         "status": "ok",
         "model": "ease_recency",
         "model_version": "7",
+        "commit": "abc1234",
         "n_movies": 6,
         "trained_through": "2022-12-31",
     }

@@ -130,7 +130,9 @@ def tmdb() -> FakeTmdb:
 
 @pytest.fixture
 def client(bundle: Bundle, engine: Engine, tmdb: FakeTmdb) -> TestClient:
-    settings = Settings(_env_file=None, model_version="7", cors_origins="https://app.example")
+    settings = Settings(
+        _env_file=None, model_version="7", git_commit="abc1234", cors_origins="https://app.example"
+    )
     app = create_app(
         settings,
         bundle=bundle,

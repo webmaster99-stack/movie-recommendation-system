@@ -30,7 +30,11 @@ COPY bundle ./bundle
 # The bundle's version in the model registry, reported by /health. It is passed in rather
 # than stored in the bundle, which has to hash the same on every build.
 ARG MODEL_VERSION=dev
-ENV MODEL_VERSION=$MODEL_VERSION
+# The commit the image was built from, also reported by /health: a deploy waits for it.
+ARG GIT_COMMIT=dev
+ENV MODEL_VERSION=$MODEL_VERSION     GIT_COMMIT=$GIT_COMMIT
+# Links the package on ghcr.io to the repository.
+LABEL org.opencontainers.image.source=https://github.com/webmaster99-stack/movie-recommendation-system
 
 USER api
 EXPOSE 8000

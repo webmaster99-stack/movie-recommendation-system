@@ -78,6 +78,7 @@ def health(services: ServicesDep) -> Health:
     return Health(
         model=bundle.name,
         model_version=services.settings.model_version,
+        commit=services.settings.git_commit,
         n_movies=len(bundle.catalog),
         trained_through=bundle.metadata["trained_on"]["last_interaction"],
     )
