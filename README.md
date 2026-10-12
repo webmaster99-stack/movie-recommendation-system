@@ -210,6 +210,50 @@ docker run --rm --memory=512m -p 8000:8000 --env-file .env recsys-api
 `api/loadtest/locustfile.py` simulates users who sign up, rate movies and ask for
 recommendations; its docstring has the commands.
 
+## Web app
+
+A Next.js app (`web/`) on top of the API: sign up, rate ten movies, get recommendations.
+
+```bash
+cd web
+npm ci
+cp .env.example .env.local     # the API's address and the Supabase project (public values)
+npm run dev                    # http://localhost:3000, with the API running on :8000
+```
+
+| Page | What it does |
+|---|---|
+| `/` | What the app is, over a wall of the catalog's best-known posters |
+| `/signup`, `/login` | Supabase email and password |
+| `/onboarding` | Rate movies until there are enough for a first list |
+| `/for-you` | The top 20 recommendations, and a row of movies similar to the last one you liked |
+| `/movies/{id}` | Plot, your rating, and what people who liked it also liked |
+| `/search` | Search by title as you type |
+| `/ratings` | Everything you rated; change or remove a rating |
+| `/about` | How a recommendation is made, the model comparison, and the model being served |
+
+How it works:
+
+- **The pages are static; the data is fetched in the browser.** The API sleeps on its free
+  host, and a server-rendered page would hang with it. Instead the page appears at once,
+  a notice says the server is waking up, and the requests are retried until it answers.
+- **Sign-in happens in the browser** with Supabase's client. The app sends the access
+  token to the API, which is the only thing that reads or writes ratings.
+- **Stars move before the server answers.** A rating is shown immediately and rolled back
+  with a message if saving it fails.
+- **Clicks and ratings are credited to the list they came from**, so that Phase 8 can
+  measure whether recommendations are used.
+- **The API's types are generated, not retyped.** `scripts/export_openapi.py` writes the
+  API's schema to `web/openapi.json` and `npm run gen:api` turns it into TypeScript. A test
+  fails when the committed schema no longer matches the API, and CI fails when the types no
+  longer match the schema.
+- **Posters are loaded from TMDB's image servers by the visitor's browser**; no copy is
+  kept. The footer carries TMDB's logo and notice.
+
+```bash
+npm run lint && npm run typecheck && npm test && npm run build
+```
+
 ## Build phases
 
 - [x] 0. Foundation: tooling, config, determinism, CI
@@ -218,7 +262,7 @@ recommendations; its docstring has the commands.
 - [x] 3. iALS, EASE, SASRec + tuning
 - [x] 4. Model selection + registry
 - [x] 5. API
-- [ ] 6. Frontend
+- [x] 6. Frontend
 - [ ] 7. Deployment + CI/CD
 - [ ] 8. Monitoring
 - [ ] 9. Retraining loop + polish

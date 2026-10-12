@@ -1,0 +1,3 @@
+# Generated from openapi.json (`npm run gen:api`) and by the shadcn CLI.
+src/lib/api/schema.d.ts
+src/components/ui

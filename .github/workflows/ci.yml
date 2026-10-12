@@ -21,3 +21,28 @@ jobs:
         run: uv run mypy
       - name: Tests
         run: uv run pytest --cov=recsys --cov=recsys_api
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install (exactly as locked)
+        run: npm ci
+      - name: API types are generated from the committed schema
+        run: npm run gen:api && git diff --exit-code src/lib/api/schema.d.ts
+      - name: Lint
+        run: npm run lint && npm run format:check
+      - name: Type check
+        run: npm run typecheck
+      - name: Tests
+        run: npm test
+      - name: Build
+        run: npm run build
