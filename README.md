@@ -301,6 +301,6 @@ Setting it up from a fork takes four things:
 - [x] 4. Model selection + registry
 - [x] 5. API
 - [x] 6. Frontend
-- [ ] 7. Deployment + CI/CD
+- [x] 7. Deployment + CI/CD
 - [ ] 8. Monitoring
 - [ ] 9. Retraining loop + polish
