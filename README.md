@@ -254,6 +254,44 @@ How it works:
 npm run lint && npm run typecheck && npm test && npm run build
 ```
 
+## Deployment
+
+| Part | Where | How it gets there |
+|---|---|---|
+| API | Render, free plan (512 MB, sleeps when idle) | `.github/workflows/deploy.yml`, after CI passes on `main` |
+| Web app | Vercel | Vercel builds `web/` on every push; pull requests get a preview |
+| Database and sign-in | Supabase | `supabase/migrations/` |
+
+What the Deploy workflow does:
+
+1. **Downloads the `champion` from the model registry** and checks it against the SHA256
+   recorded when it was registered (`python -m recsys.registry.pull`). The model in
+   production is therefore the one that was promoted by hand, not the last one trained.
+2. **Runs the parity test on that bundle**, so the image is never built around a model the
+   API would score differently from the pipeline.
+3. **Builds the image and pushes it to ghcr.io**, starts it with Render's memory limit and
+   calls `/health`.
+4. **Calls Render's deploy hook with the image's digest**, then waits until the public
+   `/health` reports this commit and this model version. Render keeps the old instance
+   answering until the new one is up, so an answer alone would prove nothing.
+
+After promoting a new model (`python -m recsys.registry.promote`), run the workflow by hand
+(Actions > Deploy > Run workflow): a promotion changes the registry, not the code.
+
+Setting it up from a fork takes four things:
+
+- **GitHub secrets** `MLFLOW_TRACKING_URI`, `MLFLOW_TRACKING_USERNAME` and
+  `MLFLOW_TRACKING_PASSWORD` (to read the registry). The first run pushes the image; make
+  the package public under the repository's Packages so Render can pull it.
+- **Render:** New > Blueprint, pointed at this repository. `render.yaml` describes the
+  service and asks for `DATABASE_URL`, `SUPABASE_URL`, `TMDB_API_KEY` and `CORS_ORIGINS`.
+  Then copy the service's deploy hook into the GitHub secret `RENDER_DEPLOY_HOOK_URL` and its
+  address into the GitHub variable `API_URL`.
+- **Vercel:** import the repository with `web` as the root directory and the three
+  variables from `web/.env.example`.
+- **`CORS_ORIGINS`** on Render is the Vercel address, and the image name in `render.yaml`
+  and `deploy.yml` is the fork's.
+
 ## Build phases
 
 - [x] 0. Foundation: tooling, config, determinism, CI

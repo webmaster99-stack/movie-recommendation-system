@@ -5,11 +5,13 @@ from typing import Any
 import pandas as pd
 import pytest
 import yaml
+from mlflow import MlflowClient
 
 from recsys.evaluation.ease_pruning import recommend_keep, weights_size_mb
 from recsys.models import BASE_MODELS, MODELS, base_name
 from recsys.registry.export import catalog_records, headline, model_card, write_catalog
-from recsys.registry.register import dir_sha256
+from recsys.registry.pull import BundleMismatchError, pull
+from recsys.registry.register import CHAMPION, dir_sha256
 from recsys.registry.select import candidate, lead, select
 from recsys.utils.config import PROJECT_ROOT, load_params
 from recsys.utils.paths import METRICS_DIR
@@ -231,3 +233,50 @@ def test_dvc_stages_cover_exactly_the_registered_models() -> None:
     for split, stage in (("val", "select"), ("val", "export"), ("test", "export")):
         deps = set(stages[stage]["deps"])
         assert {f"metrics/{split}_{name}.json" for name in MODELS} <= deps, (split, stage)
+
+
+# --- pull --------------------------------------------------------------------------------
+
+
+def registered_bundle(tmp_path: Path, sha256: str | None = None) -> MlflowClient:
+    """A throwaway registry holding one two-file bundle as the champion."""
+    bundle = tmp_path / "source"
+    (bundle / "model").mkdir(parents=True)
+    (bundle / "metadata.json").write_text('{"model": "tiny"}', encoding="utf-8")
+    (bundle / "model" / "weights.npy").write_bytes(b"\x00\x01\x02")
+
+    uri = f"sqlite:///{(tmp_path / 'mlflow.db').as_posix()}"
+    client = MlflowClient(tracking_uri=uri, registry_uri=uri)
+    experiment = client.create_experiment("t", artifact_location=(tmp_path / "store").as_uri())
+    run = client.create_run(experiment)
+    client.log_artifacts(run.info.run_id, str(bundle), artifact_path="bundle")
+    client.create_registered_model("tiny-recsys")
+    version = client.create_model_version(
+        name="tiny-recsys",
+        source=f"{run.info.artifact_uri}/bundle",
+        run_id=run.info.run_id,
+        tags={"model": "tiny", "bundle_sha256": sha256 or dir_sha256(bundle)},
+    )
+    client.set_registered_model_alias("tiny-recsys", CHAMPION, version.version)
+    return client
+
+
+def test_pull_downloads_the_registered_bundle(tmp_path: Path) -> None:
+    client = registered_bundle(tmp_path)
+    out = tmp_path / "out" / "bundle"
+    out.mkdir(parents=True)
+    (out / "stale.txt").write_text("from an earlier model", encoding="utf-8")
+
+    version = pull(client, "tiny-recsys", CHAMPION, out)
+
+    assert int(version.version) == 1
+    assert dir_sha256(out) == dir_sha256(tmp_path / "source")  # and so without stale.txt
+    assert [p.name for p in out.parent.iterdir()] == ["bundle"]  # nothing temporary is left
+
+
+def test_pull_refuses_a_bundle_that_is_not_the_registered_one(tmp_path: Path) -> None:
+    client = registered_bundle(tmp_path, sha256="0" * 64)
+    out = tmp_path / "out" / "bundle"
+    with pytest.raises(BundleMismatchError, match="tiny-recsys v1"):
+        pull(client, "tiny-recsys", CHAMPION, out)
+    assert not out.exists()

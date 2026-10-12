@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     # The registry version of the bundle. It is not inside the bundle (which must hash the
     # same on every build), so the image build passes it in.
     model_version: str = "dev"
+    # The commit the image was built from, passed in the same way. `/health` reports both,
+    # which is how a deploy checks that the new image is the one answering.
+    git_commit: str = "dev"
 
     # Postgres (`postgresql://...`, Supabase's session pooler on Render) or, for local
     # development, `sqlite:///api.db`, whose tables are created on start.

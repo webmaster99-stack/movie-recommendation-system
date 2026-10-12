@@ -1,0 +1,24 @@
+# Render Blueprint for the API: https://render.com/docs/blueprint-spec
+#
+# The service runs a prebuilt image from ghcr.io; Render never builds this repository. The
+# Deploy workflow (.github/workflows/deploy.yml) pushes the image and then calls the
+# service's deploy hook with the exact digest to run.
+services:
+  - type: web
+    name: movie-recsys-api
+    runtime: image
+    image:
+      url: ghcr.io/webmaster99-stack/movie-recommendation-system-api:latest
+    plan: free # 512 MB RAM, sleeps after 15 minutes without a request
+    region: frankfurt # next to the Supabase project (eu-central-1)
+    healthCheckPath: /health
+    envVars:
+      # `sync: false`: the value is typed into the dashboard and never stored in git.
+      - key: DATABASE_URL # Supabase's session pooler string; the direct one is IPv6-only
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: TMDB_API_KEY
+        sync: false
+      - key: CORS_ORIGINS # the frontend's address on Vercel
+        sync: false

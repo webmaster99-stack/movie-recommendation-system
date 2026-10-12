@@ -208,6 +208,8 @@ export interface components {
         };
         /** Health */
         Health: {
+            /** Commit */
+            commit: string;
             /** Model */
             model: string;
             /** Model Version */

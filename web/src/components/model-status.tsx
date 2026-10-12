@@ -16,6 +16,7 @@ export function ModelStatus() {
     ["Registry version", data?.model_version],
     ["Movies in the catalog", data?.n_movies.toLocaleString("en")],
     ["Trained on ratings up to", data?.trained_through],
+    ["Built from commit", data?.commit.slice(0, 7)],
   ];
   return (
     <dl className="grid max-w-xl grid-cols-[auto_1fr] gap-x-8 gap-y-2">

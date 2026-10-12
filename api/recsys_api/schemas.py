@@ -13,6 +13,7 @@ class Health(BaseModel):
     status: Literal["ok"] = "ok"
     model: str
     model_version: str
+    commit: str  # the git commit the running image was built from
     n_movies: int
     trained_through: str  # date of the last interaction the model has seen
 

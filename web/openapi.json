@@ -59,6 +59,10 @@
       },
       "Health": {
         "properties": {
+          "commit": {
+            "title": "Commit",
+            "type": "string"
+          },
           "model": {
             "title": "Model",
             "type": "string"
@@ -85,6 +89,7 @@
         "required": [
           "model",
           "model_version",
+          "commit",
           "n_movies",
           "trained_through"
         ],
