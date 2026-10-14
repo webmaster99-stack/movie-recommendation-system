@@ -375,5 +375,5 @@ For the deployed app:
 - [x] 5. API
 - [x] 6. Frontend
 - [x] 7. Deployment + CI/CD
-- [ ] 8. Monitoring
+- [x] 8. Monitoring
 - [ ] 9. Retraining loop + polish
