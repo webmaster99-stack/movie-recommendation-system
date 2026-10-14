@@ -1,0 +1,42 @@
+# The monitoring stack on your own machine: a Postgres with the app's schema and a Grafana
+# to look at it. For trying the dashboards and alerts without a Supabase or Grafana Cloud
+# account; the deployed app uses those instead. See "Monitoring" in the README.
+#
+#   docker compose -f monitoring/docker-compose.yml up -d
+#   docker compose -f monitoring/docker-compose.yml down -v     # stop and delete the data
+#
+# Postgres is on 127.0.0.1:54330 (user and password `postgres`), Grafana on
+# http://127.0.0.1:3001 (user and password `admin`). Nothing here is reachable from outside
+# this machine, which is the only reason the passwords can be what they are.
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "127.0.0.1:54330:5432"
+    volumes:
+      # Run once, in name order, when the database is created.
+      - ../supabase/local/auth_stub.sql:/docker-entrypoint-initdb.d/00-auth-stub.sql:ro
+      - ./local/10-migrations.sh:/docker-entrypoint-initdb.d/10-migrations.sh:ro
+      - ./local/20-local.sql:/docker-entrypoint-initdb.d/20-local.sql:ro
+      - ../supabase/migrations:/migrations:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+
+  grafana:
+    image: grafana/grafana:12.2.0
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+    ports:
+      - "127.0.0.1:3001:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy

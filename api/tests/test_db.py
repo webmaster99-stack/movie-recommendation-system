@@ -13,6 +13,8 @@ from recsys_api.db import Base, Rating, make_engine, upsert
 
 MIGRATIONS = PROJECT_ROOT / "supabase" / "migrations"
 _CREATE_TABLE = re.compile(r"create table public\.(\w+) \((.*?)\n\);", re.DOTALL)
+_ALTER_TABLE = re.compile(r"alter table public\.(\w+)(.*?);", re.DOTALL)
+_ADD_COLUMN = re.compile(r"add column (\w+)")
 _CONSTRAINTS = ("primary", "constraint", "check", "foreign", "unique")
 _NOT_USED_BY_THE_API = {"profiles"}  # maintained by a trigger, read by the frontend
 
@@ -23,6 +25,8 @@ def migration_tables() -> dict[str, set[str]]:
     for name, body in _CREATE_TABLE.findall(sql):
         words = [line.split()[0] for line in body.splitlines() if line.strip()]
         tables[name] = {word for word in words if word not in _CONSTRAINTS}
+    for name, body in _ALTER_TABLE.findall(sql):  # columns added by a later migration
+        tables[name] |= set(_ADD_COLUMN.findall(body))
     return tables
 
 

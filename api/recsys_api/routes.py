@@ -265,6 +265,8 @@ def recommendations(
         movie_ids=[item.movie_id for item in items],
         model_ms=model_ms,
         latency_ms=(time.perf_counter() - started) * 1000,
+        popularity_percentile=catalog.popularity_percentile(top),
+        catalog_size=len(catalog),
     )
     session.add(request)
     session.commit()

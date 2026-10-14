@@ -8,6 +8,20 @@ on:
 jobs:
   python:
     runs-on: ubuntu-latest
+    # A throwaway Postgres for api/tests/test_postgres.py: the migrations, and the monitoring
+    # views and role they create, can't be tested on SQLite.
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      TEST_POSTGRES_URL: postgresql://postgres:postgres@127.0.0.1:5432/postgres
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6

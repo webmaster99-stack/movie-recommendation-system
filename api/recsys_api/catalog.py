@@ -85,6 +85,13 @@ class Catalog:
     def get(self, movie_id: int) -> Movie | None:
         return self._by_movie_id.get(movie_id)
 
+    def popularity_percentile(self, indices: npt.NDArray[np.integer[Any]]) -> float | None:
+        """Where the given movies sit in the popularity order on average: 0 for the most
+        popular movie, 1 for the least. None when there is nothing to average."""
+        if len(indices) == 0 or len(self.movies) < 2:
+            return None
+        return float(self._rank[indices].mean() / (len(self.movies) - 1))
+
     def search(self, query: str, limit: int) -> list[Movie]:
         """Movies whose title contains every word of `query`.
 

@@ -1,0 +1,74 @@
+name: Monitoring
+
+# The weekly drift report: production data of the last four weeks, read from the app's
+# database through the read-only monitoring views, against the reference the pipeline made
+# from the model's training data. The report is published on GitHub Pages and logged to
+# MLflow as a run named `monitoring-drift`. Run it by hand from Actions > Monitoring.
+#
+# Secrets: MONITORING_DATABASE_URL (the `monitoring_reader` role through Supabase's session
+# pooler) and the three MLFLOW_TRACKING_* values (DagsHub: the reference is pulled from the
+# DVC remote with the same account, and the run is logged there).
+# Once, in the repository's settings: Pages > Source > GitHub Actions.
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: monitoring
+  cancel-in-progress: false
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.9.11"
+      - name: Install (exactly as locked)
+        run: uv sync --frozen
+
+      - name: Download the training reference
+        env:
+          DAGSHUB_USER: ${{ secrets.MLFLOW_TRACKING_USERNAME }}
+          DAGSHUB_TOKEN: ${{ secrets.MLFLOW_TRACKING_PASSWORD }}
+        run: |
+          # `--local`: written to .dvc/config.local, which git ignores.
+          if [ -n "$DAGSHUB_TOKEN" ]; then
+            uv run dvc remote modify --local dagshub auth basic
+            uv run dvc remote modify --local dagshub user "$DAGSHUB_USER"
+            uv run dvc remote modify --local dagshub password "$DAGSHUB_TOKEN"
+          fi
+          uv run dvc pull monitoring_reference
+
+      - name: Compare production with the reference
+        env:
+          MONITORING_DATABASE_URL: ${{ secrets.MONITORING_DATABASE_URL }}
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+          MLFLOW_TRACKING_USERNAME: ${{ secrets.MLFLOW_TRACKING_USERNAME }}
+          MLFLOW_TRACKING_PASSWORD: ${{ secrets.MLFLOW_TRACKING_PASSWORD }}
+        run: |
+          # Without the address, the run would be logged to a local file and thrown away.
+          test -n "$MLFLOW_TRACKING_URI" || { echo "::error::MLFLOW_TRACKING_URI is not set"; exit 1; }
+          uv run python -m recsys.monitoring.drift --out site --summary "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  publish:
+    needs: drift
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

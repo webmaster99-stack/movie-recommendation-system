@@ -98,6 +98,11 @@ class RecRequest(Base):
     model_ms: Mapped[float] = mapped_column(Float)  # scoring only
     latency_ms: Mapped[float] = mapped_column(Float)  # whole request, incl. database and TMDB
     created_at: Mapped[datetime] = mapped_column(_Timestamp, default=now)
+    # Where the shown movies sit in the popularity order on average, from 0 (the most popular
+    # movie) to 1 (the least), and the size of the catalog they were picked from. Both are
+    # null on rows written before monitoring existed.
+    popularity_percentile: Mapped[float | None] = mapped_column(Float)
+    catalog_size: Mapped[int | None] = mapped_column(Integer)
 
 
 class Event(Base):
@@ -113,6 +118,20 @@ class Event(Base):
     movie_id: Mapped[int] = mapped_column(Integer)
     position: Mapped[int | None] = mapped_column(Integer)  # 0-based place in the list shown
     rating: Mapped[float | None] = mapped_column(Numeric(2, 1, asdecimal=False))
+    created_at: Mapped[datetime] = mapped_column(_Timestamp, default=now)
+
+
+class RequestLog(Base):
+    """One answered request: which endpoint, what status, how long. No user and no ids."""
+
+    __tablename__ = "request_log"
+    __table_args__ = (Index("request_log_created_at_idx", "created_at"),)
+
+    id: Mapped[int] = mapped_column(_BigIntKey, primary_key=True, autoincrement=True)
+    method: Mapped[str] = mapped_column(Text)
+    route: Mapped[str] = mapped_column(Text)  # the template, e.g. /movies/{movie_id}
+    status: Mapped[int] = mapped_column(Integer)
+    latency_ms: Mapped[float] = mapped_column(Float)
     created_at: Mapped[datetime] = mapped_column(_Timestamp, default=now)
 
 
