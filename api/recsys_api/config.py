@@ -38,6 +38,9 @@ class Settings(BaseSettings):
     tmdb_refresh_days: int = 150
     tmdb_max_age_days: int = 180
 
+    # Every answered request is logged for the dashboards; rows older than this are deleted.
+    request_log_days: int = 90
+
     cors_origins: str = "http://localhost:3000"  # comma-separated
     # Ratings asked for at sign-up; the evaluation's onboarding scenario uses the same number.
     onboarding_min_ratings: int = 10

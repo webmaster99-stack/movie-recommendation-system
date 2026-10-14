@@ -35,7 +35,15 @@ ROOT = Path(__file__).resolve().parents[1]
 OVERRIDES = Path(__file__).with_name("repro_overrides.yaml")
 # What the pipeline needs to run; everything else in the repository stays behind.
 COPIED = ("src", "dvc.yaml", "params.yaml", ".dvc/config", ".dvc/.gitignore", ".dvcignore")
-OUTPUT_DIRS = ("data/interim", "data/processed", "data/evaluation", "models", "metrics", "bundle")
+OUTPUT_DIRS = (
+    "data/interim",
+    "data/processed",
+    "data/evaluation",
+    "data/monitoring",
+    "models",
+    "metrics",
+    "bundle",
+)
 
 DAY = 86_400
 GENRES = ("Action", "Comedy", "Drama", "Horror", "Romance", "Sci-Fi", "Thriller", "Western")

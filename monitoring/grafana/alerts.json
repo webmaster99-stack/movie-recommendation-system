@@ -1,0 +1,164 @@
+{
+  "title": "api",
+  "interval": 60,
+  "rules": [
+    {
+      "uid": "recsys-api-p95-latency",
+      "title": "API latency is high",
+      "condition": "B",
+      "data": [
+        {
+          "refId": "A",
+          "relativeTimeRange": {
+            "from": 900,
+            "to": 0
+          },
+          "datasourceUid": "recsys-postgres",
+          "model": {
+            "refId": "A",
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "recsys-postgres"
+            },
+            "format": "table",
+            "rawQuery": true,
+            "editorMode": "code",
+            "rawSql": "select percentile_cont(0.95) within group (order by latency_ms) as p95 from monitoring.requests where $__timeFilter(created_at) having count(*) >= 20",
+            "intervalMs": 1000,
+            "maxDataPoints": 43200
+          }
+        },
+        {
+          "refId": "B",
+          "relativeTimeRange": {
+            "from": 0,
+            "to": 0
+          },
+          "datasourceUid": "__expr__",
+          "model": {
+            "refId": "B",
+            "type": "threshold",
+            "datasource": {
+              "type": "__expr__",
+              "uid": "__expr__"
+            },
+            "expression": "A",
+            "conditions": [
+              {
+                "type": "query",
+                "evaluator": {
+                  "type": "gt",
+                  "params": [
+                    2000
+                  ]
+                },
+                "operator": {
+                  "type": "and"
+                },
+                "query": {
+                  "params": [
+                    "B"
+                  ]
+                },
+                "reducer": {
+                  "type": "last",
+                  "params": []
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "noDataState": "OK",
+      "execErrState": "Error",
+      "for": "5m",
+      "labels": {
+        "service": "movie-recsys-api"
+      },
+      "annotations": {
+        "summary": "The 95th percentile latency of the API has been above 2000 ms for 5 minutes.",
+        "description": "Over the last 15 minutes, with at least 20 requests. Open the 'Movie recommender: API' dashboard to see which endpoint is slow."
+      },
+      "isPaused": false
+    },
+    {
+      "uid": "recsys-api-error-rate",
+      "title": "API error rate is high",
+      "condition": "B",
+      "data": [
+        {
+          "refId": "A",
+          "relativeTimeRange": {
+            "from": 900,
+            "to": 0
+          },
+          "datasourceUid": "recsys-postgres",
+          "model": {
+            "refId": "A",
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "recsys-postgres"
+            },
+            "format": "table",
+            "rawQuery": true,
+            "editorMode": "code",
+            "rawSql": "select 100.0 * count(*) filter (where status >= 500) / count(*) as error_rate from monitoring.requests where $__timeFilter(created_at) having count(*) >= 20",
+            "intervalMs": 1000,
+            "maxDataPoints": 43200
+          }
+        },
+        {
+          "refId": "B",
+          "relativeTimeRange": {
+            "from": 0,
+            "to": 0
+          },
+          "datasourceUid": "__expr__",
+          "model": {
+            "refId": "B",
+            "type": "threshold",
+            "datasource": {
+              "type": "__expr__",
+              "uid": "__expr__"
+            },
+            "expression": "A",
+            "conditions": [
+              {
+                "type": "query",
+                "evaluator": {
+                  "type": "gt",
+                  "params": [
+                    5
+                  ]
+                },
+                "operator": {
+                  "type": "and"
+                },
+                "query": {
+                  "params": [
+                    "B"
+                  ]
+                },
+                "reducer": {
+                  "type": "last",
+                  "params": []
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "noDataState": "OK",
+      "execErrState": "Error",
+      "for": "5m",
+      "labels": {
+        "service": "movie-recsys-api"
+      },
+      "annotations": {
+        "summary": "More than 5% of the API's answers have been server errors for 5 minutes.",
+        "description": "Over the last 15 minutes, with at least 20 requests. The service's logs on Render have the stack traces."
+      },
+      "isPaused": false
+    }
+  ]
+}

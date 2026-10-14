@@ -44,6 +44,13 @@ dev = [
     "types-PyYAML",
     "pandas-stubs",
 ]
+# The weekly drift report (`recsys.monitoring.drift`): Evidently, and a driver to read the
+# monitoring views with. Not in the serving image.
+monitoring = [
+    "evidently>=0.7.23",
+    "psycopg[binary]>=3.3.6",
+    "sqlalchemy>=2.1.1",
+]
 notebook = [
     "jupyterlab>=4.6.4",
     "matplotlib>=3.11.2",
@@ -51,7 +58,8 @@ notebook = [
 ]
 
 [tool.uv]
-default-groups = ["dev", "api"]  # the API's tests run in the same environment as the rest
+# The API's and the drift report's tests run in the same environment as the rest.
+default-groups = ["dev", "api", "monitoring"]
 
 [build-system]
 requires = ["hatchling"]

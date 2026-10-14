@@ -2434,3 +2434,123 @@ stages:
     params:
       params.yaml:
         mlflow.registered_model: movie-recsys
+  monitoring_reference:
+    cmd: python -m recsys.monitoring.reference
+    deps:
+    - path: data/interim/ratings.parquet
+      hash: md5
+      md5: ca142bc316d5f29ebd252d6ad834a8e7
+      size: 164193095
+    - path: data/processed/items.parquet
+      hash: md5
+      md5: ab61fe6a1bd0ea374a5a0538f48559ce
+      size: 701413
+    - path: data/processed/splits/train.parquet
+      hash: md5
+      md5: 9c0ce1f6d69c1dce7ef9880b86406bff
+      size: 31410215
+    - path: data/processed/splits/val.parquet
+      hash: md5
+      md5: bc6d456a61c87922336dd49ceb5cb388
+      size: 2615608
+    - path: data/processed/user_map.parquet
+      hash: md5
+      md5: 687a20412a8006a09b1097ebeea87c76
+      size: 651618
+    - path: metrics/selection.json
+      hash: md5
+      md5: b7d1bdb228672ada0f7219fb897d216c
+      size: 1917
+    - path: models/final
+      hash: md5
+      md5: c6c633ca2851f6442a2df5b144c5f2f2.dir
+      size: 225286249
+      nfiles: 41
+    - path: src/recsys/data/preprocess.py
+      hash: md5
+      md5: 443bcad66ca79a379bbe79f3b229dfcc
+      size: 4662
+    - path: src/recsys/evaluation/evaluate.py
+      hash: md5
+      md5: 713113f2a23f1570d1ef913bb9275e13
+      size: 9769
+    - path: src/recsys/evaluation/protocol.py
+      hash: md5
+      md5: 77496963515ca072f8bda3478cc0a8c8
+      size: 2201
+    - path: src/recsys/models/__init__.py
+      hash: md5
+      md5: b4658dc6123eeb1d221600250d95eb8b
+      size: 2140
+    - path: src/recsys/models/base.py
+      hash: md5
+      md5: e4366fc28fa17f20253229b8ead90ade
+      size: 4187
+    - path: src/recsys/models/recency.py
+      hash: md5
+      md5: 970522407df3bbf58163f40ab9d80596
+      size: 4192
+    - path: src/recsys/monitoring/reference.py
+      hash: md5
+      md5: 0f4b1a153c3be7798513026410f1b108
+      size: 6590
+    - path: src/recsys/utils/io.py
+      hash: md5
+      md5: 0cae415f444058509ef9a420b7b5e34a
+      size: 727
+    params:
+      params.yaml:
+        evaluation.batch_size: 1024
+        models:
+          popularity:
+            half_life_days: 30
+          item_knn:
+            k: 853
+            similarity: cosine
+            shrinkage: 19.53
+          ials:
+            factors: 110
+            regularization: 19.25
+            alpha: 2.945
+            iterations: 21
+          ease:
+            l2: 1138.0
+            keep_per_item: 500
+          sasrec:
+            hidden_dim: 64
+            n_blocks: 2
+            n_heads: 1
+            max_len: 50
+            dropout: 0.2395
+            learning_rate: 0.002352
+            weight_decay: 0.0
+            epochs: 10
+            batch_size: 256
+            n_negatives: 1024
+            max_users:
+          item_knn_recency:
+            half_life_days: 246
+            weight: 0.05231
+          ials_recency:
+            half_life_days: 7
+            weight: 4.108
+          ease_recency:
+            half_life_days: 11
+            weight: 9.071
+          sasrec_recency:
+            half_life_days: 11
+            weight: 2.086
+        monitoring.reference:
+          n_ratings: 200000
+          n_users: 2000
+          k: 20
+        preprocess.positive_threshold: 3.5
+        preprocess.start_date: '2015-01-01'
+        seed: 42
+        split.test_start: '2023-01-01'
+    outs:
+    - path: data/monitoring/reference
+      hash: md5
+      md5: ddda38efec6f3ab3a7c2785dd5b8595c.dir
+      size: 977520
+      nfiles: 5

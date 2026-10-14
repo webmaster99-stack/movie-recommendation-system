@@ -1,10 +1,10 @@
-"""A six-movie bundle, an in-memory database and a fake TMDB: the API with nothing real
+"""A six-movie bundle, a throwaway database and a fake TMDB: the API with nothing real
 behind it."""
 
 import json
 import time
 import uuid
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from pathlib import Path
 from typing import Any
 
@@ -119,8 +119,12 @@ def bundle(tmp_path_factory: pytest.TempPathFactory) -> Bundle:
 
 
 @pytest.fixture
-def engine() -> Engine:
-    return make_engine("sqlite://")
+def engine(tmp_path: Path) -> Iterator[Engine]:
+    # A file, not `sqlite://`: an in-memory database is one connection shared by every
+    # thread, and the request log is written from a thread of its own.
+    engine = make_engine(f"sqlite:///{(tmp_path / 'api.db').as_posix()}")
+    yield engine
+    engine.dispose()
 
 
 @pytest.fixture

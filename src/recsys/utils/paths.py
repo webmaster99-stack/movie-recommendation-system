@@ -8,6 +8,7 @@ INTERIM_DIR = DATA_DIR / "interim"
 PROCESSED_DIR = DATA_DIR / "processed"
 SPLITS_DIR = PROCESSED_DIR / "splits"
 EVAL_DIR = DATA_DIR / "evaluation"
+MONITORING_REFERENCE_DIR = DATA_DIR / "monitoring" / "reference"
 MODELS_DIR = PROJECT_ROOT / "models"  # trained on the training split
 FINAL_MODELS_DIR = MODELS_DIR / "final"  # refitted on training + validation
 METRICS_DIR = PROJECT_ROOT / "metrics"

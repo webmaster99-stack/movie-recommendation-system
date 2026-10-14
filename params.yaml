@@ -156,6 +156,27 @@ comparison:
 selection:
   max_model_size_mb: 150  # the API host has 512 MB of RAM in total
 
+# Monitoring of the deployed model.
+monitoring:
+  # Stage `monitoring_reference`: what production is compared with.
+  reference:
+    n_ratings: 200000  # training-period ratings sampled for the rating and genre distributions
+    n_users: 2000  # training users whose recommended lists stand for what the model serves
+    k: 20  # length of those lists: the API's default
+  # `python -m recsys.monitoring.drift`, run weekly by a workflow. Not a DVC stage: it reads
+  # live data, so its result changes from week to week by design.
+  drift:
+    window_days: 28  # production data from the last four weeks
+    # Fewer production rows than this are reported as "not enough data", never as drift: two
+    # samples of a few hundred rows from the same distribution are already about 0.05 apart
+    # by chance, and smaller ones cross the threshold below on noise alone.
+    min_rows: 300
+    # Distances between the two distributions rather than significance tests: with 200,000
+    # reference rows a test finds every difference significant, however small.
+    num_method: wasserstein  # in units of the reference's standard deviation
+    cat_method: jensenshannon  # 0 = same mix of categories, 1 = no category in common
+    threshold: 0.1  # a column has drifted when its distance is at least this
+
 mlflow:
   experiment_name: movie-recsys
   registered_model: movie-recsys  # registry name; aliases `challenger` and `champion`

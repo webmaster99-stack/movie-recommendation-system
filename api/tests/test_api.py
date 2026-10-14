@@ -230,6 +230,18 @@ def test_every_recommendation_request_is_logged(
         )
         assert (logged.strategy, logged.n_liked, logged.movie_ids) == ("personalised", 1, [20, 50])
         assert 0 <= logged.model_ms <= logged.latency_ms
+        # The two movies are 4th and 5th of 6 in the popularity order: places 3 and 4 of 0-5.
+        assert (logged.popularity_percentile, logged.catalog_size) == (0.7, 6)
+
+
+def test_a_list_with_no_movies_left_has_no_popularity(
+    client: TestClient, auth: Headers, engine: Engine
+) -> None:
+    for movie_id in (10, 20, 30, 40, 50, 60):
+        rate(client, auth, movie_id, 4.0)
+    assert client.get("/recommendations", headers=auth).json()["items"] == []
+    with Session(engine) as session:
+        assert session.scalars(select(RecRequest)).one().popularity_percentile is None
 
 
 # --- events ------------------------------------------------------------------------------

@@ -198,8 +198,8 @@ How it works:
   for at most 6 months, as TMDB's terms require. They are never stored in git or DVC. This
   product uses the TMDB API but is not endorsed or certified by TMDB.
 - **Every recommendation list is logged** with the model version, the movies shown and the
-  time it took, and clicks and ratings refer back to the list they came from. Phase 8 builds
-  its monitoring on these tables.
+  time it took, and clicks and ratings refer back to the list they came from. The
+  monitoring (below) is built on these tables.
 
 ```bash
 uv run pytest api/tests                                              # in-memory database, fake TMDB
@@ -291,6 +291,79 @@ Setting it up from a fork takes four things:
   variables from `web/.env.example`.
 - **`CORS_ORIGINS`** on Render is the Vercel address, and the image name in `render.yaml`
   and `deploy.yml` is the fork's.
+
+## Monitoring
+
+Three questions, each answered from the app's own Postgres:
+
+| Question | Answered by | Where to look |
+|---|---|---|
+| Is the API healthy? | `request_log`: one row per request with its endpoint, status and latency | Grafana dashboard "Movie recommender: API", and two alerts |
+| Are the recommendations any good in use? | `rec_requests`, `events`, `ratings` | Grafana dashboard "Movie recommender: recommendations" |
+| Is the app used the way the model was trained? | The same tables against a reference from the training data | The weekly drift report on GitHub Pages and in MLflow |
+
+**What is logged.** The API queues a row for every answered request and a background thread
+writes them, so logging adds nothing to a request. `/health` and CORS preflights are left
+out, the endpoint is stored as its template (`/movies/{movie_id}`) and no user is recorded;
+rows are deleted after 90 days. Each recommendation list also records how popular its movies
+are and the size of the catalog, which is what popularity bias and coverage are computed from.
+
+**Who may read it.** Grafana and the weekly job connect as `monitoring_reader`, a role that
+can read the views in the `monitoring` schema and nothing else
+(`supabase/migrations/20261014092107_monitoring.sql`). The views carry no account ids: a
+user appears as a hash, enough to count people. A leaked monitoring password therefore shows
+how the app is used, not who uses it, and cannot change anything.
+
+**Dashboards and alerts** are JSON in `monitoring/grafana/`, pushed to Grafana by
+`scripts/grafana_sync.py`. The alerts fire when, over 15 minutes with at least 20 requests,
+the 95th percentile latency is above 2 s or more than 5% of the answers are server errors.
+Online quality is measured per list: click-through rate (a list with at least one click),
+hit rate (the user later rated a movie from the list), catalog coverage, and the mean place
+of the recommended movies in the popularity order.
+
+**The drift report** (`python -m recsys.monitoring.drift`, run every Monday by
+`.github/workflows/monitoring.yml`) compares the last four weeks with a reference written
+by the pipeline's `monitoring_reference` stage: a sample of the ratings the model was
+trained on, its users' history lengths, and the lists it recommends to them. Five
+comparisons are made with [Evidently](https://www.evidentlyai.com/): the stars given, the
+year and popularity of the movies rated, their genres, the history length per user, and the
+same for the movies served. Distances are used rather than significance tests (with 200,000
+reference rows a test calls every difference significant), and a comparison with fewer than
+300 production rows is reported as "not enough data" instead of as drift.
+
+To try all of it without any account:
+
+```bash
+docker compose -f monitoring/docker-compose.yml up -d    # Postgres with the schema, and Grafana
+
+# The API on that Postgres, with a shared secret so the load test can make up users
+DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54330/postgres SUPABASE_URL= TMDB_API_KEY= \
+SUPABASE_JWT_SECRET=local-monitoring-secret-0123456789abcdef \
+  uv run uvicorn recsys_api.main:create_app --factory --app-dir api
+LOADTEST_JWT_SECRET=local-monitoring-secret-0123456789abcdef uvx --with pyjwt locust \
+  -f api/loadtest/locustfile.py --headless --host http://127.0.0.1:8000 --users 15 --run-time 1m
+
+# Dashboards and alerts into the local Grafana (http://127.0.0.1:3001, admin / admin)
+GRAFANA_URL=http://127.0.0.1:3001 GRAFANA_USER=admin GRAFANA_PASSWORD=admin \
+MONITORING_DATABASE_URL="postgresql://monitoring_reader:monitoring@postgres:5432/postgres?sslmode=disable" \
+  uv run python scripts/grafana_sync.py --check
+
+# The drift report for what the load test did, written to site/index.html
+uv run dvc pull monitoring_reference
+MONITORING_DATABASE_URL=postgresql://monitoring_reader:monitoring@127.0.0.1:54330/postgres \
+  uv run python -m recsys.monitoring.drift --out site --no-mlflow
+```
+
+For the deployed app:
+
+- **Supabase:** apply the migration, then give the role a password in the SQL editor:
+  `alter role monitoring_reader with password '...';`. Its connection string is the session
+  pooler's with the user `monitoring_reader.<project ref>`.
+- **Grafana Cloud** (free plan): create a service account with the Admin role (creating the data source and the alert rules needs it) and a token,
+  then run `scripts/grafana_sync.py --check` with `GRAFANA_URL`, `GRAFANA_TOKEN` and
+  `MONITORING_DATABASE_URL` set. Choose where alerts are sent under Alerting > Contact points.
+- **GitHub:** the secret `MONITORING_DATABASE_URL`, and Settings > Pages > Source > GitHub
+  Actions. The workflow reuses the `MLFLOW_TRACKING_*` secrets for the DVC remote and MLflow.
 
 ## Build phases
 

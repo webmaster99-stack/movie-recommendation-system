@@ -4,13 +4,18 @@ Run the API with a shared-secret (HS256) verifier and a throwaway database, so t
 mint its own users and never touches Supabase or TMDB:
 
     DATABASE_URL=sqlite:///loadtest.db SUPABASE_JWT_SECRET=<32+ characters> TMDB_API_KEY= \
-        uv run uvicorn recsys_api.main:create_app --factory --app-dir api
+        SUPABASE_URL= uv run uvicorn recsys_api.main:create_app --factory --app-dir api
 
-    LOADTEST_JWT_SECRET=<the same secret> uvx locust -f api/loadtest/locustfile.py \
+    LOADTEST_JWT_SECRET=<the same secret> uvx --with pyjwt locust \
+        -f api/loadtest/locustfile.py \
         --headless --host http://127.0.0.1:8000 --users 20 --spawn-rate 5 --run-time 2m
 
+`SUPABASE_URL=` (empty) matters when `.env` names a project: with one set, tokens must carry
+its issuer, which the made-up ones here do not.
+
 Locust is run with `uvx` instead of being a project dependency: it is only needed here, and
-would add gevent and a web UI to the lock file.
+would add gevent and a web UI to the lock file. `--with pyjwt` gives it the one library this
+file needs.
 """
 
 import os

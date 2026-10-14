@@ -274,6 +274,37 @@ stages:
     outs:
       - bundle
 
+  # What the weekly drift report compares production with: samples of the ratings the
+  # selected model was trained on and of the lists it recommends.
+  monitoring_reference:
+    cmd: python -m recsys.monitoring.reference
+    deps:
+      - models/final
+      - data/interim/ratings.parquet
+      - data/processed/items.parquet
+      - data/processed/user_map.parquet
+      - data/processed/splits/train.parquet
+      - data/processed/splits/val.parquet
+      - metrics/selection.json
+      - src/recsys/monitoring/reference.py
+      - src/recsys/data/preprocess.py  # reuses filter_window
+      - src/recsys/evaluation/evaluate.py  # reuses load_split, recommend_all
+      - src/recsys/evaluation/protocol.py
+      - src/recsys/models/__init__.py
+      - src/recsys/models/base.py
+      - src/recsys/models/recency.py
+      - src/recsys/utils/io.py
+    params:
+      - seed
+      - preprocess.start_date
+      - preprocess.positive_threshold
+      - split.test_start
+      - models
+      - evaluation.batch_size
+      - monitoring.reference
+    outs:
+      - data/monitoring/reference
+
   # Uploads the bundle to MLflow and points the registry's `challenger` alias at it.
   # Making it the `champion` is manual: `python -m recsys.registry.promote`.
   register:
