@@ -63,6 +63,14 @@ export default function AboutPage() {
           why a new account gets recommendations after ten ratings, and why changing one rating
           changes the next list.
         </p>
+        <p>
+          Your ratings also go into the next version of the model. Every so often they are copied
+          into the project&apos;s published training data, with a scrambled id in place of your
+          account and nothing but the movie, the stars and the time, and the model is refitted with
+          them. The new version replaces this one only if it does at least as well on MovieLens and,
+          once the app has enough users, better on their latest ratings. Ratings that have been
+          copied stay in the published data even if you change or remove them here.
+        </p>
       </Section>
 
       <Section title="Why this model">
@@ -129,9 +137,10 @@ export default function AboutPage() {
           memory, accounts and ratings live in Supabase (Postgres), and this site is Next.js.
         </p>
         <p>
-          Ratings for training come from the MovieLens 32M dataset by GroupLens. Posters and plot
-          summaries come from TMDB and are only ever shown here, never used for training. This
-          product uses the TMDB API but is not endorsed or certified by TMDB.
+          Ratings for training come from the MovieLens 32M dataset by GroupLens and from this
+          app&apos;s users. Posters and plot summaries come from TMDB and are only ever shown here,
+          never used for training. This product uses the TMDB API but is not endorsed or certified
+          by TMDB.
         </p>
       </Section>
     </div>

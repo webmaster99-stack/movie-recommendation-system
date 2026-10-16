@@ -1,0 +1,10 @@
+{
+  "last_rating": "2026-10-13",
+  "n_holdout": 2,
+  "n_holdout_users": 1,
+  "n_likes": 10,
+  "n_likes_outside_catalog": 0,
+  "n_ratings": 10,
+  "n_train": 8,
+  "n_users": 1
+}

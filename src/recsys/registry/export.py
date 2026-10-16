@@ -3,10 +3,11 @@
 The bundle is everything the API needs and nothing else, readable with numpy, scipy and the
 standard library (the API image has no pandas, pyarrow or torch):
 
-- `model/`: the selected model refitted on training + validation, as written by its `save`.
+- `model/`: the selected model fitted on training + validation and the app's own likes
+  (stage `retrain`), as written by its `save`.
 - `items.json`: the catalog, one movie per line, in `item_idx` order (the model's columns).
-- `metadata.json`: hyperparameters, the data the model was trained on (with SHA256 hashes)
-  and its validation and test metrics.
+- `metadata.json`: hyperparameters, the data the model was trained on (with SHA256 hashes),
+  the app feedback it was also fitted on, and its validation and test metrics.
 - `model_card.md`: the same in prose, with how the model was chosen and what it can't do.
 
 Everything here is deterministic, so the bundle is a DVC output like any other. The git
@@ -24,11 +25,18 @@ import pandas as pd
 
 from recsys.data.download import sha256_of
 from recsys.evaluation.evaluate import load_split
-from recsys.models import load_fitted
+from recsys.models import load_model
 from recsys.models.train import dir_size_bytes
 from recsys.utils.config import load_params
 from recsys.utils.io import write_json
-from recsys.utils.paths import BUNDLE_DIR, FINAL_MODELS_DIR, METRICS_DIR, PROCESSED_DIR, SPLITS_DIR
+from recsys.utils.paths import (
+    APP_FEEDBACK_PROCESSED_DIR,
+    BUNDLE_DIR,
+    METRICS_DIR,
+    PROCESSED_DIR,
+    RETRAINED_DIR,
+    SPLITS_DIR,
+)
 
 _SCOPES = {
     "all": "All users",
@@ -102,6 +110,17 @@ def training_data(interactions: pd.DataFrame, splits: tuple[str, ...]) -> dict[s
     }
 
 
+def app_feedback_data(counts: dict[str, Any]) -> dict[str, Any]:
+    """The app's likes the model was also fitted on, from `metrics/app_feedback.json`."""
+    return {
+        "n_likes": counts["n_train"],
+        "n_held_out": counts["n_holdout"],
+        "n_users": counts["n_users"],
+        "last_rating": counts["last_rating"],
+        "sha256": {"train.parquet": sha256_of(APP_FEEDBACK_PROCESSED_DIR / "train.parquet")},
+    }
+
+
 def _table(header: list[str], rows: list[list[str]]) -> str:
     lines = [header, ["---"] * len(header), *rows]
     return "\n".join("| " + " | ".join(line) + " |" for line in lines)
@@ -147,6 +166,8 @@ def model_card(
     header += ["Test all", "Test returning", "Test new", "Size (MB)", "Fits"]
     chosen = _table(header, candidates)
     hashes = "\n".join(f"- `{file}`: `{digest}`" for file, digest in data["sha256"].items())
+    app = metadata["app_feedback"]
+    app_hash = app["sha256"]["train.parquet"]
     all_params = {**metadata["base_params"], **metadata["params"]}
     params = "\n".join(f"- `{key}`: {value}" for key, value in all_params.items())
 
@@ -182,6 +203,12 @@ likes by {data["n_users"]:,} users, from {data["first_interaction"]} to
 
 {hashes}
 
+It was also fitted on {app["n_likes"]:,} likes by app users (up to {app["last_rating"]}; app
+feedback `train.parquet`: `{app_hash}`), with {app["n_held_out"]:,} of their latest likes held
+out to compare it with the model in production. Only the personalised part learns from them:
+the app's ratings come years after MovieLens ends, so what counts as recent is still
+decided by MovieLens.
+
 ## How it was chosen
 
 {len(candidates)} candidates (five algorithms, plus a recency variant of each personalised
@@ -199,7 +226,8 @@ The test columns were computed afterwards, once, and played no part in the choic
 
 Full ranking over the whole catalog with seen movies excluded; no sampled negatives.
 Brackets are 95% bootstrap confidence intervals over users. Validation numbers come from the
-model fitted on the training split; test numbers from this model.
+model fitted on the training split; test numbers from the same model fitted on training +
+validation without the app's likes, which come from after the test period.
 
 {_table(["Users", "Split", "n", "NDCG@10", "Recall@10", "MRR@10"], performance)}
 
@@ -230,7 +258,7 @@ def main() -> None:
     name: str = selection["selected"]
     splits = ("train", "val")
     interactions, _ = load_split("test")  # everything before the test split
-    model = load_fitted(name, FINAL_MODELS_DIR, params["models"][name], interactions)
+    model = load_model(name, RETRAINED_DIR)
 
     if BUNDLE_DIR.exists():
         shutil.rmtree(BUNDLE_DIR)
@@ -248,6 +276,7 @@ def main() -> None:
         "model_size_bytes": dir_size_bytes(BUNDLE_DIR / "model"),
         "preprocess": params["preprocess"],
         "trained_on": training_data(interactions, splits),
+        "app_feedback": app_feedback_data(read_json(METRICS_DIR / "app_feedback.json")),
         "metrics": {
             split: headline(read_json(METRICS_DIR / f"{split}_{name}.json"))
             for split in ("val", "test")

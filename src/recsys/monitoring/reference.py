@@ -24,17 +24,17 @@ import pandas as pd
 from recsys.data.preprocess import filter_window
 from recsys.evaluation.evaluate import load_split, recommend_all
 from recsys.evaluation.protocol import _per_user
-from recsys.models import load_fitted
+from recsys.models import load_model
 from recsys.models.base import Recommender
 from recsys.registry.export import read_json
 from recsys.utils.config import load_params
 from recsys.utils.io import write_json, write_parquet
 from recsys.utils.paths import (
-    FINAL_MODELS_DIR,
     INTERIM_DIR,
     METRICS_DIR,
     MONITORING_REFERENCE_DIR,
     PROCESSED_DIR,
+    RETRAINED_DIR,
 )
 from recsys.utils.seed import make_deterministic
 
@@ -135,7 +135,7 @@ def main() -> None:
     )
 
     name: str = read_json(METRICS_DIR / "selection.json")["selected"]
-    model = load_fitted(name, FINAL_MODELS_DIR, params["models"][name], interactions)
+    model = load_model(name, RETRAINED_DIR)  # the model the bundle serves
     served = served_table(
         model,
         interactions,

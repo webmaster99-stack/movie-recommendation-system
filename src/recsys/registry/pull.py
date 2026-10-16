@@ -32,6 +32,13 @@ class BundleMismatchError(RuntimeError):
 def pull(client: MlflowClient, registered_model: str, alias: str, out: Path) -> ModelVersion:
     """Download the version behind `alias` to `out`, replacing whatever is there."""
     version = client.get_model_version_by_alias(registered_model, alias)
+    download(client, version, out)
+    return version
+
+
+def download(client: MlflowClient, version: ModelVersion, out: Path) -> None:
+    """Download `version`'s bundle to `out`, checked against its registered SHA256."""
+    registered_model = version.name
     expected = version.tags["bundle_sha256"]
     out.parent.mkdir(parents=True, exist_ok=True)
     # Downloaded next to `out` and moved into place only once it has been checked, so a
@@ -53,7 +60,6 @@ def pull(client: MlflowClient, registered_model: str, alias: str, out: Path) -> 
         if out.exists():
             shutil.rmtree(out)
         shutil.move(downloaded, out)
-    return version
 
 
 def main() -> None:

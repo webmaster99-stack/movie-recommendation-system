@@ -131,6 +131,13 @@ def test_model_card_reports_the_choice_and_both_splits() -> None:
             "last_interaction": "2022-12-31",
             "sha256": {"train.parquet": "abc123", "val.parquet": "def456"},
         },
+        "app_feedback": {
+            "n_likes": 1234,
+            "n_held_out": 56,
+            "n_users": 78,
+            "last_rating": "2026-10-13",
+            "sha256": {"train.parquet": "fed789"},
+        },
         "metrics": {
             "val": {scope: scope_metrics(9689, 0.25) for scope in scopes},
             "test": {scope: scope_metrics(8650, 0.24) for scope in scopes},
@@ -165,6 +172,7 @@ def test_model_card_reports_the_choice_and_both_splits() -> None:
     assert "EASE (Steck 2019)" in card and "recency prior" in card
     assert "- `l2`: 1138.0" in card and "- `weight`: 0.5" in card
     assert "7,959,933" in card and "`train.parquet`: `abc123`" in card
+    assert "1,234 likes by app users (up to 2026-10-13" in card and "`fed789`" in card
     assert "which is statistically significant" in card
     assert (
         "| **ease_recency** | 0.250 | 0.250 | 0.250 | 0.240 | 0.240 | 0.240 | 80.0 | yes |" in card
