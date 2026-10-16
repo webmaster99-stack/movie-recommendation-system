@@ -5,7 +5,76 @@ iALS, EASE, SASRec) are compared on MovieLens 32M, and the winner is served in a
 (Next.js on Vercel, FastAPI on Render) with experiment tracking, model registry, data versioning
 and production monitoring.
 
-> 🚧 Work in progress. See the build phases below.
+- **App:** <https://movie-recommendation-system-steel-three.vercel.app> (the API sleeps when
+  idle, so the first request can take up to a minute)
+- **API:** <https://movie-recsys-api-03b8.onrender.com/health>
+- **Weekly drift report:** <https://webmaster99-stack.github.io/movie-recommendation-system/>
+
+![Browsing the app: the poster wall, search, a movie page with similar movies, and the model comparison](docs/demo.gif)
+
+## Architecture
+
+```mermaid
+flowchart LR
+  subgraph pipeline["DVC pipeline: uv run dvc repro"]
+    ml["MovieLens 32M"] --> prep["validate, preprocess, split"]
+    prep --> models["train, tune, evaluate:<br/>9 candidates"]
+    models --> select["compare, select"]
+    select --> retrain["retrain"]
+    feedback["app feedback snapshot"] --> retrain
+    retrain --> export["export bundle"]
+  end
+  export --> registry[("MLflow registry<br/>on DagsHub")]
+  registry -- "promote: gate,<br/>then champion" --> deploy["Deploy workflow:<br/>image on ghcr.io"]
+  deploy --> api["FastAPI on Render"]
+  web["Next.js on Vercel"] --> api
+  api <--> db[("Supabase:<br/>Postgres and Auth")]
+  api --> tmdb["TMDB: posters"]
+  db -- "monitoring views" --> grafana["Grafana Cloud"]
+  db -- "weekly" --> drift["Drift report on<br/>GitHub Pages"]
+  db -- "snapshot" --> feedback
+```
+
+- **Offline**, one DVC pipeline builds everything from the raw data: five algorithms and a
+  recency variant of each personalised one, tuned and compared on the same temporal split.
+  The winner is refitted with the app's own ratings and registered as the `challenger`.
+- **The gate to production is manual.** `promote` compares the challenger with the current
+  `champion` on the same users and moves the alias only if the challenger is no worse; the
+  Deploy workflow then bakes the champion into the API image.
+- **Online**, the API scores a user's ratings as they are at that moment (no per-user
+  training) and logs every list it serves. The logs feed the dashboards, the drift report
+  and, through snapshots, the next retrain.
+
+## How to reproduce
+
+The experiments need [uv](https://docs.astral.sh/uv/) and nothing else: no account and no
+API key.
+
+```bash
+git clone https://github.com/webmaster99-stack/movie-recommendation-system.git
+cd movie-recommendation-system
+uv sync                          # Python 3.12 and every package, exactly as in uv.lock
+```
+
+Then pick how far to go:
+
+| | Commands | Takes | What you get |
+|---|---|---|---|
+| Check the published results | `uv run dvc pull`, then `uv run dvc status` | minutes | The data, models and metrics of this commit. `dvc status` finds nothing to do: every output matches its hash in `dvc.lock` |
+| Rebuild from scratch | `uv run dvc repro --force`, then `uv run dvc metrics diff` | hours on a laptop, about 8 GB of RAM | Everything downloaded again from GroupLens (checksum-verified) and retrained; `dvc metrics diff` lists any metric that changed |
+| Check determinism | `uv run python scripts/repro_check.py` | ~25 min | The whole pipeline twice on a small synthetic dataset; fails if any output file differs |
+
+The app feedback snapshot is the one input that doesn't come from GroupLens. It is in the
+DVC remote with everything else, so `dvc pull` fetches the same snapshot for everyone.
+
+Results are byte-identical inside the reference image, `docker/train.Dockerfile`
+(`docker build -f docker/train.Dockerfile -t recsys-train .`, then
+`docker run --rm -v "$PWD":/work recsys-train dvc repro`). Outside it, multithreaded
+floating-point maths can differ in the last digits from one CPU to another, so metrics agree
+within a small tolerance rather than bit for bit.
+
+The deployed web app and API need accounts (Supabase, TMDB, Render, Vercel), but running
+them locally needs none: see [API](#api) and [Web app](#web-app).
 
 ## Quickstart
 
@@ -106,7 +175,7 @@ largest-magnitude weights per movie are kept. The `ease_pruning` stage measures 
 ```bash
 uv run dvc repro                              # data -> train -> evaluate -> compare -> select -> export -> register
 uv run dvc repro evaluate@item_knn            # a single model on validation (`test@item_knn` for test)
-uv run python -m recsys.registry.promote      # move the `champion` alias to the current challenger
+uv run python -m recsys.registry.promote      # compare with the champion; promote if no worse
 ```
 
 - `compare` runs paired tests between all models on the same users: a bootstrap confidence
@@ -114,10 +183,12 @@ uv run python -m recsys.registry.promote      # move the `champion` alias to the
   (`metrics/comparison_val.json`, `metrics/comparison_test.json`).
 - `select` picks the best validation NDCG@10 over all users among the models within
   `selection.max_model_size_mb` (`metrics/selection.json`).
-- `export` writes `bundle/`: the selected model refitted on train + validation, the movie
-  catalog, metadata, and a model card (`bundle/model_card.md`).
+- `export` writes `bundle/`: the selected model refitted on train + validation and the app's
+  likes (see [Retraining loop](#retraining-loop)), the movie catalog, metadata, and a model
+  card (`bundle/model_card.md`).
 - `register` uploads the bundle to MLflow as a new version of `movie-recsys` with the
-  `challenger` alias. Promotion to `champion` is a deliberate manual step.
+  `challenger` alias. Promotion to `champion` is a deliberate manual step, behind a
+  comparison with the current champion.
 
 ### Reproducibility check
 
@@ -365,6 +436,45 @@ For the deployed app:
 - **GitHub:** the secret `MONITORING_DATABASE_URL`, and Settings > Pages > Source > GitHub
   Actions. The workflow reuses the `MLFLOW_TRACKING_*` secrets for the DVC remote and MLflow.
 
+## Retraining loop
+
+The app's ratings go back into the model:
+
+```bash
+uv run --env-file .env python -m recsys.feedback.snapshot   # app ratings -> data/app_feedback/
+uv run dvc add data/app_feedback
+uv run --env-file .env dvc repro       # app_feedback -> retrain -> export -> register (challenger)
+uv run dvc push && git add data/app_feedback.dvc dvc.lock metrics && git commit
+uv run --env-file .env python -m recsys.registry.promote    # the gate, then `champion`
+```
+
+Then run the Deploy workflow by hand, as after any promotion.
+
+1. **Snapshot.** The ratings are read through the `monitoring.ratings` view, so they carry no
+   account id: each user appears as an MD5 hash of their id. Only the movie, the stars and the
+   time are copied. The snapshot is versioned with `dvc add`, like a downloaded dataset, so the
+   pipeline stays reproducible: the same commit always means the same snapshot. It is pushed
+   to the public DVC remote, and the About page tells users so.
+2. **`app_feedback` stage.** Likes (3.5 stars and up) of movies in the catalog, with app users
+   numbered after the MovieLens ones. For every app user with at least 5 likes, their latest
+   20% are held out for the gate (`retraining.app_feedback` in `params.yaml`).
+3. **`retrain` stage.** The selected model, with the hyperparameters it was chosen with, fitted
+   on training + validation plus the app likes that weren't held out. Only the personalised
+   part learns from them; the recency prior is still computed from MovieLens. The app's
+   ratings come three years after MovieLens ends, so with an 11-day half-life a handful of
+   app users would otherwise decide what counts as popular for everyone. `models/final/` is
+   not touched, so the offline test results stay clean.
+4. **The gate** (`recsys.registry.promote`). The challenger and the champion are downloaded
+   from the registry and score the same users. On the MovieLens test split the challenger
+   must not be worse: the lower end of the 95% confidence interval of the difference in
+   NDCG@10 must be at least -0.002. On the app's held-out likes it must be ahead, but only
+   once at least 100 app users have held-out likes. With fewer, the difference is reported
+   but not applied, because it would be mostly noise. The outcome is recorded as `gate_*`
+   tags on the model version. `--skip-gate` promotes anyway, for a rollback.
+
+Retraining is started by hand, not on a schedule: the EASE fit needs about 5 GB of memory,
+too much for a free CI runner, and promotion is manual anyway.
+
 ## Build phases
 
 - [x] 0. Foundation: tooling, config, determinism, CI
@@ -376,4 +486,4 @@ For the deployed app:
 - [x] 6. Frontend
 - [x] 7. Deployment + CI/CD
 - [x] 8. Monitoring
-- [ ] 9. Retraining loop + polish
+- [x] 9. Retraining loop + polish

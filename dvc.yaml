@@ -236,11 +236,59 @@ stages:
       - metrics/selection.json:
           cache: false
 
+  # The app's ratings as likes in the model's index, with each app user's latest likes held
+  # out for the promotion gate. The snapshot is taken by `python -m recsys.feedback.snapshot`
+  # and versioned with `dvc add data/app_feedback`.
+  app_feedback:
+    cmd: python -m recsys.feedback.prepare
+    deps:
+      - data/app_feedback
+      - data/processed/item_map.parquet
+      - data/processed/user_map.parquet
+      - src/recsys/feedback/prepare.py
+      - src/recsys/utils/io.py
+    params:
+      - preprocess.positive_threshold
+      - retraining.app_feedback
+    outs:
+      - data/processed/app_feedback
+    metrics:
+      - metrics/app_feedback.json:
+          cache: false
+
+  # The selected model fitted on training + validation plus the app's likes: what is served.
+  retrain:
+    cmd: python -m recsys.feedback.retrain
+    deps:
+      - data/processed/splits/train.parquet
+      - data/processed/splits/val.parquet
+      - data/processed/app_feedback/train.parquet
+      - data/processed/item_map.parquet
+      - metrics/selection.json
+      - src/recsys/feedback/retrain.py
+      - src/recsys/evaluation/evaluate.py  # reuses load_split
+      - src/recsys/models/__init__.py  # any of the models may be the selected one
+      - src/recsys/models/base.py
+      - src/recsys/models/train.py
+      - src/recsys/models/recency.py
+      - src/recsys/models/popularity.py
+      - src/recsys/models/item_knn.py
+      - src/recsys/models/ials.py
+      - src/recsys/models/ease.py
+      - src/recsys/models/sasrec.py
+    params:
+      - seed
+      - models
+    outs:
+      - models/retrained
+
   # The selected model as a self-contained serving bundle with its model card.
   export:
     cmd: python -m recsys.registry.export
     deps:
-      - models/final
+      - models/retrained
+      - data/processed/app_feedback/train.parquet
+      - metrics/app_feedback.json
       - data/processed/items.parquet
       - data/processed/splits/train.parquet
       - data/processed/splits/val.parquet
@@ -279,7 +327,7 @@ stages:
   monitoring_reference:
     cmd: python -m recsys.monitoring.reference
     deps:
-      - models/final
+      - models/retrained
       - data/interim/ratings.parquet
       - data/processed/items.parquet
       - data/processed/user_map.parquet

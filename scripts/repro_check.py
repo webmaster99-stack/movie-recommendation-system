@@ -6,7 +6,8 @@ The real pipeline takes hours and gigabytes, so this runs it on a small syntheti
 in the shape of MovieLens (generated here from a fixed seed, no download) with the
 hyperparameters shrunk by `scripts/repro_overrides.yaml`. Everything else is the real thing:
 the same `dvc.yaml`, the same stage commands and the same code, from `validate` to
-`register`. Only the `download` stage is skipped.
+`register`. Only the `download` stage is skipped, and the app feedback snapshot is
+synthetic too.
 
 It works in a throwaway copy of the project, so the real `data/`, `models/` and `params.yaml`
 are never touched and no credentials are needed (MLflow logs to a local file there).
@@ -114,6 +115,33 @@ def synthetic_movielens(seed: int, n_users: int = 1500, n_movies: int = 400) -> 
     return {name: table.to_csv(index=False, lineterminator="\n") for name, table in tables.items()}
 
 
+def synthetic_app_feedback(seed: int, n_movies: int = 400, n_users: int = 40) -> pd.DataFrame:
+    """A snapshot like `recsys.feedback.snapshot` writes: app users rating in 2026.
+
+    Some users have fewer likes than `retraining.app_feedback.min_likes` and some movies are
+    outside the shrunken catalog, so both of those paths run too.
+    """
+    rng = np.random.default_rng(seed + 1)
+    start = unix("2026-10-01")
+    rows = []
+    for user in range(n_users):
+        n = int(rng.integers(2, 25))
+        rows.append(
+            pd.DataFrame(
+                {
+                    "user_key": hashlib.md5(str(user).encode()).hexdigest(),
+                    "movie_id": rng.choice(np.arange(1, n_movies + 1), n, replace=False),
+                    "rating": rng.choice([2.0, 3.0, 3.5, 4.0, 4.5, 5.0], n),
+                    "timestamp": start + rng.integers(0, 14 * DAY, n),
+                }
+            )
+        )
+    df = pd.concat(rows, ignore_index=True)
+    return df.astype(
+        {"user_key": "string", "movie_id": "int32", "rating": "float32", "timestamp": "int64"}
+    )
+
+
 def merge(base: dict[str, Any], overrides: dict[str, Any]) -> dict[str, Any]:
     """`overrides` laid over `base`, descending into nested mappings."""
     merged = dict(base)
@@ -142,6 +170,9 @@ def prepare(workdir: Path) -> None:
     for name, text in synthetic_movielens(params["seed"]).items():
         (raw / f"{name}.csv").write_text(text, encoding="utf-8", newline="\n")
     (raw / "README.txt").write_text("Synthetic data for the reproducibility check.\n")
+    app_feedback = workdir / "data" / "app_feedback"
+    app_feedback.mkdir(parents=True)
+    synthetic_app_feedback(params["seed"]).to_parquet(app_feedback / "ratings.parquet", index=False)
 
 
 def run_pipeline(workdir: Path) -> None:

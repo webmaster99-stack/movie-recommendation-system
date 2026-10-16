@@ -177,6 +177,21 @@ monitoring:
     cat_method: jensenshannon  # 0 = same mix of categories, 1 = no category in common
     threshold: 0.1  # a column has drifted when its distance is at least this
 
+# The retraining loop: the app's own ratings added to the selected model's fit.
+retraining:
+  # Stage `app_feedback`, on the snapshot in data/app_feedback/ (`python -m recsys.feedback.snapshot`).
+  app_feedback:
+    min_likes: 5  # app users with fewer likes are used for training only
+    holdout_fraction: 0.2  # of everyone else's likes, the latest (at least one) are held out
+  # `python -m recsys.registry.promote`: when a challenger may replace the champion.
+  gate:
+    # How much tuning.metric the challenger may lose: the lower end of the 95% interval of
+    # (challenger - champion) must be at least -margin. 0.002 is about 1% of NDCG@10.
+    margin: 0.002
+    # App users with held-out likes needed before "better for app users" is required; with
+    # fewer, a difference is mostly noise.
+    min_app_users: 100
+
 mlflow:
   experiment_name: movie-recsys
   registered_model: movie-recsys  # registry name; aliases `challenger` and `champion`
